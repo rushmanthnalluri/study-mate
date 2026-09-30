@@ -29,7 +29,14 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
   subjects,
   onRefreshSubjects
 }) => {
-  const [activeTab, setActiveTab] = useState<'manage' | 'add-subject' | 'add-resource'>('manage');
+  const [activeTab, setActiveTab] = useState<'manage' | 'add-subject' | 'add-resource' | 'ai-config'>('manage');
+  const [aiProvider, setAiProvider] = useState<'offline' | 'groq' | 'gemini'>('offline');
+  const [aiModel, setAiModel] = useState('');
+  const [aiKey, setAiKey] = useState('');
+  const [aiConfigured, setAiConfigured] = useState(false);
+  const [aiSecretReady, setAiSecretReady] = useState(false);
+  const [aiConfigMessage, setAiConfigMessage] = useState('');
+  const [isSavingAiConfig, setIsSavingAiConfig] = useState(false);
 
   // Stats
   const [stats, setStats] = useState({
@@ -80,6 +87,44 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
       })
       .catch(() => {});
   }, [subjects]);
+
+  useEffect(() => {
+    if (activeTab !== 'ai-config') return;
+    fetch('/api/admin/ai-config', { headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` } })
+      .then(res => res.json())
+      .then(data => {
+        setAiProvider(data.provider || 'offline');
+        setAiModel(data.model || '');
+        setAiConfigured(Boolean(data.configured));
+        setAiSecretReady(Boolean(data.secretConfigured));
+      })
+      .catch(() => setAiConfigMessage('Could not load AI configuration.'));
+  }, [activeTab]);
+
+  const handleSaveAiConfig = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingAiConfig(true);
+    setAiConfigMessage('');
+    try {
+      const res = await fetch('/api/admin/ai-config', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}`
+        },
+        body: JSON.stringify({ provider: aiProvider, model: aiModel, apiKey: aiKey })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Could not save AI configuration.');
+      setAiConfigured(Boolean(data.configured));
+      setAiKey('');
+      setAiConfigMessage('Central AI configuration saved. Students will use this provider automatically.');
+    } catch (err: any) {
+      setAiConfigMessage(err.message || 'Could not save AI configuration.');
+    } finally {
+      setIsSavingAiConfig(false);
+    }
+  };
 
   // Load existing resource content and metadata when subject or resource type changes
   useEffect(() => {
@@ -336,7 +381,14 @@ Subject: ${selectedSubjName} | Department: Food Technology
 
       {/* Tab Switcher */}
       <div className="flex items-center space-x-2 border-b border-surface-border pb-1">
-        <button
+                  <button
+            type="button"
+            onClick={() => setActiveTab('ai-config')}
+            className={`px-3 py-2 rounded-xl text-xs font-bold ${activeTab === 'ai-config' ? 'bg-[#3b2b23] text-white' : 'bg-[#f7eee6] text-[#5f4939] hover:bg-[#efe0d1]'}`}
+          >
+            AI Control
+          </button>
+<button
           onClick={() => setActiveTab('manage')}
           className={`pb-2 px-3 text-xs font-bold border-b-2 transition-all ${
             activeTab === 'manage'
@@ -369,6 +421,44 @@ Subject: ${selectedSubjName} | Department: Food Technology
           <span>Add / Edit Materials</span>
         </button>
       </div>
+
+      {activeTab === 'ai-config' && (
+        <div className="rounded-[24px] border border-[#dfc8b1] bg-[#fffaf4] p-5 shadow-sm">
+          <div className="mb-5 flex items-start gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ead4bd] text-[#714628]"><ShieldCheck size={20} /></div>
+            <div>
+              <h3 className="text-base font-black text-[#3b2b23]">Central AI control</h3>
+              <p className="mt-1 text-xs leading-5 text-[#806f61]">This is the only place where an application-wide Groq or Gemini API key can be configured. The key is encrypted server-side and is never sent back to students.</p>
+            </div>
+          </div>
+          <form onSubmit={handleSaveAiConfig} className="space-y-4">
+            {!aiSecretReady && <div className="rounded-2xl border border-[#efc9b9] bg-[#fff0ec] p-3 text-xs font-semibold text-[#9c4637]">Server protection is not initialized yet. Set <code>STUDYMATE_CONFIG_SECRET</code> on Render before saving a key.</div>}
+            {aiConfigMessage && <div className="rounded-2xl border border-[#d9c8b8] bg-[#f8f0e8] p-3 text-xs font-semibold text-[#5d4738]">{aiConfigMessage}</div>}
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="block"><span className="mb-1.5 block text-xs font-bold text-[#4b392e]">Provider</span>
+                <select value={aiProvider} onChange={e => setAiProvider(e.target.value as any)} className="auth-input">
+                  <option value="offline">Offline knowledge engine</option>
+                  <option value="groq">Groq</option>
+                  <option value="gemini">Google Gemini</option>
+                </select>
+              </label>
+              <label className="block"><span className="mb-1.5 block text-xs font-bold text-[#4b392e]">Model</span>
+                <input value={aiModel} onChange={e => setAiModel(e.target.value)} placeholder={aiProvider === 'groq' ? 'llama-3.3-70b-versatile' : 'gemini-1.5-flash'} className="auth-input" />
+              </label>
+            </div>
+            {aiProvider !== 'offline' && (
+              <label className="block"><span className="mb-1.5 block text-xs font-bold text-[#4b392e]">New API key</span>
+                <input value={aiKey} onChange={e => setAiKey(e.target.value)} type="password" placeholder="Paste a new key; it will not be displayed again" className="auth-input font-mono" required />
+              </label>
+            )}
+            <div className="flex items-center justify-between rounded-2xl border border-[#e4d5c6] bg-[#f8f0e8] p-4">
+              <div><p className="text-xs font-extrabold text-[#4b392e]">Current status</p><p className="mt-1 text-[11px] text-[#806f61]">{aiConfigured ? 'A central provider is configured.' : 'No cloud provider is configured; offline mode is available.'}</p></div>
+              <span className={`rounded-full px-3 py-1 text-[10px] font-black ${aiConfigured ? 'bg-[#dcebd5] text-[#4f6d45]' : 'bg-[#eee2d8] text-[#806f61]'}`}>{aiConfigured ? 'CONFIGURED' : 'OFFLINE'}</span>
+            </div>
+            <button disabled={isSavingAiConfig || !aiSecretReady} className="w-full rounded-2xl bg-[#7c4f2c] px-4 py-3 text-xs font-extrabold text-white shadow-sm hover:bg-[#643c20] disabled:opacity-50">{isSavingAiConfig ? 'Saving securely…' : 'Save central AI configuration'}</button>
+          </form>
+        </div>
+      )}
 
       {/* TAB 1: SUBJECT CATALOG & MANAGE */}
       {activeTab === 'manage' && (
