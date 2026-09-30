@@ -409,7 +409,7 @@ app.get('/api/feedback/summary', requireAuth, async (req, res) => {
 // ==========================================
 app.post('/api/chat', requireAuth, async (req, res) => {
   try {
-    const { message, department, subject, history, userId, userSettings } = req.body;
+    const { message, department, subject, history } = req.body;
     if (!message) {
       return res.status(400).json({ error: 'Message is required.' });
     }
@@ -417,7 +417,7 @@ app.post('/api/chat', requireAuth, async (req, res) => {
     // Persist user prompt
     await saveChatMessage({
       id: `chat-${Date.now()}-user`,
-      userId: userId || 'default',
+      userId: req.user.id,
       role: 'user',
       content: message,
       subject: subject || 'General',
@@ -430,7 +430,7 @@ app.post('/api/chat', requireAuth, async (req, res) => {
       history: history || [],
       department: department || 'Food Technology',
       subject: subject || 'Food Microbiology',
-      userSettings: userSettings || {}
+      
     });
 
     // Persist bot reply
@@ -456,8 +456,7 @@ app.post('/api/chat', requireAuth, async (req, res) => {
 
 app.get('/api/chat/history', requireAuth, async (req, res) => {
   try {
-    const { userId } = req.query;
-    const messages = await getChatMessages(userId);
+    const messages = await getChatMessages(req.user.id);
     res.json(messages);
   } catch (err) {
     res.status(500).json({ error: err.message });
