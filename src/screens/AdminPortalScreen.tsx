@@ -67,7 +67,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
 
   // Fetch admin stats on mount
   useEffect(() => {
-    fetch('/api/admin/stats')
+    fetch('/api/admin/stats', { headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` })
       .then((res) => res.json())
       .then((data) => {
         if (data.totalSubjects) {
@@ -142,7 +142,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     setSubjectSuccessMsg('');
 
     try {
-      const res = await fetch('/api/admin/subjects', {
+      const res = await fetch('/api/admin/subjects', { headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` }, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -180,7 +180,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     setResourceSuccessMsg('');
 
     try {
-      const res = await fetch('/api/admin/resources', {
+      const res = await fetch('/api/admin/resources', { headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` }, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -214,7 +214,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     }
 
     try {
-      const res = await fetch(`/api/admin/subjects/${encodeURIComponent(subjName)}?department=Food+Technology`, {
+      const res = await fetch(`/api/admin/subjects/${encodeURIComponent(subjName)}?department=Food+Technology`, { headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` }, {
         method: 'DELETE'
       });
       if (!res.ok) throw new Error('Failed to delete subject');
