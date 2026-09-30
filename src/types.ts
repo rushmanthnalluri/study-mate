@@ -109,14 +109,6 @@ export interface LmsCourse {
   lmsCourseUrl: string;
 }
 
-export interface AiSettings {
-  provider: 'offline' | 'groq' | 'gemini';
-  groqApiKey?: string;
-  geminiApiKey?: string;
-  groqModel?: string;
-  geminiModel?: string;
-}
-
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
@@ -155,7 +147,6 @@ export interface UserProfile {
   lmsUsername?: string;
   lmsLastSynced?: string;
   enrolledCourses?: LmsCourse[];
-  aiSettings?: AiSettings;
 }
 
 export type ScreenId =
