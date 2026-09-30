@@ -163,6 +163,8 @@ export type ScreenId =
   | 'glossary'
   | 'knowledge-base'
   | 'mock-exam'
+  | 'quiz'
+  | 'studio'
   | 'admin'
   | 'lms-sync'
   | 'chatbot';
