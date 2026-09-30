@@ -499,7 +499,7 @@ app.get('/api/chat/history', async (req, res) => {
 // ==========================================
 
 // GET current user
-app.get('/api/auth/me', (req, res) => {
+app.get('/api/auth/me', async (req, res) => {
   try {
     const raw = fs.readFileSync(usersFile, 'utf8');
     const users = JSON.parse(raw);
@@ -677,12 +677,26 @@ app.post('/api/auth/kl-lms/sync', (req, res) => {
   }
 });
 
+// Admin authorization guard: every admin API requires an authenticated admin token.
+async function requireAdmin(req, res, next) {
+  try {
+    const auth = req.headers.authorization || '';
+    if (!auth.startsWith('Bearer ')) return res.status(401).json({ error: 'Admin authentication required.' });
+    const token = auth.slice(7);
+    const users = await getAllUsers();
+    const user = users.find(u => `token-${u.id}` === token && u.role === 'admin');
+    if (!user) return res.status(403).json({ error: 'Admin access denied.' });
+    req.adminUser = user;
+    next();
+  } catch (err) { return res.status(500).json({ error: 'Authorization check failed.' }); }
+}
+
 // ==========================================
 // 🛠️ ADMIN PORTAL API ENDPOINTS
 // ==========================================
 
 // ADMIN: Get stats
-app.get('/api/admin/stats', (req, res) => {
+app.get('/api/admin/stats', requireAdmin, (req, res) => {
   try {
     const subjects = getAllSubjects('Food Technology');
     let totalQuestions = 0;
@@ -709,7 +723,7 @@ app.get('/api/admin/stats', (req, res) => {
 });
 
 // ADMIN: Create New Subject
-app.post('/api/admin/subjects', (req, res) => {
+app.post('/api/admin/subjects', requireAdmin, (req, res) => {
   try {
     const { name, code, description = '', department = 'Food Technology', units = [], topics = [] } = req.body;
     if (!name || !code) {
@@ -866,7 +880,7 @@ ${defaultUnits.map(u => `### ${u}\n- Comprehensive lecture notes, equations, and
 });
 
 // ADMIN: Add or Update Resources for a Subject
-app.post('/api/admin/resources', (req, res) => {
+app.post('/api/admin/resources', requireAdmin, (req, res) => {
   try {
     const {
       subjectName,
@@ -960,7 +974,7 @@ app.post('/api/admin/resources', (req, res) => {
 });
 
 // ADMIN: Delete a Subject
-app.delete('/api/admin/subjects/:name', (req, res) => {
+app.delete('/api/admin/subjects/:name', requireAdmin, (req, res) => {
   try {
     const { name } = req.params;
     const { department = 'Food Technology' } = req.query;
