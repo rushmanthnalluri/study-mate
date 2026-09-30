@@ -15,7 +15,9 @@ import {
   addFeedback,
   getChatMessages,
   saveChatMessage,
-  isDatabaseConnected
+  isDatabaseConnected,
+  getAiConfig,
+  saveAiConfig
 } from './db.js';
 import { generateChatbotReply } from './chatbot.js';
 
@@ -670,6 +672,77 @@ app.post('/api/auth/kl-lms/sync', requireAuth, async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// ==========================================
+ // CENTRAL AI CONFIGURATION — ADMIN ONLY
+// API keys are encrypted before persistence and never returned to the browser.
+const getConfigSecret = () => process.env.STUDYMATE_CONFIG_SECRET || '';
+const encryptionKey = () => crypto.createHash('sha256').update(getConfigSecret()).digest();
+
+const encryptApiKey = (plain) => {
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', encryptionKey(), iv);
+  const encrypted = Buffer.concat([cipher.update(plain, 'utf8'), cipher.final()]);
+  return [iv.toString('hex'), cipher.getAuthTag().toString('hex'), encrypted.toString('hex')].join(':');
+};
+
+const decryptApiKey = (payload) => {
+  if (!payload || !getConfigSecret()) return '';
+  try {
+    const [ivHex, tagHex, dataHex] = payload.split(':');
+    const decipher = crypto.createDecipheriv('aes-256-gcm', encryptionKey(), Buffer.from(ivHex, 'hex'));
+    decipher.setAuthTag(Buffer.from(tagHex, 'hex'));
+    return Buffer.concat([decipher.update(Buffer.from(dataHex, 'hex')), decipher.final()]).toString('utf8');
+  } catch {
+    return '';
+  }
+};
+
+const loadCentralAiConfig = async () => {
+  const stored = await getAiConfig();
+  if (stored?.provider && stored.provider !== 'offline' && stored.encryptedApiKey) {
+    const key = decryptApiKey(stored.encryptedApiKey);
+    if (key) return { provider: stored.provider, model: stored.model || '', apiKey: key };
+  }
+  if (process.env.GEMINI_API_KEY) return { provider: 'gemini', model: process.env.GEMINI_MODEL || 'gemini-1.5-flash', apiKey: process.env.GEMINI_API_KEY };
+  if (process.env.GROQ_API_KEY) return { provider: 'groq', model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile', apiKey: process.env.GROQ_API_KEY };
+  return { provider: 'offline', model: '', apiKey: '' };
+};
+
+app.get('/api/admin/ai-config', requireAdmin, async (req, res) => {
+  const stored = await getAiConfig();
+  const runtime = await loadCentralAiConfig();
+  res.json({
+    provider: runtime.provider,
+    model: runtime.model,
+    configured: Boolean(runtime.apiKey),
+    updatedAt: stored?.updatedAt || null,
+    secretConfigured: Boolean(getConfigSecret())
+  });
+});
+
+app.put('/api/admin/ai-config', requireAdmin, async (req, res) => {
+  try {
+    const { provider = 'offline', model = '', apiKey = '' } = req.body || {};
+    if (!['offline', 'groq', 'gemini'].includes(provider)) {
+      return res.status(400).json({ error: 'Unsupported AI provider.' });
+    }
+    if (provider !== 'offline' && !apiKey.trim()) {
+      return res.status(400).json({ error: 'An API key is required for the selected provider.' });
+    }
+    if (!getConfigSecret()) {
+      return res.status(503).json({ error: 'STUDYMATE_CONFIG_SECRET is not configured on the server yet.' });
+    }
+    await saveAiConfig({
+      provider,
+      model: model.trim() || (provider === 'groq' ? 'llama-3.3-70b-versatile' : provider === 'gemini' ? 'gemini-1.5-flash' : ''),
+      encryptedApiKey: provider === 'offline' ? '' : encryptApiKey(apiKey.trim())
+    });
+    res.json({ success: true, provider, model: model.trim(), configured: provider === 'offline' || Boolean(apiKey.trim()) });
+  } catch {
+    res.status(500).json({ error: 'AI configuration could not be saved.' });
   }
 });
 
