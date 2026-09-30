@@ -22,7 +22,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     { id: 'mock-exam' as ScreenId, title: 'Mock papers', text: 'Build a complete exam sheet', icon: FileSpreadsheet, tone: 'bg-[#f7e8dd] text-[#8d4d32]' },
     { id: 'flashcards' as ScreenId, title: 'Flashcards', text: 'Fast 2-mark recall', icon: Layers, tone: 'bg-[#f4ecd8] text-[#846b29]' },
     { id: 'pdf-analyzer' as ScreenId, title: 'Past papers', text: 'Extract exam patterns', icon: FileSearch, tone: 'bg-[#e8eee7] text-[#527052]' },
-    { id: 'planner' as ScreenId, title: 'Study planner', text: 'Organize your units', icon: Calendar, tone: 'bg-[#eee6f0] text-[#765b7f]' }
+    { id: 'planner' as ScreenId, title: 'Study planner', text: 'Organize your units', icon: Calendar, tone: 'bg-[#eee6f0] text-[#765b7f]' },
+    { id: 'quiz' as ScreenId, title: 'Quiz & model test', text: 'Timed exam practice', icon: FileSpreadsheet, tone: 'bg-[#e7eee7] text-[#55704f]' },
+    { id: 'studio' as ScreenId, title: 'Study studio', text: 'Audio, voice & maps', icon: Bot, tone: 'bg-[#eee6f0] text-[#6f5a78]' }
   ];
 
   return (
