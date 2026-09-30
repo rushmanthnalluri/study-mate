@@ -48,17 +48,16 @@ export const App: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   
-  const defaultFoodTechSubj = fallbackSubjects.find(s => s.department === 'Food Technology') || fallbackSubjects[0];
-  const defaultFoodTechNote = fallbackGoldAnswers["Thermal Death Kinetics (D, z, F Values)"] || fallbackGoldAnswers["Banker's Algorithm for Deadlock Avoidance"];
-
+  const defaultFoodTechSubj = fallbackSubjects[0];
+  const defaultFoodTechNote = fallbackGoldAnswers["Thermal Death Kinetics (D, z, F Values)"] || Object.values(fallbackGoldAnswers)[0];
   const [currentSubject, setCurrentSubject] = useState<Subject | null>(defaultFoodTechSubj);
-  const [currentNote, setCurrentNote] = useState<ExamNote | null>(defaultFoodTechNote);
+  const [currentNote, setCurrentNote] = useState<ExamNote | null>(null);
   const [savedNotes, setSavedNotes] = useState<ExamNote[]>(() => {
     try {
       const stored = localStorage.getItem('studymate_saved_notes');
-      return stored ? JSON.parse(stored) : [defaultFoodTechNote];
+      return stored ? JSON.parse(stored) : [];
     } catch {
-      return [defaultFoodTechNote];
+      return [];
     }
   });
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
