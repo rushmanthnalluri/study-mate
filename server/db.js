@@ -140,7 +140,7 @@ export async function getAllUsers() {
   if (isMongoConnected && UserModel) {
     try {
       const docs = await UserModel.find({}).lean();
-      if (docs.length > 0) return docs;
+      return docs;
     } catch (e) {
       console.warn('Mongo read error, falling back to file:', e.message);
     }
@@ -187,7 +187,7 @@ export async function getSavedNotes(userId = null) {
   if (isMongoConnected && SavedNoteModel) {
     try {
       const docs = await SavedNoteModel.find(userId ? { userId } : {}).sort({ createdAt: -1 }).lean();
-      if (docs.length > 0) return docs;
+      return docs;
     } catch (e) {}
   }
   if (!fs.existsSync(savedNotesFile)) return [];
@@ -216,14 +216,14 @@ export async function addSavedNote(note) {
   return note;
 }
 
-export async function deleteSavedNote(id) {
-  const notes = await getSavedNotes();
+export async function deleteSavedNote(id, userId = null) {
+  const notes = await getSavedNotes(userId);
   const filtered = notes.filter(n => n.id !== id);
   fs.writeFileSync(savedNotesFile, JSON.stringify(filtered, null, 2), 'utf8');
 
   if (isMongoConnected && SavedNoteModel) {
     try {
-      await SavedNoteModel.deleteOne({ id });
+      await SavedNoteModel.deleteOne(userId ? { id, userId } : { id });
     } catch (e) {}
   }
   return true;
@@ -236,7 +236,7 @@ export async function getFeedbacks() {
   if (isMongoConnected && FeedbackModel) {
     try {
       const docs = await FeedbackModel.find({}).sort({ createdAt: -1 }).lean();
-      if (docs.length > 0) return docs;
+      return docs;
     } catch (e) {}
   }
   if (!fs.existsSync(feedbackFile)) return [];
@@ -267,7 +267,7 @@ export async function getChatMessages(userId = 'default') {
   if (isMongoConnected && ChatMessageModel) {
     try {
       const docs = await ChatMessageModel.find({ userId }).sort({ createdAt: 1 }).lean();
-      if (docs.length > 0) return docs;
+      return docs;
     } catch (e) {}
   }
   if (!fs.existsSync(chatHistoryFile)) return [];
