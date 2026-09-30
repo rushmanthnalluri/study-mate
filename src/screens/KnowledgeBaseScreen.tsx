@@ -126,21 +126,21 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
       <div className="flex items-center space-x-3 pt-1">
         <button
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-surface-border bg-white text-surface-muted hover:text-surface-dark transition-colors"
+          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#806f61] hover:text-[#3b2b23] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
         <div>
-          <span className="text-[10px] font-condensed font-bold tracking-wider uppercase text-brand-800">
+          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#7c4f2c]">
             KL Knowledge Base
           </span>
-          <h1 className="text-xl font-serif font-bold text-surface-dark leading-tight">
+          <h1 className="text-xl font-sans font-bold text-[#3b2b23] leading-tight">
             Academic Drive Library
           </h1>
         </div>
       </div>
 
-      <p className="text-xs text-surface-muted">
+      <p className="text-xs text-[#806f61]">
         As specified in System Blueprint Section 02: A shared folder library containing the 6 standard items per subject.
       </p>
 
@@ -152,8 +152,8 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
             onClick={() => setDeptFilter(dept as Department)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
               deptFilter === dept
-                ? 'bg-brand-800 text-white shadow-sm'
-                : 'bg-white text-surface-dark border border-surface-border'
+                ? 'bg-[#7c4f2c] text-white shadow-sm'
+                : 'bg-[#fffaf4] text-[#3b2b23] border border-[#e3d6cb]'
             }`}
           >
             {dept === 'All' ? 'All Depts' : dept}
@@ -162,9 +162,9 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
       </div>
 
       {/* Subject Dropdown / Picker */}
-      <div className="bg-white border border-surface-border rounded-xl p-3.5 shadow-mobile-card space-y-2">
-        <label className="text-xs font-semibold text-surface-dark flex items-center space-x-1.5">
-          <Folder size={15} className="text-brand-800" />
+      <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-3.5 shadow-sm space-y-2">
+        <label className="text-xs font-semibold text-[#3b2b23] flex items-center space-x-1.5">
+          <Folder size={15} className="text-[#7c4f2c]" />
           <span>Select Subject Folder in Knowledge Base:</span>
         </label>
         <select
@@ -173,7 +173,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
             const found = subjects.find((s) => s.id === e.target.value);
             if (found) setSelectedSubject(found);
           }}
-          className="w-full bg-surface-subtle border border-surface-border rounded-lg p-2.5 text-xs text-surface-dark font-medium focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+          className="w-full bg-surface-subtle border border-[#e3d6cb] rounded-lg p-2.5 text-xs text-[#3b2b23] font-medium focus:outline-none focus:ring-2 focus:ring-brand-800/30"
         >
           {filteredSubjects.map((s) => (
             <option key={s.id} value={s.id}>
@@ -186,10 +186,10 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
       {/* The 6 Standard Items Grid */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-condensed uppercase tracking-wider font-bold text-surface-muted">
+          <span className="text-[10px] font-sans uppercase tracking-wider font-bold text-[#806f61]">
             The 6 Standard Items in {currentSubject.name}
           </span>
-          <span className="text-[10px] text-surface-muted font-mono">
+          <span className="text-[10px] text-[#806f61] font-mono">
             6 / 6 Items Grounded
           </span>
         </div>
@@ -201,17 +201,17 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
               <div
                 key={idx}
                 onClick={() => setActiveFile(file)}
-                className="bg-white border border-surface-border rounded-xl p-3.5 shadow-mobile-card hover:border-brand-400 cursor-pointer group transition-all flex items-start justify-between"
+                className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-3.5 shadow-sm hover:border-brand-400 cursor-pointer group transition-all flex items-start justify-between"
               >
                 <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 rounded-lg bg-brand-50 text-brand-800 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-lg bg-[#f4eadf] text-[#7c4f2c] flex items-center justify-center shrink-0 mt-0.5">
                     <Icon size={16} />
                   </div>
                   <div className="space-y-0.5">
-                    <h4 className="text-xs font-bold text-surface-dark group-hover:text-brand-800 transition-colors">
+                    <h4 className="text-xs font-bold text-[#3b2b23] group-hover:text-[#7c4f2c] transition-colors">
                       {file.label}
                     </h4>
-                    <p className="text-[10px] text-surface-muted">
+                    <p className="text-[10px] text-[#806f61]">
                       {file.name}
                     </p>
                     <p className="text-[10px] text-stone-500 italic pt-1">
@@ -220,7 +220,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
                   </div>
                 </div>
 
-                <span className="text-xs text-surface-muted group-hover:text-brand-800 p-1">
+                <span className="text-xs text-[#806f61] group-hover:text-[#7c4f2c] p-1">
                   <Eye size={15} />
                 </span>
               </div>
@@ -232,15 +232,15 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
       {/* File Preview Modal */}
       {activeFile && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-xl w-full p-5 shadow-2xl space-y-3 max-h-[85vh] flex flex-col border border-surface-border">
-            <div className="flex items-center justify-between border-b border-surface-border pb-3">
+          <div className="bg-[#fffaf4] rounded-2xl max-w-xl w-full p-5 shadow-2xl space-y-3 max-h-[85vh] flex flex-col border border-[#e3d6cb]">
+            <div className="flex items-center justify-between border-b border-[#e3d6cb] pb-3">
               <div className="flex items-center space-x-2">
-                <FileText size={18} className="text-brand-800" />
+                <FileText size={18} className="text-[#7c4f2c]" />
                 <div>
-                  <h3 className="text-xs sm:text-sm font-bold text-surface-dark font-mono">
+                  <h3 className="text-xs sm:text-sm font-bold text-[#3b2b23] font-mono">
                     {activeFile.name}
                   </h3>
-                  <p className="text-[10px] text-surface-muted">
+                  <p className="text-[10px] text-[#806f61]">
                     KL Knowledge Base • {currentSubject.name}
                   </p>
                 </div>
@@ -248,35 +248,35 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
               <div className="flex items-center space-x-1.5">
                 <button
                   onClick={() => handleCopyFile(activeFile.content)}
-                  className="p-1.5 rounded-lg border border-surface-border hover:bg-surface-subtle text-xs flex items-center space-x-1"
+                  className="p-1.5 rounded-lg border border-[#e3d6cb] hover:bg-surface-subtle text-xs flex items-center space-x-1"
                 >
                   {copied ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
                   <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy'}</span>
                 </button>
                 <button
                   onClick={() => handleDownloadFile(activeFile.name, activeFile.content)}
-                  className="p-1.5 rounded-lg border border-surface-border hover:bg-surface-subtle text-xs flex items-center space-x-1"
+                  className="p-1.5 rounded-lg border border-[#e3d6cb] hover:bg-surface-subtle text-xs flex items-center space-x-1"
                 >
                   <Download size={14} />
                   <span className="hidden sm:inline">Save</span>
                 </button>
                 <button
                   onClick={() => setActiveFile(null)}
-                  className="p-1.5 rounded-lg text-surface-muted hover:text-surface-dark hover:bg-surface-subtle"
+                  className="p-1.5 rounded-lg text-[#806f61] hover:text-[#3b2b23] hover:bg-surface-subtle"
                 >
                   <X size={18} />
                 </button>
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto bg-surface-subtle p-3.5 rounded-xl border border-surface-border/60 text-xs font-mono text-stone-800 whitespace-pre-wrap leading-relaxed">
+            <div className="flex-1 overflow-y-auto bg-surface-subtle p-3.5 rounded-xl border border-[#e3d6cb]/60 text-xs font-mono text-stone-800 whitespace-pre-wrap leading-relaxed">
               {activeFile.content}
             </div>
 
             <div className="pt-1 flex justify-end">
               <button
                 onClick={() => setActiveFile(null)}
-                className="px-4 py-2 rounded-xl bg-brand-800 text-white font-semibold text-xs"
+                className="px-4 py-2 rounded-xl bg-[#7c4f2c] text-white font-semibold text-xs"
               >
                 Close File
               </button>
