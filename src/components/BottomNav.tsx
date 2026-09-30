@@ -13,7 +13,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onNavigate,
     { id: 'home' as ScreenId, label: 'Home', icon: Home },
     { id: 'select-subject' as ScreenId, label: 'Subjects', icon: BookOpen },
     { id: 'enter-topic' as ScreenId, label: 'Generate', icon: PenTool, highlight: true },
-    { id: 'mock-exam' as ScreenId, label: 'Mock', icon: FileSpreadsheet },
+    { id: 'quiz' as ScreenId, label: 'Quiz', icon: FileSpreadsheet },
     { id: 'save' as ScreenId, label: 'Revision', icon: Bookmark, badge: savedCount > 0 ? savedCount : null }
   ];
 
