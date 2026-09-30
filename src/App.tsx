@@ -66,7 +66,7 @@ export const App: React.FC = () => {
     return localStorage.getItem('studymate_night_mode') === 'true';
   });
 
-  const authHeaders = () => {
+  const authHeaders = (): Record<string, string> => {
     const token = localStorage.getItem('studymate_token');
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
