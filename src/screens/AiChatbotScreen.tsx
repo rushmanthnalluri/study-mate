@@ -61,9 +61,11 @@ export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
   onSelectSubjectAndTopic,
   selectedDepartment
 }) => {
+  const chatStorageKey = `studymate_chat_history_${currentUser?.id || 'anonymous'}`;
+
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     try {
-      const stored = localStorage.getItem('studymate_chat_history');
+      const stored = currentUser?.id ? localStorage.getItem(`studymate_chat_history_${currentUser.id}`) : null;
       return stored ? JSON.parse(stored) : [DEFAULT_WELCOME_MESSAGE];
     } catch {
       return [DEFAULT_WELCOME_MESSAGE];
@@ -81,10 +83,11 @@ export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
 
   useEffect(() => {
     scrollToBottom();
+    if (!currentUser?.id) return;
     try {
-      localStorage.setItem('studymate_chat_history', JSON.stringify(messages));
+      localStorage.setItem(chatStorageKey, JSON.stringify(messages));
     } catch (e) {}
-  }, [messages]);
+  }, [messages, currentUser?.id, chatStorageKey]);
 
   const handleSendMessage = async (customText?: string) => {
     const textToSend = customText || inputMessage.trim();
@@ -104,14 +107,17 @@ export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
     setIsSending(true);
 
     try {
+      const token = localStorage.getItem('studymate_token');
       const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({
           message: textToSend,
           department: selectedDepartment,
           subject: selectedSubject,
-          userId: currentUser?.id,
           history: messages.slice(-6).map(m => ({ role: m.role, content: m.content }))
         })
       });
@@ -154,7 +160,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
   const handleClearChat = () => {
     if (window.confirm('Clear your conversation history?')) {
       setMessages([DEFAULT_WELCOME_MESSAGE]);
-      localStorage.removeItem('studymate_chat_history');
+      localStorage.removeItem(chatStorageKey);
     }
   };
 
