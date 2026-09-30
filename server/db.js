@@ -32,6 +32,7 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const SavedNoteSchema = new mongoose.Schema({
+  userId: { type: String, required: true, index: true },
   id: { type: String, required: true, unique: true },
   topic: { type: String, required: true },
   subject: { type: String, required: true },
@@ -155,10 +156,10 @@ export async function saveUser(user) {
 // -------------------------------------------------------------
 // SAVED NOTES OPERATIONS
 // -------------------------------------------------------------
-export async function getSavedNotes() {
+export async function getSavedNotes(userId = null) {
   if (isMongoConnected && SavedNoteModel) {
     try {
-      const docs = await SavedNoteModel.find({}).sort({ createdAt: -1 }).lean();
+      const docs = await SavedNoteModel.find(userId ? { userId } : {}).sort({ createdAt: -1 }).lean();
       if (docs.length > 0) return docs;
     } catch (e) {}
   }
@@ -171,7 +172,7 @@ export async function getSavedNotes() {
 }
 
 export async function addSavedNote(note) {
-  const notes = await getSavedNotes();
+  const notes = await getSavedNotes(note.userId || null);
   const filtered = notes.filter(n => !(n.topic === note.topic && n.subject === note.subject));
   filtered.unshift(note);
   fs.writeFileSync(savedNotesFile, JSON.stringify(filtered, null, 2), 'utf8');
