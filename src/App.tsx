@@ -40,16 +40,15 @@ export const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
     try {
       const stored = localStorage.getItem('studymate_user');
-      return stored ? JSON.parse(stored) : defaultDemoStudent;
+      return stored ? JSON.parse(stored) : null;
     } catch {
-      return defaultDemoStudent;
+      return null;
     }
   });
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   
   const defaultFoodTechSubj = fallbackSubjects[0];
-  const defaultFoodTechNote = fallbackGoldAnswers["Thermal Death Kinetics (D, z, F Values)"] || Object.values(fallbackGoldAnswers)[0];
   const [currentSubject, setCurrentSubject] = useState<Subject | null>(defaultFoodTechSubj);
   const [currentNote, setCurrentNote] = useState<ExamNote | null>(null);
   const [savedNotes, setSavedNotes] = useState<ExamNote[]>(() => {
@@ -65,6 +64,26 @@ export const App: React.FC = () => {
   const [isNightMode, setIsNightMode] = useState<boolean>(() => {
     return localStorage.getItem('studymate_night_mode') === 'true';
   });
+
+  const authHeaders = () => {
+    const token = localStorage.getItem('studymate_token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+
+  const loadSavedNotes = async () => {
+    if (!currentUser) {
+      setSavedNotes([]);
+      return;
+    }
+    try {
+      const res = await fetch('/api/saved-notes', { headers: authHeaders() });
+      if (!res.ok) throw new Error('Could not load saved notes');
+      const data = await res.json();
+      setSavedNotes(Array.isArray(data) ? data : []);
+    } catch {
+      setSavedNotes([]);
+    }
+  };
 
   const toggleNightMode = () => {
     const next = !isNightMode;
@@ -106,6 +125,16 @@ export const App: React.FC = () => {
   useEffect(() => {
     fetchSubjects();
   }, []);
+
+  useEffect(() => {
+    loadSavedNotes();
+  }, [currentUser?.id]);
+
+  useEffect(() => {
+    if (currentScreen === 'admin' && currentUser?.role !== 'admin') {
+      setCurrentScreen('home');
+    }
+  }, [currentScreen, currentUser?.role]);
 
   // Fetch feedback signals
   useEffect(() => {
@@ -178,7 +207,7 @@ export const App: React.FC = () => {
     try {
       const res = await fetch('/api/generate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify({
           department: dept,
           subject: subjName,
@@ -280,7 +309,7 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
 
       fetch('/api/saved-notes', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify(newNote)
       }).catch(() => {});
     }
@@ -288,7 +317,7 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
 
   const handleDeleteNote = (id: string) => {
     setSavedNotes(savedNotes.filter((n) => n.id !== id));
-    fetch(`/api/saved-notes/${id}`, { method: 'DELETE' }).catch(() => {});
+    fetch(`/api/saved-notes/${id}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
   };
 
   const handleToggleReviewed = (id: string) => {
@@ -308,7 +337,7 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
     try {
       const res = await fetch('/api/feedback', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify(data)
       });
       const json = await res.json();
@@ -330,7 +359,7 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
   );
 
   return (
-    <div className="min-h-screen bg-[#f6f8fc] dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-brand-100 selection:text-brand-900 transition-colors">
+    <div className="min-h-screen bg-[#f4eadf] dark:bg-[#211a16] text-[#3b2b23] dark:text-[#fff8f1] flex flex-col transition-colors">
       {/* Top Header */}
       <Header
         currentScreen={currentScreen}
