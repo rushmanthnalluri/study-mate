@@ -1076,6 +1076,15 @@ app.delete('/api/admin/subjects/:name', requireAdmin, (req, res) => {
   }
 });
 
+app.get('/api/health', (req, res) => {
+  res.status(isDatabaseConnected() ? 200 : 503).json({
+    ok: isDatabaseConnected(),
+    service: 'studymate',
+    database: isDatabaseConnected() ? 'connected' : 'file-fallback',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Serve frontend build if exists
 const distPath = path.resolve('dist');
 if (fs.existsSync(distPath)) {
@@ -1085,10 +1094,6 @@ if (fs.existsSync(distPath)) {
   });
 }
 
-app.get('/api/health', (req, res) => {
-  res.json({ ok: true, service: 'studymate', database: isDatabaseConnected() ? 'connected' : 'file-fallback' });
-});
-
-app.listen(PORT, () => {
+, () => {
   console.log(`StudyMate AI Food Technology server running on port ${PORT}`);
 });
