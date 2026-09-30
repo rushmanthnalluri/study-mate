@@ -3,9 +3,32 @@
  * Supports online Groq / Gemini inference or smart offline academic tutoring grounded in KL University curriculum.
  */
 
-export async function generateChatbotReply({ message, history = [], department = 'Food Technology', subject = 'Food Microbiology', userSettings = {} }) {
-  const apiKey = userSettings.geminiApiKey || process.env.GEMINI_API_KEY || userSettings.groqApiKey || process.env.GROQ_API_KEY;
-  const provider = userSettings.provider || (process.env.GEMINI_API_KEY ? 'gemini' : process.env.GROQ_API_KEY ? 'groq' : 'offline');
+import crypto from 'crypto';
+import { getAiConfig } from './db.js';
+
+const centralConfig = async () => {
+  const stored = await getAiConfig();
+  const secret = process.env.STUDYMATE_CONFIG_SECRET || '';
+  if (stored?.encryptedApiKey && secret) {
+    try {
+      const key = crypto.createHash('sha256').update(secret).digest();
+      const [ivHex, tagHex, dataHex] = stored.encryptedApiKey.split(':');
+      const decipher = crypto.createDecipheriv('aes-256-gcm', key, Buffer.from(ivHex, 'hex'));
+      decipher.setAuthTag(Buffer.from(tagHex, 'hex'));
+      const apiKey = Buffer.concat([decipher.update(Buffer.from(dataHex, 'hex')), decipher.final()]).toString('utf8');
+      if (apiKey) return { provider: stored.provider, model: stored.model || '', apiKey };
+    } catch {}
+  }
+  if (process.env.GEMINI_API_KEY) return { provider: 'gemini', model: process.env.GEMINI_MODEL || 'gemini-1.5-flash', apiKey: process.env.GEMINI_API_KEY };
+  if (process.env.GROQ_API_KEY) return { provider: 'groq', model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile', apiKey: process.env.GROQ_API_KEY };
+  return { provider: 'offline', model: '', apiKey: '' };
+};
+
+export async function generateChatbotReply({ message, history = [], department = 'Food Technology', subject = 'Food Microbiology' }) {
+  const config = await centralConfig();
+  const apiKey = config.apiKey;
+  const provider = config.provider;
+  const model = config.model;
 
   // Try Online Groq
   if (provider === 'groq' && apiKey) {
@@ -17,7 +40,7 @@ export async function generateChatbotReply({ message, history = [], department =
           'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: userSettings.groqModel || 'llama-3.3-70b-versatile',
+          model: model || 'llama-3.3-70b-versatile',
           messages: [
             {
               role: 'system',
@@ -48,7 +71,7 @@ Answer clearly and authoritatively with academic precision. Use equations, step-
   // Try Online Gemini
   if (provider === 'gemini' && apiKey) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${userSettings.geminiModel || 'gemini-1.5-flash'}:generateContent?key=${apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model || 'gemini-1.5-flash'}:generateContent?key=${apiKey}`;
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
