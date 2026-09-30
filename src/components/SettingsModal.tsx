@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { UserProfile } from '../types';
+import { Department, UserProfile } from '../types';
 import { X, UserRound, ShieldCheck, LogOut, Save, Trash2 } from 'lucide-react';
 
 interface SettingsModalProps {
@@ -12,7 +12,7 @@ interface SettingsModalProps {
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser, onSaveProfile, onResetData }) => {
   const [name, setName] = useState('');
-  const [department, setDepartment] = useState('Food Technology');
+  const [department, setDepartment] = useState<Department>('Food Technology');
   const [klId, setKlId] = useState('');
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
           </div>
           <label className="block">
             <span className="mb-1.5 block text-xs font-bold text-[#4b392e]">Department</span>
-            <select className="auth-input" value={department} onChange={e => setDepartment(e.target.value)}>
+            <select className="auth-input" value={department} onChange={e => setDepartment(e.target.value as Department)}>
               <option>Food Technology</option><option>CSE</option><option>AIDS</option><option>ECE</option><option>EEE</option>
             </select>
           </label>
