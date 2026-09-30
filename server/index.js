@@ -335,9 +335,9 @@ app.post('/api/generate', requireAuth, async (req, res) => {
 });
 
 // API: Saved Notes (Dual Mongo / File support)
-app.get('/api/saved-notes', async (req, res) => {
+app.get('/api/saved-notes', requireAuth, async (req, res) => {
   try {
-    const notes = await getSavedNotes();
+    const notes = await getSavedNotes(req.user.id);
     res.json(notes);
   } catch (err) {
     res.status(500).json({ error: err.message });
