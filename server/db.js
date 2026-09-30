@@ -192,7 +192,8 @@ export async function getSavedNotes(userId = null) {
   }
   if (!fs.existsSync(savedNotesFile)) return [];
   try {
-    return JSON.parse(fs.readFileSync(savedNotesFile, 'utf8'));
+    const list = JSON.parse(fs.readFileSync(savedNotesFile, 'utf8'));
+    return userId ? list.filter(n => n.userId === userId) : list;
   } catch (e) {
     return [];
   }
