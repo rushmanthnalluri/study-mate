@@ -1,0 +1,23 @@
+{
+  "id": "ft-micro",
+  "name": "Food Microbiology",
+  "code": "21BT2210",
+  "description": "Study of microorganisms in food spoilage, foodborne pathogens, microbiological examination, and thermal death kinetics (D, z, F values) ensuring commercial sterility and safety.",
+  "department": "Food Technology",
+  "units": [
+    "Unit I: Microorganisms in Food & Bacterial Cell Morphology",
+    "Unit II: Intrinsic & Extrinsic Factors Governing Microbial Growth",
+    "Unit III: Microbial Food Spoilage & Foodborne Pathogens",
+    "Unit IV: Thermal Death Kinetics (D, z, and F Values)",
+    "Unit V: Industrial Fermentations & Probiotic Starters"
+  ],
+  "topics": [
+    "Thermal Death Kinetics (D, z, F Values)",
+    "Gram Staining Mechanism and Procedure",
+    "12D Concept in Commercial Canning",
+    "Intrinsic and Extrinsic Factors of Food Spoilage",
+    "Clostridium botulinum vs Salmonella in Food Processing"
+  ],
+  "questionCount": 5,
+  "updatedAt": "2026-09-30"
+}

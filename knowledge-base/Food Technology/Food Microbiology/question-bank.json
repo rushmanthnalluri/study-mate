@@ -1,0 +1,42 @@
+[
+  {
+    "id": "q-ft-m1",
+    "topic": "Thermal Death Kinetics (D, z, F Values)",
+    "marks": 10,
+    "unit": 4,
+    "paperYear": "KL End Sem May 2024",
+    "question": "Mathematically derive D-value, z-value, and F-value in thermal bacteriology and explain the 12D Botulinum Cook concept in commercial canning."
+  },
+  {
+    "id": "q-ft-m2",
+    "topic": "Gram Staining Mechanism and Procedure",
+    "marks": 10,
+    "unit": 1,
+    "paperYear": "KL End Sem Dec 2023",
+    "question": "Explain structural differences between Gram-positive and Gram-negative bacterial cell walls. Describe step-by-step Gram staining with chemical reagents and color transitions."
+  },
+  {
+    "id": "q-ft-m3",
+    "topic": "Intrinsic and Extrinsic Factors of Food Spoilage",
+    "marks": 5,
+    "unit": 2,
+    "paperYear": "KL In-Sem 1 2024",
+    "question": "Explain how Water Activity (aw), pH, and Redox Potential (Eh) interact to inhibit foodborne spoilage pathogens."
+  },
+  {
+    "id": "q-ft-m4",
+    "topic": "12D Concept in Thermal Processing",
+    "marks": 2,
+    "unit": 4,
+    "paperYear": "KL End Sem May 2024",
+    "question": "What is the 12D Botulinum Cook concept in low-acid canned food sterilization?"
+  },
+  {
+    "id": "q-ft-m5",
+    "topic": "D-Value (Decimal Reduction Time)",
+    "marks": 2,
+    "unit": 4,
+    "paperYear": "KL In-Sem 2 2024",
+    "question": "Define D-value and state its units in thermal food processing."
+  }
+]

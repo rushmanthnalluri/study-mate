@@ -1,0 +1,34 @@
+[
+  {
+    "id": "q-ml-1",
+    "topic": "Support Vector Machines (SVM) & Kernel Trick",
+    "marks": 10,
+    "unit": 4,
+    "paperYear": "KL End Semester May 2024",
+    "question": "Derive the maximum margin hyperplane optimization for Support Vector Machines (SVM). Explain the Kernel Trick (RBF, Polynomial) for non-linear decision boundaries."
+  },
+  {
+    "id": "q-ml-2",
+    "topic": "Principal Component Analysis (PCA)",
+    "marks": 10,
+    "unit": 5,
+    "paperYear": "KL End Semester Dec 2023",
+    "question": "Detail the mathematical procedure of Principal Component Analysis (PCA) through Covariance Matrix, Eigenvalues, and Eigenvectors with dimensionality reduction steps."
+  },
+  {
+    "id": "q-ml-3",
+    "topic": "Bias-Variance Tradeoff",
+    "marks": 5,
+    "unit": 1,
+    "paperYear": "KL In-Sem Exam 1, 2024",
+    "question": "Explain the Bias-Variance tradeoff curve and demonstrate how L1 (Lasso) and L2 (Ridge) regularization control model complexity."
+  },
+  {
+    "id": "q-ml-4",
+    "topic": "Curse of Dimensionality",
+    "marks": 2,
+    "unit": 5,
+    "paperYear": "KL End Semester Dec 2023",
+    "question": "Define the Curse of Dimensionality in high-dimensional feature spaces."
+  }
+]

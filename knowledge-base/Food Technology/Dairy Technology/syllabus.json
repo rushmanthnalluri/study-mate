@@ -1,0 +1,23 @@
+{
+  "id": "ft-dairy",
+  "name": "Dairy Technology",
+  "code": "21BT3112",
+  "description": "Comprehensive study of bovine milk chemistry, market milk processing, pasteurization kinetics (HTST/UHT), homogenization mechanics, cheese manufacturing, and spray drying.",
+  "department": "Food Technology",
+  "units": [
+    "Unit I: Physical & Chemical Composition of Bovine Milk",
+    "Unit II: Market Milk Processing & Homogenization",
+    "Unit III: HTST Pasteurization & UHT Sterilization",
+    "Unit IV: Cheddar Cheese Manufacturing & Rennet Coagulation",
+    "Unit V: Spray Drying of Skim Milk Powder & Cyclone Recovery"
+  ],
+  "topics": [
+    "HTST Pasteurization System and Flow Diversion Valve",
+    "Milk Homogenization and Stokes' Law",
+    "Spray Drying of Milk Powder and Cyclone Separation",
+    "Cheddar Cheese Manufacturing and Rennet Coagulation",
+    "Cleaning-in-Place (CIP) Cleaning Cycles for Dairy Equipment"
+  ],
+  "questionCount": 4,
+  "updatedAt": "2026-09-30"
+}

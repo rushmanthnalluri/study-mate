@@ -1,0 +1,22 @@
+{
+  "id": "eee-ps",
+  "name": "Power Systems",
+  "code": "21EE2207",
+  "department": "EEE",
+  "units": [
+    "Unit I: Transmission Line Parameters & Modeling",
+    "Unit II: Load Flow Analysis (Gauss-Seidel & Newton-Raphson)",
+    "Unit III: Symmetrical & Unsymmetrical Fault Analysis",
+    "Unit IV: Power System Stability & Swing Equation",
+    "Unit V: Economic Dispatch & Automatic Generation Control"
+  ],
+  "topics": [
+    "Newton-Raphson Load Flow Method and Jacobian Matrix",
+    "Equal Area Criterion for Transient Stability",
+    "Symmetrical Fault Analysis using Thevenin Equivalent",
+    "Unsymmetrical Faults (LG, LL, LLG) using Symmetrical Components",
+    "Ferranti Effect in Long Transmission Lines"
+  ],
+  "questionCount": 4,
+  "updatedAt": "2026-09-30"
+}

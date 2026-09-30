@@ -1,0 +1,34 @@
+[
+  {
+    "id": "q-cs-1",
+    "topic": "Root Locus Technique Construction Rules",
+    "marks": 10,
+    "unit": 3,
+    "paperYear": "KL End Semester May 2024",
+    "question": "State all the 8 construction rules of the Root Locus technique. Sketch the root locus for G(s)H(s) = K / [s(s+2)(s+4)] and determine the range of K for stability."
+  },
+  {
+    "id": "q-cs-2",
+    "topic": "Bode Plot Stability Margins",
+    "marks": 10,
+    "unit": 4,
+    "paperYear": "KL End Semester Dec 2023",
+    "question": "Explain the frequency domain specifications: Gain Margin (GM) and Phase Margin (PM). Detail the construction of Magnitude and Phase plots on semi-log graph paper."
+  },
+  {
+    "id": "q-cs-3",
+    "topic": "PID Controller Effects",
+    "marks": 5,
+    "unit": 2,
+    "paperYear": "KL In-Sem Exam 2, 2024",
+    "question": "Discuss the individual effects of Proportional (P), Integral (I), and Derivative (D) control actions on steady-state error, rise time, and maximum overshoot."
+  },
+  {
+    "id": "q-cs-4",
+    "topic": "Routh-Hurwitz Stability Condition",
+    "marks": 2,
+    "unit": 3,
+    "paperYear": "KL End Semester May 2024",
+    "question": "State the necessary and sufficient conditions for system stability according to the Routh-Hurwitz criterion."
+  }
+]

@@ -1,0 +1,75 @@
+[
+  {
+    "id": "user-ft-student-1",
+    "name": "K. Sai Praneeth",
+    "klId": "2100030045",
+    "email": "2100030045@kluniversity.in",
+    "password": "password123",
+    "department": "Food Technology",
+    "role": "student",
+    "isLmsConnected": true,
+    "lmsUsername": "2100030045",
+    "lmsLastSynced": "2026-09-30T17:33:07.131Z",
+    "enrolledCourses": [
+      {
+        "code": "21BT2210",
+        "name": "Food Microbiology",
+        "faculty": "Dr. V. Ramanathan",
+        "attendance": "92%",
+        "inSemGrade": "A+",
+        "upcomingDeadline": "Assignment 2: Thermal Death Kinetics Derivation (Due Oct 5)",
+        "lmsCourseUrl": "https://lms.kluniversity.in/course/view.php?id=21210"
+      },
+      {
+        "code": "21BT3112",
+        "name": "Dairy Technology",
+        "faculty": "Dr. M. Sangeetha",
+        "attendance": "89%",
+        "inSemGrade": "A",
+        "upcomingDeadline": "Lab Report: HTST Pasteurization FDV Valve Test (Due Oct 8)",
+        "lmsCourseUrl": "https://lms.kluniversity.in/course/view.php?id=31112"
+      },
+      {
+        "code": "21BT2108",
+        "name": "Food Chemistry and Nutrition",
+        "faculty": "Prof. K. Ananya",
+        "attendance": "94%",
+        "inSemGrade": "O",
+        "upcomingDeadline": "Quiz: Maillard Reaction & Lipid Auto-oxidation (Due Oct 12)",
+        "lmsCourseUrl": "https://lms.kluniversity.in/course/view.php?id=21108"
+      },
+      {
+        "code": "21BT2205",
+        "name": "Food Processing and Engineering",
+        "faculty": "Dr. P. Venkateswarlu",
+        "attendance": "86%",
+        "inSemGrade": "A",
+        "upcomingDeadline": "Project: Freezing Curve Analysis with Planck Equation (Due Oct 15)",
+        "lmsCourseUrl": "https://lms.kluniversity.in/course/view.php?id=22205"
+      }
+    ]
+  },
+  {
+    "id": "user-ft-faculty-1",
+    "name": "Dr. V. Ramanathan",
+    "klId": "KL-FT-0842",
+    "email": "ramanathan@kluniversity.in",
+    "password": "password123",
+    "department": "Food Technology",
+    "role": "faculty",
+    "isLmsConnected": true,
+    "lmsUsername": "KL-FT-0842",
+    "lmsLastSynced": "2026-09-30T17:32:03.485Z",
+    "enrolledCourses": [
+      {
+        "code": "21BT2210",
+        "name": "Food Microbiology",
+        "faculty": "Dr. V. Ramanathan (Course Coordinator)",
+        "attendance": "Class Avg: 91%",
+        "inSemGrade": "45 Students Enrolled",
+        "upcomingDeadline": "In-Sem 2 Question Paper Submission (Due Oct 10)",
+        "lmsCourseUrl": "https://lms.kluniversity.in/course/view.php?id=21210"
+      }
+    ]
+  }
+]

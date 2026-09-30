@@ -1,0 +1,22 @@
+{
+  "id": "ece-dsp",
+  "name": "Digital Signal Processing",
+  "code": "21EC2208",
+  "department": "ECE",
+  "units": [
+    "Unit I: Discrete-Time Signals, Systems & Z-Transforms",
+    "Unit II: Discrete Fourier Transform (DFT) & FFT Algorithms",
+    "Unit III: IIR Filter Design (Butterworth & Chebyshev)",
+    "Unit IV: FIR Filter Design (Windowing & Frequency Sampling)",
+    "Unit V: Finite Word Length Effects & Multirate Signal Processing"
+  ],
+  "topics": [
+    "Radix-2 Decimation-in-Time (DIT) FFT Algorithm",
+    "IIR Filter Design using Bilinear Transformation",
+    "FIR Filter Design using Hamming and Hanning Windows",
+    "Discrete Fourier Transform (DFT) Properties",
+    "Nyquist Sampling Theorem and Aliasing"
+  ],
+  "questionCount": 4,
+  "updatedAt": "2026-09-30"
+}

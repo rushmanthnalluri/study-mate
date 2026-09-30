@@ -1,0 +1,20 @@
+[
+  {
+    "id": "chat-1790790480791-user",
+    "userId": "default",
+    "role": "user",
+    "content": "What is D-value and how does it relate to z-value?",
+    "subject": "Food Microbiology",
+    "department": "Food Technology",
+    "timestamp": "2026-09-30T17:48:00.791Z"
+  },
+  {
+    "id": "chat-1790790480796-bot",
+    "userId": "default",
+    "role": "assistant",
+    "content": "### 🔬 Thermal Death Kinetics (KL Exam Guide)\n\nIn **Food Microbiology & Thermal Processing**, evaluators at KL University look for three governing parameters and their mathematical definitions:\n\n#### 1. D-value (Decimal Reduction Time)\n- **Definition:** The exposure time in minutes at a given constant temperature ($T$) required to reduce a specific microbial population by **90%** (or **1 log cycle**).\n- **Governing Formula:**\n  $$\\log_{10}\\left(\\frac{N_1}{N_2}\\right) = \\frac{t_2 - t_1}{D}$$\n  where $N_1$ and $N_2$ are viable cell counts at times $t_1$ and $t_2$.\n- **Standard Unit:** Minutes (min).\n- **Benchmark:** *Clostridium botulinum* endospores have $D_{121.1^\\circ\\text{C}} = 0.21\\text{ min}$.\n\n#### 2. z-value (Thermal Sensitivity Index)\n- **Definition:** The temperature increase (in $^\\circ\\text{C}$ or $^\\circ\\text{F}$) required to effect a **10-fold (1 log)** change in the D-value.\n- **Formula:**\n  $$z = \\frac{T_2 - T_1}{\\log D_1 - \\log D_2}$$\n- **Typical Value:** $z = 10^\\circ\\text{C}$ ($18^\\circ\\text{F}$) for *C. botulinum*.\n\n#### 3. F-value & 12D \"Botulinum Cook\"\n- **F-value:** The total equivalent lethality delivered to the slowest heating point (cold point) at $121.1^\\circ\\text{C}$ ($250^\\circ\\text{F}$).\n- **12D Concept:** For low-acid canned foods ($\\text{pH} > 4.5$), safety requires reducing initial spore load from $10^{12}$ to $10^0$ (1 spore):\n  $$F_0 = 12 \\times D_{121.1} = 12 \\times 0.21 = 2.52 \\approx 3.0\\text{ minutes}$$\n\n> **KL In-Sem Tip:** In a 10-mark question, always plot the **Thermal Death Time (TDT)** semilog graph with $\\log D$ on the y-axis and Temperature on the x-axis!",
+    "subject": "Food Microbiology",
+    "department": "Food Technology",
+    "timestamp": "2026-09-30T17:48:00.796Z"
+  }
+]

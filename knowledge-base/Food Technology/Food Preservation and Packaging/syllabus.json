@@ -1,0 +1,23 @@
+{
+  "id": "ft-pres",
+  "name": "Food Preservation and Packaging",
+  "code": "21BT3115",
+  "description": "Preservation technologies including thermal processing, freezing, dehydration, modified atmosphere packaging (MAP), active packaging, barrier materials, and shelf-life extension.",
+  "department": "Food Technology",
+  "units": [
+    "Unit I: Principles of Food Preservation & Hurdle Technology",
+    "Unit II: Thermal Canning Operations, Exhausting & Retort Processing",
+    "Unit III: Modified Atmosphere Packaging (MAP) & Controlled Atmosphere (CAP)",
+    "Unit IV: Flexible Packaging Materials (LDPE, HDPE, EVOH, Metallized Films)",
+    "Unit V: Active and Intelligent Packaging Technologies"
+  ],
+  "topics": [
+    "Modified Atmosphere Packaging (MAP) for Fresh Meat and Produce",
+    "Hurdle Technology Principle and Synergistic Preservation",
+    "Canning Operations: Exhausting, Seaming, and Retort Retorting",
+    "Oxygen Scavengers and Moisture Absorbers in Active Packaging",
+    "Barrier Properties of EVOH vs PVDC Packaging Films"
+  ],
+  "questionCount": 4,
+  "updatedAt": "2026-09-30"
+}

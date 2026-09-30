@@ -1,0 +1,34 @@
+[
+  {
+    "id": "q-ft-c1",
+    "topic": "Maillard Reaction Mechanism and Stages",
+    "marks": 10,
+    "unit": 5,
+    "paperYear": "KL End Sem May 2024",
+    "question": "Explain the chemistry of Non-Enzymatic Browning (Maillard Reaction) in foods. Detail Initial, Intermediate (Amadori rearrangement), and Final stages (Melanoidin pigments) with reaction schemes."
+  },
+  {
+    "id": "q-ft-c2",
+    "topic": "Lipid Auto-oxidation and Free Radical Chain Mechanism",
+    "marks": 10,
+    "unit": 4,
+    "paperYear": "KL End Sem Dec 2023",
+    "question": "Detail the free-radical mechanism of Lipid Auto-oxidation (Initiation, Propagation, and Termination). Explain how synthetic and natural antioxidants (BHA, BHT, Tocopherols) inhibit rancidity."
+  },
+  {
+    "id": "q-ft-c3",
+    "topic": "Starch Gelatinization and Retrogradation",
+    "marks": 5,
+    "unit": 2,
+    "paperYear": "KL In-Sem 1 2024",
+    "question": "Differentiate between Starch Gelatinization and Retrogradation. Explain their roles in bread staling and syneresis in food gels."
+  },
+  {
+    "id": "q-ft-c4",
+    "topic": "Water Activity (aw) Definition",
+    "marks": 2,
+    "unit": 1,
+    "paperYear": "KL End Sem May 2024",
+    "question": "Define Water Activity (aw) and state its relationship with Equilibrium Relative Humidity (ERH)."
+  }
+]

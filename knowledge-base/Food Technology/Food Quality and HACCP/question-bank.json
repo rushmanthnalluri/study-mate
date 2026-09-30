@@ -1,0 +1,34 @@
+[
+  {
+    "id": "q-ft-q1",
+    "topic": "The 7 Principles of HACCP and CCP Decision Tree",
+    "marks": 10,
+    "unit": 2,
+    "paperYear": "KL End Sem May 2024",
+    "question": "State and explain all 7 Principles of HACCP in sequence. Demonstrate how the Codex CCP Decision Tree identifies Critical Control Points in food processing operations."
+  },
+  {
+    "id": "q-ft-q2",
+    "topic": "Critical Control Points in Fruit Juice Processing",
+    "marks": 10,
+    "unit": 2,
+    "paperYear": "KL End Sem Dec 2023",
+    "question": "Develop a comprehensive HACCP plan for a packaged mango juice processing plant. Identify biological, chemical, and physical hazards; establish critical limits, monitoring procedures, and corrective actions."
+  },
+  {
+    "id": "q-ft-q3",
+    "topic": "Sensory Evaluation: Triangle Test Method",
+    "marks": 5,
+    "unit": 5,
+    "paperYear": "KL In-Sem 1 2024",
+    "question": "Explain the sensory evaluation Triangle Test protocol. Detail sample presentation, statistical hypothesis, and probability calculation (p = 1/3)."
+  },
+  {
+    "id": "q-ft-q4",
+    "topic": "Difference between Critical Limit and Operational Limit",
+    "marks": 2,
+    "unit": 2,
+    "paperYear": "KL End Sem May 2024",
+    "question": "Distinguish between a Critical Limit (CL) and an Operational Limit (OL) in HACCP verification."
+  }
+]
