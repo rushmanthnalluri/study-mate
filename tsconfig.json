@@ -18,13 +18,7 @@
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true,
-    "types": [
-      "vite/client",
-      "node",
-      "react",
-      "react-dom"
-    ]
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "src"
