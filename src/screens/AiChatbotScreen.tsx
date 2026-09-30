@@ -112,7 +112,6 @@ export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
           department: selectedDepartment,
           subject: selectedSubject,
           userId: currentUser?.id,
-          userSettings: currentUser?.aiSettings || {},
           history: messages.slice(-6).map(m => ({ role: m.role, content: m.content }))
         })
       });
