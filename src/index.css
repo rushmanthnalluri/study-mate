@@ -2,62 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Source Serif 4', Georgia, serif;
-  --font-condensed: 'Barlow Condensed', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
-}
-
-body {
-  font-family: var(--font-sans);
-  background-color: #fbfaf8;
-  color: #1c1917;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Mobile Safe Areas */
-.safe-bottom {
-  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.18s ease-out forwards;
-}
-
-/* Hide scrollbars for horizontal pill bars */
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Print Styles for Exam Revision Sheet */
-@media print {
-  body {
-    background: white !important;
-    color: black !important;
-  }
-  header, nav, button, .print\:hidden {
-    display: none !important;
-  }
-  main {
-    max-width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-}
+:root { --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+html { scroll-behavior:smooth; }
+body { margin:0; font-family:var(--font-sans); background:#f6f8fc; color:#0f172a; -webkit-font-smoothing:antialiased; }
+button,input,select,textarea { font:inherit; }
+button { -webkit-tap-highlight-color:transparent; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.animate-fade-in { animation:fadeIn .22s ease-out both; }
+.scrollbar-none::-webkit-scrollbar{display:none}.scrollbar-none{scrollbar-width:none}
+.safe-bottom{padding-bottom:max(.5rem,env(safe-area-inset-bottom));}
+@media print { body{background:#fff!important;color:#000!important} header,nav,button,.print\\:hidden{display:none!important} main{max-width:100%!important;padding:0!important;margin:0!important} }
