@@ -27,7 +27,7 @@ const kbRoot = path.resolve('knowledge-base');
 const dataDir = path.resolve('data');
 
 // Initialize Render MongoDB or fallback to file storage
-initDatabase().catch((e) => console.warn('Database initialization warning:', e));
+initDatabase().then(() => ensureBootstrapAdmin()).catch((e) => console.warn('Database initialization warning:', e));
 
 
 if (!fs.existsSync(dataDir)) {
@@ -85,46 +85,8 @@ const defaultFoodTechCourses = [
 ];
 
 if (!fs.existsSync(usersFile)) {
-  fs.writeFileSync(usersFile, JSON.stringify([
-    {
-      id: 'user-ft-student-1',
-      name: 'K. Sai Praneeth',
-      klId: '2100030045',
-      email: '2100030045@kluniversity.in',
-      password: 'password123',
-      department: 'Food Technology',
-      role: 'student',
-      isLmsConnected: true,
-      lmsUsername: '2100030045',
-      lmsLastSynced: new Date().toISOString(),
-      enrolledCourses: defaultFoodTechCourses
-    },
-    {
-      id: 'user-ft-faculty-1',
-      name: 'Dr. V. Ramanathan',
-      klId: 'KL-FT-0842',
-      email: 'ramanathan@kluniversity.in',
-      password: 'password123',
-      department: 'Food Technology',
-      role: 'faculty',
-      isLmsConnected: true,
-      lmsUsername: 'KL-FT-0842',
-      lmsLastSynced: new Date().toISOString(),
-      enrolledCourses: [
-        {
-          code: '21BT2210',
-          name: 'Food Microbiology',
-          faculty: 'Dr. V. Ramanathan (Course Coordinator)',
-          attendance: 'Class Avg: 91%',
-          inSemGrade: '45 Students Enrolled',
-          upcomingDeadline: 'In-Sem 2 Question Paper Submission (Due Oct 10)',
-          lmsCourseUrl: 'https://lms.kluniversity.in/course/view.php?id=21210'
-        }
-      ]
-    }
-  ], null, 2), 'utf8');
+  fs.writeFileSync(usersFile, '[]', 'utf8');
 }
-
 app.use(cors());
 app.use(express.json());
 
@@ -533,6 +495,30 @@ const requireAdmin = async (req, res, next) => {
   } catch {
     res.status(500).json({ error: 'Authorization service unavailable.' });
   }
+};
+
+const ensureBootstrapAdmin = async () => {
+  const email = (process.env.STUDYMATE_ADMIN_EMAIL || '').trim().toLowerCase();
+  const password = process.env.STUDYMATE_ADMIN_PASSWORD || '';
+  if (!email || !password) return;
+  const users = await getAllUsers();
+  if (users.some(u => u.role === 'admin')) return;
+  const token = issueAuthToken();
+  const admin = {
+    id: crypto.randomUUID(),
+    name: 'StudyMate Administrator',
+    klId: 'ADMIN',
+    email,
+    passwordHash: hashPassword(password),
+    authTokenHash: tokenHash(token),
+    authTokenIssuedAt: new Date().toISOString(),
+    department: 'All',
+    role: 'admin',
+    isLmsConnected: false,
+    enrolledCourses: []
+  };
+  await saveUser(admin);
+  console.log('StudyMate bootstrap administrator created.');
 };
 
 // GET current user
