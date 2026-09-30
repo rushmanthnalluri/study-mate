@@ -144,7 +144,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     try {
       const res = await fetch('/api/admin/subjects', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` },
         body: JSON.stringify({
           name: newSubjName.trim(),
           code: newSubjCode.trim(),
@@ -182,7 +182,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     try {
       const res = await fetch('/api/admin/resources', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` },
         body: JSON.stringify({
           subjectName: selectedSubjName,
           department: 'Food Technology',
@@ -215,7 +215,8 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
 
     try {
       const res = await fetch(`/api/admin/subjects/${encodeURIComponent(subjName)}?department=Food+Technology`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` }
       });
       if (!res.ok) throw new Error('Failed to delete subject');
       await onRefreshSubjects();
