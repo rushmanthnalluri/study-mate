@@ -188,17 +188,15 @@ export const Header: React.FC<HeaderProps> = ({
             <Bot size={14} className={currentScreen === 'chatbot' ? 'text-amber-300' : 'text-brand-800'} />
             <span>AI Tutor</span>
           </button>
-          <button
-            onClick={() => navigateTo('admin')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors flex items-center space-x-1 ${
-              currentScreen === 'admin'
-                ? 'bg-brand-800 text-white'
-                : 'bg-brand-50 text-brand-900 border border-brand-200/60 hover:bg-brand-100'
-            }`}
-          >
-            <ShieldCheck size={14} className={currentScreen === 'admin' ? 'text-amber-300' : 'text-brand-800'} />
-            <span className="font-bold">Admin Portal</span>
-          </button>
+          {currentUser?.role === 'admin' && (
+            <button
+              onClick={() => navigateTo('admin')}
+              className={`px-3 py-2 rounded-xl transition-all flex items-center space-x-1.5 ${currentScreen === 'admin' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}
+            >
+              <ShieldCheck size={14} />
+              <span className="font-bold">Admin</span>
+            </button>
+          )}
         </div>
 
         {/* Right side controls: User Pill, Dept Switcher, Night Toggle & Settings */}
