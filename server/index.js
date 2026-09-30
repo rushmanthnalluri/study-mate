@@ -354,7 +354,7 @@ app.delete('/api/saved-notes/:id', requireAuth, async (req, res) => {
     const { id } = req.params;
     const notes = await getSavedNotes(req.user.id);
     if (!notes.some(n => n.id === id)) return res.status(404).json({ error: 'Saved note not found.' });
-    await deleteSavedNote(id);
+    await deleteSavedNote(id, req.user.id);
     res.json({ success: true, id });
   } catch (err) {
     res.status(500).json({ error: err.message });
