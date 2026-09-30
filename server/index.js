@@ -474,7 +474,7 @@ const authenticateRequest = async (req) => {
   const hashed = tokenHash(token);
   return users.find(u => u.authTokenHash === hashed) || null;
 };
-const requireAuth = async (req, res, next) => {
+async function requireAuth(req, res, next) {
   try {
     const user = await authenticateRequest(req);
     if (!user) return res.status(401).json({ error: 'Authentication required.' });
@@ -483,8 +483,8 @@ const requireAuth = async (req, res, next) => {
   } catch {
     res.status(500).json({ error: 'Authentication service unavailable.' });
   }
-};
-const requireAdmin = async (req, res, next) => {
+}
+async function requireAdmin(req, res, next) {
   try {
     const user = await authenticateRequest(req);
     if (!user || user.role !== 'admin') {
@@ -495,7 +495,7 @@ const requireAdmin = async (req, res, next) => {
   } catch {
     res.status(500).json({ error: 'Authorization service unavailable.' });
   }
-};
+}
 
 const ensureBootstrapAdmin = async () => {
   const email = (process.env.STUDYMATE_ADMIN_EMAIL || '').trim().toLowerCase();
