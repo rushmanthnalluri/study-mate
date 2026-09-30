@@ -13,6 +13,14 @@ const feedbackFile = path.join(dataDir, 'feedback.json');
 const chatHistoryFile = path.join(dataDir, 'chat-history.json');
 
 // Mongoose Schemas for Render MongoDB
+const AiConfigSchema = new mongoose.Schema({
+  id: { type: String, unique: true, default: 'global' },
+  provider: { type: String, default: 'offline' },
+  model: { type: String, default: '' },
+  encryptedApiKey: { type: String, default: '' },
+  updatedAt: { type: String }
+}, { timestamps: true });
+
 const UserSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   klId: { type: String, required: true },
@@ -71,6 +79,7 @@ const ChatMessageSchema = new mongoose.Schema({
   timestamp: { type: String, default: () => new Date().toISOString() }
 }, { timestamps: true });
 
+export let AiConfigModel;
 export let UserModel;
 export let SavedNoteModel;
 export let FeedbackModel;
@@ -90,6 +99,7 @@ export async function initDatabase() {
       isMongoConnected = true;
       console.log('🍃 [Render MongoDB] Connected successfully to MongoDB instance!');
 
+      AiConfigModel = mongoose.models.AiConfig || mongoose.model('AiConfig', AiConfigSchema);
       UserModel = mongoose.models.User || mongoose.model('User', UserSchema);
       SavedNoteModel = mongoose.models.SavedNote || mongoose.model('SavedNote', SavedNoteSchema);
       FeedbackModel = mongoose.models.Feedback || mongoose.model('Feedback', FeedbackSchema);
@@ -104,6 +114,24 @@ export async function initDatabase() {
   }
 
   return false;
+}
+
+// -------------------------------------------------------------
+export async function getAiConfig() {
+  if (isMongoConnected && AiConfigModel) {
+    try {
+      return await AiConfigModel.findOne({ id: 'global' }).lean();
+    } catch (e) {}
+  }
+  return null;
+}
+
+export async function saveAiConfig(config) {
+  const payload = { ...config, id: 'global', updatedAt: new Date().toISOString() };
+  if (isMongoConnected && AiConfigModel) {
+    return AiConfigModel.findOneAndUpdate({ id: 'global' }, payload, { upsert: true, new: true }).lean();
+  }
+  return payload;
 }
 
 // -------------------------------------------------------------
