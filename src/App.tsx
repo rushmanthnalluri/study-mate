@@ -31,56 +31,6 @@ import { AuthModal } from './components/AuthModal';
 import { FloatingChatbot } from './components/FloatingChatbot';
 import { SettingsModal } from './components/SettingsModal';
 
-const defaultDemoStudent: UserProfile = {
-  id: 'user-ft-student-1',
-  name: 'K. Sai Praneeth',
-  klId: '2100030045',
-  email: '2100030045@kluniversity.in',
-  department: 'Food Technology',
-  role: 'student',
-  isLmsConnected: true,
-  lmsUsername: '2100030045',
-  lmsLastSynced: new Date().toISOString(),
-  enrolledCourses: [
-    {
-      code: '21BT2210',
-      name: 'Food Microbiology',
-      faculty: 'Dr. V. Ramanathan',
-      attendance: '92%',
-      inSemGrade: '28.5 / 30',
-      upcomingDeadline: 'Assignment 3: Spoilage Kinetics (Due Oct 8, 23:59)',
-      lmsCourseUrl: 'https://lms.kluniversity.in/course/view.php?id=21210'
-    },
-    {
-      code: '21BT3112',
-      name: 'Dairy Technology',
-      faculty: 'Dr. P. Anitha',
-      attendance: '88%',
-      inSemGrade: '26.0 / 30',
-      upcomingDeadline: 'Pasteurization Heat Balance Problem (Due Oct 12, 17:00)',
-      lmsCourseUrl: 'https://lms.kluniversity.in/course/view.php?id=21312'
-    },
-    {
-      code: '21BT2105',
-      name: 'Food Chemistry & Analysis',
-      faculty: 'Dr. K. M. Rao',
-      attendance: '94%',
-      inSemGrade: '29.0 / 30',
-      upcomingDeadline: 'Proximate Analysis Lab Report (Due Oct 15, 23:59)',
-      lmsCourseUrl: 'https://lms.kluniversity.in/course/view.php?id=21205'
-    },
-    {
-      code: '21BT3218',
-      name: 'Food Process Engineering',
-      faculty: 'Dr. S. Mukherjee',
-      attendance: '86%',
-      inSemGrade: '25.5 / 30',
-      upcomingDeadline: 'Heat Exchanger Sizing Assignment (Due Oct 19, 14:00)',
-      lmsCourseUrl: 'https://lms.kluniversity.in/course/view.php?id=21318'
-    }
-  ]
-};
-
 export const App: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<ScreenId>('home');
   const [selectedDepartment, setSelectedDepartment] = useState<Department>('Food Technology');
@@ -381,7 +331,7 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
   );
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-stone-950 text-surface-dark dark:text-stone-100 flex flex-col selection:bg-brand-100 selection:text-brand-900 transition-colors">
+    <div className="min-h-screen bg-[#f6f8fc] dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-brand-100 selection:text-brand-900 transition-colors">
       {/* Top Header */}
       <Header
         currentScreen={currentScreen}
@@ -519,7 +469,7 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
           />
         )}
 
-        {currentScreen === 'admin' && (
+        {currentScreen === 'admin' && currentUser?.role === 'admin' && (
           <AdminPortalScreen
             onNavigate={setCurrentScreen}
             subjects={subjects}
@@ -636,10 +586,12 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
           } catch (e) {}
         }}
         onResetData={() => {
-          localStorage.clear();
-          setCurrentUser(defaultDemoStudent);
+          localStorage.removeItem('studymate_saved_notes');
+          localStorage.removeItem('studymate_user');
+          localStorage.removeItem('studymate_token');
+          setCurrentUser(null);
           setSavedNotes([]);
-          fetchSubjects();
+          setCurrentScreen('home');
         }}
       />
     </div>
