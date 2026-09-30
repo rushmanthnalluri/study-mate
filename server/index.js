@@ -348,6 +348,7 @@ app.post('/api/saved-notes', requireAuth, async (req, res) => {
   try {
     const newNote = {
       ...req.body,
+      userId: req.user.id,
       id: req.body.id || `note-${Date.now()}`,
       savedAt: req.body.savedAt || new Date().toISOString()
     };
@@ -361,6 +362,8 @@ app.post('/api/saved-notes', requireAuth, async (req, res) => {
 app.delete('/api/saved-notes/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
+    const notes = await getSavedNotes(req.user.id);
+    if (!notes.some(n => n.id === id)) return res.status(404).json({ error: 'Saved note not found.' });
     await deleteSavedNote(id);
     res.json({ success: true, id });
   } catch (err) {
