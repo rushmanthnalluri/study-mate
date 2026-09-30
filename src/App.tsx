@@ -49,6 +49,7 @@ export const App: React.FC = () => {
     }
   });
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(() => !Boolean(localStorage.getItem('studymate_user')));
+  const [isAuthValidated, setIsAuthValidated] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   
   const defaultFoodTechSubj = fallbackSubjects[0];
@@ -72,6 +73,34 @@ export const App: React.FC = () => {
     const token = localStorage.getItem('studymate_token');
     return token ? { Authorization: `Bearer ${token}` } : {};
   };
+
+  // Validate the persisted session with the server before trusting localStorage.
+  useEffect(() => {
+    const token = localStorage.getItem('studymate_token');
+    if (!token) {
+      setCurrentUser(null);
+      setIsAuthValidated(true);
+      return;
+    }
+
+    fetch('/api/auth/me', { headers: authHeaders() })
+      .then(async (res) => {
+        if (!res.ok) throw new Error('Session expired');
+        return res.json();
+      })
+      .then((data) => {
+        if (!data?.user) throw new Error('Invalid session response');
+        setCurrentUser(data.user);
+        localStorage.setItem('studymate_user', JSON.stringify(data.user));
+      })
+      .catch(() => {
+        localStorage.removeItem('studymate_user');
+        localStorage.removeItem('studymate_token');
+        setCurrentUser(null);
+        setIsAuthModalOpen(true);
+      })
+      .finally(() => setIsAuthValidated(true));
+  }, []);
 
   const loadSavedNotes = async () => {
     if (!currentUser) {
@@ -341,6 +370,18 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
     setCurrentScreen('home');
     setIsAuthModalOpen(true);
   };
+
+  if (!isAuthValidated) {
+    return (
+      <div className="min-h-screen bg-[#f4eadf] flex items-center justify-center px-6">
+        <div className="rounded-3xl border border-[#dfc8b1] bg-[#fffaf4] px-7 py-6 text-center shadow-lg">
+          <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-2 border-[#dfc8b1] border-t-[#7c4f2c]" />
+          <p className="text-xs font-black uppercase tracking-[.16em] text-[#7c4f2c]">Securing your workspace</p>
+          <p className="mt-1 text-[11px] text-[#806f61]">Validating your StudyMate session…</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f4eadf] dark:bg-[#211a16] text-[#3b2b23] dark:text-[#fff8f1] flex flex-col transition-colors">
