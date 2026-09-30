@@ -1,4 +1,5 @@
 import express from 'express';
+import crypto from 'crypto';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
@@ -40,30 +41,8 @@ if (!fs.existsSync(savedNotesFile)) {
 }
 
 if (!fs.existsSync(feedbackFile)) {
-  fs.writeFileSync(feedbackFile, JSON.stringify([
-    {
-      id: 'fb-init-1',
-      topic: "Thermal Death Kinetics (D, z, F Values)",
-      department: "Food Technology",
-      subject: "Food Microbiology",
-      source: "Professor",
-      rating: "useful",
-      comment: "Includes explicit mention of Clostridium botulinum D121=0.21 min and 12D formula, exactly what we check during KL evaluation.",
-      createdAt: "2026-09-29T14:20:00Z"
-    },
-    {
-      id: 'fb-init-2',
-      topic: "HTST Pasteurization System",
-      department: "Food Technology",
-      subject: "Dairy Technology",
-      source: "Top student",
-      rating: "useful",
-      comment: "The Flow Diversion Valve (FDV) fail-safe action explanation scored 10/10 in KL End-Sem May 2024!",
-      createdAt: "2026-09-30T08:05:00Z"
-    }
-  ], null, 2), 'utf8');
+  fs.writeFileSync(feedbackFile, '[]', 'utf8');
 }
-
 const defaultFoodTechCourses = [
   {
     code: '21BT2210',
@@ -283,7 +262,7 @@ app.get('/api/subjects/:id', (req, res) => {
 });
 
 // API: Generate KL Exam Notes with resource citations
-app.post('/api/generate', async (req, res) => {
+app.post('/api/generate', requireAuth, async (req, res) => {
   try {
     const { department, subject, topic } = req.body;
     if (!topic || !subject) {
@@ -365,7 +344,7 @@ app.get('/api/saved-notes', async (req, res) => {
   }
 });
 
-app.post('/api/saved-notes', async (req, res) => {
+app.post('/api/saved-notes', requireAuth, async (req, res) => {
   try {
     const newNote = {
       ...req.body,
@@ -379,7 +358,7 @@ app.post('/api/saved-notes', async (req, res) => {
   }
 });
 
-app.delete('/api/saved-notes/:id', async (req, res) => {
+app.delete('/api/saved-notes/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     await deleteSavedNote(id);
@@ -390,7 +369,7 @@ app.delete('/api/saved-notes/:id', async (req, res) => {
 });
 
 // API: Feedback (Dual Mongo / File support)
-app.post('/api/feedback', async (req, res) => {
+app.post('/api/feedback', requireAuth, async (req, res) => {
   try {
     const { topic, department, subject, source, rating, comment } = req.body;
     const feedbackEntry = {
@@ -410,7 +389,7 @@ app.post('/api/feedback', async (req, res) => {
   }
 });
 
-app.get('/api/feedback/summary', async (req, res) => {
+app.get('/api/feedback/summary', requireAuth, async (req, res) => {
   try {
     const feedbackList = await getFeedbacks();
     const total = feedbackList.length;
@@ -435,7 +414,7 @@ app.get('/api/feedback/summary', async (req, res) => {
 // ==========================================
 // 🤖 AI CHATBOT & TUTOR ENDPOINTS
 // ==========================================
-app.post('/api/chat', async (req, res) => {
+app.post('/api/chat', requireAuth, async (req, res) => {
   try {
     const { message, department, subject, history, userId, userSettings } = req.body;
     if (!message) {
@@ -482,7 +461,7 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-app.get('/api/chat/history', async (req, res) => {
+app.get('/api/chat/history', requireAuth, async (req, res) => {
   try {
     const { userId } = req.query;
     const messages = await getChatMessages(userId);
@@ -498,102 +477,127 @@ app.get('/api/chat/history', async (req, res) => {
 // Official KL LMS Portal: https://lms.kluniversity.in/login/index.php
 // ==========================================
 
+// Production authentication: real accounts, hashed passwords, opaque sessions.
+const hashPassword = (password, salt = crypto.randomBytes(16).toString('hex')) => {
+  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+  return `${salt}:${hash}`;
+};
+const verifyPassword = (password, stored) => {
+  if (!stored || !stored.includes(':')) return false;
+  const [salt, expected] = stored.split(':');
+  const actual = crypto.scryptSync(password, salt, 64).toString('hex');
+  return actual.length === expected.length &&
+    crypto.timingSafeEqual(Buffer.from(actual, 'hex'), Buffer.from(expected, 'hex'));
+};
+const issueAuthToken = () => crypto.randomBytes(32).toString('hex');
+const tokenHash = (token) => crypto.createHash('sha256').update(token).digest('hex');
+const sanitizeUser = (user) => {
+  if (!user) return null;
+  const { password, passwordHash, authTokenHash, ...safeUser } = user;
+  return safeUser;
+};
+const getBearerToken = (req) => {
+  const header = req.headers.authorization || '';
+  return header.startsWith('Bearer ') ? header.slice(7).trim() : '';
+};
+const authenticateRequest = async (req) => {
+  const token = getBearerToken(req);
+  if (!token) return null;
+  const users = await getAllUsers();
+  const hashed = tokenHash(token);
+  return users.find(u => u.authTokenHash === hashed) || null;
+};
+const requireAuth = async (req, res, next) => {
+  try {
+    const user = await authenticateRequest(req);
+    if (!user) return res.status(401).json({ error: 'Authentication required.' });
+    req.user = user;
+    next();
+  } catch {
+    res.status(500).json({ error: 'Authentication service unavailable.' });
+  }
+};
+const requireAdmin = async (req, res, next) => {
+  try {
+    const user = await authenticateRequest(req);
+    if (!user || user.role !== 'admin') {
+      return res.status(403).json({ error: 'Administrator access required.' });
+    }
+    req.user = user;
+    next();
+  } catch {
+    res.status(500).json({ error: 'Authorization service unavailable.' });
+  }
+};
+
 // GET current user
-app.get('/api/auth/me', async (req, res) => {
-  try {
-    const raw = fs.readFileSync(usersFile, 'utf8');
-    const users = JSON.parse(raw);
-    const authHeader = req.headers.authorization;
-    let user = users[0]; // Default to student
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.replace('Bearer ', '');
-      const found = users.find(u => `token-${u.id}` === token || u.id === token);
-      if (found) user = found;
-    }
-    const { password: _, ...safeUser } = user;
-    res.json({ user: safeUser });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+app.get('/api/auth/me', requireAuth, (req, res) => {
+  res.json({ user: sanitizeUser(req.user) });
 });
 
-// POST login
-app.post('/api/auth/login', (req, res) => {
+// POST login — existing accounts only; no automatic account creation.
+app.post('/api/auth/login', async (req, res) => {
   try {
-    const { usernameOrEmail, password, asLmsAuth } = req.body;
-    if (!usernameOrEmail) {
-      return res.status(400).json({ error: 'Username, KL Student ID, or Email is required.' });
+    const { usernameOrEmail, password } = req.body || {};
+    if (!usernameOrEmail || !password) {
+      return res.status(400).json({ error: 'Email / KL ID and password are required.' });
     }
-
-    const raw = fs.readFileSync(usersFile, 'utf8');
-    const users = JSON.parse(raw);
-    const cleanLogin = usernameOrEmail.trim().toLowerCase();
-
-    let user = users.find(u => 
-      u.email.toLowerCase() === cleanLogin ||
-      u.klId.toLowerCase() === cleanLogin ||
-      (u.lmsUsername && u.lmsUsername.toLowerCase() === cleanLogin)
+    const users = await getAllUsers();
+    const cleanLogin = String(usernameOrEmail).trim().toLowerCase();
+    const user = users.find(u =>
+      String(u.email || '').toLowerCase() === cleanLogin ||
+      String(u.klId || '').toLowerCase() === cleanLogin ||
+      String(u.lmsUsername || '').toLowerCase() === cleanLogin
     );
+    if (!user) return res.status(401).json({ error: 'Account not found. Create an account before signing in.' });
 
-    // If not found, auto-provision student account with KL LMS integration
-    if (!user) {
-      const isEmail = cleanLogin.includes('@');
-      user = {
-        id: `user-${Date.now()}`,
-        name: isEmail ? cleanLogin.split('@')[0].toUpperCase() : `KL Student (${cleanLogin})`,
-        klId: cleanLogin,
-        email: isEmail ? cleanLogin : `${cleanLogin}@kluniversity.in`,
-        password: password || 'kl123456',
-        department: 'Food Technology',
-        role: 'student',
-        isLmsConnected: true,
-        lmsUsername: cleanLogin,
-        lmsLastSynced: new Date().toISOString(),
-        enrolledCourses: defaultFoodTechCourses
-      };
-      users.push(user);
-      fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
+    const valid = user.passwordHash
+      ? verifyPassword(String(password), user.passwordHash)
+      : String(user.password || '') === String(password);
+    if (!valid) return res.status(401).json({ error: 'Invalid credentials.' });
+
+    const token = issueAuthToken();
+    user.authTokenHash = tokenHash(token);
+    user.authTokenIssuedAt = new Date().toISOString();
+    if (!user.passwordHash && user.password) {
+      user.passwordHash = hashPassword(String(user.password));
+      delete user.password;
     }
-
-    const { password: _, ...safeUser } = user;
-    res.json({
-      success: true,
-      message: safeUser.isLmsConnected ? 'Logged in & KL LMS synchronized!' : 'Logged in successfully!',
-      user: safeUser,
-      token: `token-${user.id}`
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    await saveUser(user);
+    res.json({ success: true, message: 'Signed in successfully.', user: sanitizeUser(user), token });
+  } catch {
+    res.status(500).json({ error: 'Login service unavailable.' });
   }
 });
 
-// POST signup
-app.post('/api/auth/signup', (req, res) => {
+// POST signup — every account is a real persisted student account.
+app.post('/api/auth/signup', async (req, res) => {
   try {
-    const { name, klId, email, password, department = 'Food Technology', linkLms = true } = req.body;
+    const { name, klId, email, password, department = 'Food Technology', linkLms = false } = req.body || {};
     if (!name || !email || !password) {
-      return res.status(400).json({ error: 'Name, Email, and Password are required.' });
+      return res.status(400).json({ error: 'Name, email, and password are required.' });
     }
-
-    const raw = fs.readFileSync(usersFile, 'utf8');
-    const users = JSON.parse(raw);
-
-    const existing = users.find(u => 
-      u.email.toLowerCase() === email.trim().toLowerCase() ||
-      (klId && u.klId.toLowerCase() === klId.trim().toLowerCase())
+    if (String(password).length < 8) {
+      return res.status(400).json({ error: 'Password must contain at least 8 characters.' });
+    }
+    const users = await getAllUsers();
+    const cleanEmail = String(email).trim().toLowerCase();
+    const cleanKlId = String(klId || cleanEmail.split('@')[0]).trim();
+    const duplicate = users.find(u =>
+      String(u.email || '').toLowerCase() === cleanEmail ||
+      String(u.klId || '').toLowerCase() === cleanKlId.toLowerCase()
     );
+    if (duplicate) return res.status(409).json({ error: 'An account with this email or KL ID already exists.' });
 
-    if (existing) {
-      return res.status(400).json({ error: 'An account with this Email or KL ID already exists.' });
-    }
-
-    const cleanKlId = klId ? klId.trim() : email.split('@')[0];
+    const token = issueAuthToken();
     const newUser = {
-      id: `user-${Date.now()}`,
-      name: name.trim(),
+      id: crypto.randomUUID(),
+      name: String(name).trim(),
       klId: cleanKlId,
-      email: email.trim().toLowerCase(),
-      password: password.trim(),
+      email: cleanEmail,
+      passwordHash: hashPassword(String(password)),
+      authTokenHash: tokenHash(token),
+      authTokenIssuedAt: new Date().toISOString(),
       department,
       role: 'student',
       isLmsConnected: Boolean(linkLms),
@@ -601,42 +605,32 @@ app.post('/api/auth/signup', (req, res) => {
       lmsLastSynced: linkLms ? new Date().toISOString() : undefined,
       enrolledCourses: linkLms ? defaultFoodTechCourses : []
     };
-
-    users.push(newUser);
-    fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
-
-    const { password: _, ...safeUser } = newUser;
-    res.json({
-      success: true,
-      message: 'Account created successfully!',
-      user: safeUser,
-      token: `token-${newUser.id}`
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    await saveUser(newUser);
+    res.status(201).json({ success: true, message: 'Account created successfully.', user: sanitizeUser(newUser), token });
+  } catch {
+    res.status(500).json({ error: 'Account creation failed.' });
   }
 });
 
 // POST connect with KL LMS (lms.kluniversity.in)
-app.post('/api/auth/kl-lms/connect', (req, res) => {
+app.post('/api/auth/kl-lms/connect', requireAuth, async (req, res) => {
   try {
     const { userId, lmsUsername } = req.body;
     if (!lmsUsername) {
       return res.status(400).json({ error: 'KL LMS Username or Email is required.' });
     }
+    if (userId && userId !== req.user.id) return res.status(403).json({ error: 'You can only update your own LMS account.' });
 
-    const raw = fs.readFileSync(usersFile, 'utf8');
-    const users = JSON.parse(raw);
-    const user = users.find(u => u.id === userId) || users[0];
+    const user = req.user;
 
     user.isLmsConnected = true;
     user.lmsUsername = lmsUsername.trim();
     user.lmsLastSynced = new Date().toISOString();
     user.enrolledCourses = defaultFoodTechCourses;
 
-    fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
+    await saveUser(user);
 
-    const { password: _, ...safeUser } = user;
+    const safeUser = sanitizeUser(user);
     res.json({
       success: true,
       message: 'Connected to KL Learning Management System (lms.kluniversity.in)! Courses and attendance synced.',
@@ -649,12 +643,11 @@ app.post('/api/auth/kl-lms/connect', (req, res) => {
 });
 
 // POST sync KL LMS data
-app.post('/api/auth/kl-lms/sync', (req, res) => {
+app.post('/api/auth/kl-lms/sync', requireAuth, async (req, res) => {
   try {
     const { userId } = req.body;
-    const raw = fs.readFileSync(usersFile, 'utf8');
-    const users = JSON.parse(raw);
-    const user = users.find(u => u.id === userId) || users[0];
+    if (userId && userId !== req.user.id) return res.status(403).json({ error: 'You can only sync your own LMS account.' });
+    const user = req.user;
 
     user.isLmsConnected = true;
     user.lmsLastSynced = new Date().toISOString();
@@ -662,9 +655,9 @@ app.post('/api/auth/kl-lms/sync', (req, res) => {
       user.enrolledCourses = defaultFoodTechCourses;
     }
 
-    fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
+    await saveUser(user);
 
-    const { password: _, ...safeUser } = user;
+    const safeUser = sanitizeUser(user);
     res.json({
       success: true,
       message: 'KL LMS courses, attendance, and assignment deadlines refreshed.',
@@ -676,20 +669,6 @@ app.post('/api/auth/kl-lms/sync', (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-// Admin authorization guard: every admin API requires an authenticated admin token.
-async function requireAdmin(req, res, next) {
-  try {
-    const auth = req.headers.authorization || '';
-    if (!auth.startsWith('Bearer ')) return res.status(401).json({ error: 'Admin authentication required.' });
-    const token = auth.slice(7);
-    const users = await getAllUsers();
-    const user = users.find(u => `token-${u.id}` === token && u.role === 'admin');
-    if (!user) return res.status(403).json({ error: 'Admin access denied.' });
-    req.adminUser = user;
-    next();
-  } catch (err) { return res.status(500).json({ error: 'Authorization check failed.' }); }
-}
 
 // ==========================================
 // 🛠️ ADMIN PORTAL API ENDPOINTS
@@ -999,6 +978,10 @@ if (fs.existsSync(distPath)) {
     res.sendFile(path.join(distPath, 'index.html'));
   });
 }
+
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true, service: 'studymate', database: isDatabaseConnected() ? 'connected' : 'file-fallback' });
+});
 
 app.listen(PORT, () => {
   console.log(`StudyMate AI Food Technology server running on port ${PORT}`);
