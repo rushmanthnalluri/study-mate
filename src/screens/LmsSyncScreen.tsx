@@ -126,11 +126,11 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
         <div className="absolute right-0 top-0 translate-x-8 -translate-y-8 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div className="space-y-2">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-xs font-semibold">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#fffaf4]/10 backdrop-blur-md text-amber-300 text-xs font-semibold">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>Official KL University Moodle Gateway</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold font-serif tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold font-sans tracking-tight">
               KL LMS Academic Synchronization
             </h1>
             <p className="text-brand-100 text-sm max-w-xl">
@@ -151,7 +151,7 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
               href="https://lms.kluniversity.in/login/index.php"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-medium text-sm backdrop-blur-md transition-colors border border-white/20"
+              className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[#fffaf4]/15 hover:bg-[#fffaf4]/25 text-white font-medium text-sm backdrop-blur-md transition-colors border border-white/20"
             >
               <span>Open KL LMS Portal</span>
               <ExternalLink size={15} />
@@ -178,38 +178,38 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
       {/* Profile & Sync Status Bar */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Student / Faculty Card */}
-        <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-surface-border dark:border-stone-800 shadow-sm flex items-center space-x-4">
-          <div className="w-14 h-14 rounded-2xl bg-brand-800 text-amber-300 flex items-center justify-center font-bold text-xl shadow-inner shrink-0">
+        <div className="bg-[#fffaf4] dark:bg-stone-900 p-5 rounded-2xl border border-[#e3d6cb] dark:border-stone-800 shadow-sm flex items-center space-x-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#7c4f2c] text-amber-300 flex items-center justify-center font-bold text-xl shadow-inner shrink-0">
             {currentUser?.name ? currentUser.name.charAt(0) : 'K'}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2">
-              <h3 className="font-bold text-base text-surface-dark dark:text-white truncate">
+              <h3 className="font-bold text-base text-[#3b2b23] dark:text-white truncate">
                 {currentUser?.name || 'K. Sai Praneeth'}
               </h3>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-100 text-brand-900 uppercase">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-100 text-[#7c4f2c] uppercase">
                 {currentUser?.role || 'Student'}
               </span>
             </div>
-            <p className="text-xs text-surface-muted font-mono mt-0.5">
-              KL ID: <span className="font-semibold text-brand-800 dark:text-amber-300">{currentUser?.klId || '2100030045'}</span>
+            <p className="text-xs text-[#806f61] font-mono mt-0.5">
+              KL ID: <span className="font-semibold text-[#7c4f2c] dark:text-amber-300">{currentUser?.klId || '2100030045'}</span>
             </p>
-            <p className="text-xs text-surface-muted truncate">
+            <p className="text-xs text-[#806f61] truncate">
               {currentUser?.department || 'Food Technology'} • KL University
             </p>
           </div>
           <button
             onClick={onOpenAuthModal}
-            className="text-xs font-semibold text-brand-800 hover:text-brand-900 underline shrink-0"
+            className="text-xs font-semibold text-[#7c4f2c] hover:text-[#7c4f2c] underline shrink-0"
           >
             Switch
           </button>
         </div>
 
         {/* LMS Connection Status */}
-        <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-surface-border dark:border-stone-800 shadow-sm flex flex-col justify-between">
+        <div className="bg-[#fffaf4] dark:bg-stone-900 p-5 rounded-2xl border border-[#e3d6cb] dark:border-stone-800 shadow-sm flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-surface-muted uppercase tracking-wider font-condensed">
+            <span className="text-xs font-bold text-[#806f61] uppercase tracking-wider font-sans">
               Moodle Connection
             </span>
             <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
@@ -218,10 +218,10 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
             </span>
           </div>
           <div className="mt-2">
-            <p className="text-xs text-surface-muted font-mono">
-              Username: <span className="text-surface-dark dark:text-stone-200 font-semibold">{currentUser?.lmsUsername || currentUser?.klId || '2100030045'}</span>
+            <p className="text-xs text-[#806f61] font-mono">
+              Username: <span className="text-[#3b2b23] dark:text-stone-200 font-semibold">{currentUser?.lmsUsername || currentUser?.klId || '2100030045'}</span>
             </p>
-            <p className="text-[11px] text-surface-muted mt-1 flex items-center space-x-1">
+            <p className="text-[11px] text-[#806f61] mt-1 flex items-center space-x-1">
               <Clock size={12} />
               <span>
                 Last Synced:{' '}
@@ -234,9 +234,9 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
         </div>
 
         {/* KL Exam Hall Ticket Eligibility Meter */}
-        <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-surface-border dark:border-stone-800 shadow-sm flex flex-col justify-between">
+        <div className="bg-[#fffaf4] dark:bg-stone-900 p-5 rounded-2xl border border-[#e3d6cb] dark:border-stone-800 shadow-sm flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-surface-muted uppercase tracking-wider font-condensed">
+            <span className="text-xs font-bold text-[#806f61] uppercase tracking-wider font-sans">
               KL Exam Hall Ticket Status
             </span>
             <span
@@ -253,8 +253,8 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
           </div>
           <div className="mt-2">
             <div className="flex items-baseline justify-between text-xs mb-1">
-              <span className="font-semibold text-surface-dark dark:text-white">Overall Attendance</span>
-              <span className="font-mono font-bold text-brand-800 dark:text-amber-300 text-sm">
+              <span className="font-semibold text-[#3b2b23] dark:text-white">Overall Attendance</span>
+              <span className="font-mono font-bold text-[#7c4f2c] dark:text-amber-300 text-sm">
                 {avgAttendance}%
               </span>
             </div>
@@ -270,7 +270,7 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
                 style={{ width: `${avgAttendance}%` }}
               />
             </div>
-            <p className="text-[10px] text-surface-muted mt-1.5">
+            <p className="text-[10px] text-[#806f61] mt-1.5">
               KL Rule: Minimum 85% attendance required for semester exams.
             </p>
           </div>
@@ -294,16 +294,16 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold font-serif text-surface-dark dark:text-white tracking-tight">
+            <h2 className="text-xl font-bold font-sans text-[#3b2b23] dark:text-white tracking-tight">
               Enrolled Food Technology Courses ({courses.length})
             </h2>
-            <p className="text-xs text-surface-muted">
+            <p className="text-xs text-[#806f61]">
               Synchronized from KL Moodle LMS • Semester V (2024-2025)
             </p>
           </div>
           <button
             onClick={() => onNavigate('select-subject')}
-            className="text-xs font-bold text-brand-800 dark:text-amber-300 hover:underline flex items-center space-x-1"
+            className="text-xs font-bold text-[#7c4f2c] dark:text-amber-300 hover:underline flex items-center space-x-1"
           >
             <span>All Subjects</span>
             <ArrowRight size={13} />
@@ -318,12 +318,12 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
             return (
               <div
                 key={course.code}
-                className="bg-white dark:bg-stone-900 rounded-2xl border border-surface-border dark:border-stone-800 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-4"
+                className="bg-[#fffaf4] dark:bg-stone-900 rounded-2xl border border-[#e3d6cb] dark:border-stone-800 p-5 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-4"
               >
                 {/* Course Header */}
                 <div>
                   <div className="flex items-start justify-between gap-2">
-                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950/60 text-brand-800 dark:text-amber-300 border border-brand-200 dark:border-brand-900">
+                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950/60 text-[#7c4f2c] dark:text-amber-300 border border-brand-200 dark:border-brand-900">
                       {course.code}
                     </span>
                     <span
@@ -337,10 +337,10 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-base text-surface-dark dark:text-white mt-2 leading-snug">
+                  <h3 className="font-bold text-base text-[#3b2b23] dark:text-white mt-2 leading-snug">
                     {course.name}
                   </h3>
-                  <p className="text-xs text-surface-muted mt-1 flex items-center space-x-1">
+                  <p className="text-xs text-[#806f61] mt-1 flex items-center space-x-1">
                     <UserCheck size={13} />
                     <span>Faculty: {course.faculty}</span>
                   </p>
@@ -350,9 +350,9 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
                 <div className="space-y-2.5 pt-2 border-t border-surface-subtle dark:border-stone-800">
                   {/* Attendance Bar */}
                   <div>
-                    <div className="flex justify-between text-[11px] text-surface-muted mb-1">
+                    <div className="flex justify-between text-[11px] text-[#806f61] mb-1">
                       <span>Attendance Eligibility</span>
-                      <span className="font-semibold text-surface-dark dark:text-stone-300">{att}%</span>
+                      <span className="font-semibold text-[#3b2b23] dark:text-stone-300">{att}%</span>
                     </div>
                     <div className="w-full bg-surface-subtle dark:bg-stone-800 h-1.5 rounded-full overflow-hidden">
                       <div
@@ -365,8 +365,8 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
                   {/* In-Sem Grade */}
                   {course.inSemGrade && (
                     <div className="flex items-center justify-between text-xs bg-surface-subtle dark:bg-stone-800/60 p-2 rounded-xl">
-                      <span className="text-surface-muted font-medium">In-Sem Score / Status:</span>
-                      <span className="font-mono font-bold text-brand-800 dark:text-amber-300">
+                      <span className="text-[#806f61] font-medium">In-Sem Score / Status:</span>
+                      <span className="font-mono font-bold text-[#7c4f2c] dark:text-amber-300">
                         {course.inSemGrade}
                       </span>
                     </div>
@@ -380,7 +380,7 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
                         <span className="font-bold block text-[11px] uppercase tracking-wide text-amber-800 dark:text-amber-400">
                           Upcoming In-Sem Deadline
                         </span>
-                        <span className="text-surface-dark dark:text-stone-300 text-xs leading-tight">
+                        <span className="text-[#3b2b23] dark:text-stone-300 text-xs leading-tight">
                           {course.upcomingDeadline}
                         </span>
                       </div>
@@ -398,7 +398,7 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
                         onNavigate('select-subject');
                       }
                     }}
-                    className="w-full py-2 px-3 rounded-xl bg-brand-800 hover:bg-brand-900 text-white font-semibold text-xs transition-colors flex items-center justify-center space-x-1.5 shadow-sm"
+                    className="w-full py-2 px-3 rounded-xl bg-[#7c4f2c] hover:bg-[#7c4f2c] text-white font-semibold text-xs transition-colors flex items-center justify-center space-x-1.5 shadow-sm"
                   >
                     <BookOpen size={13} />
                     <span>Study in AI</span>
@@ -408,7 +408,7 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
                     href={course.lmsCourseUrl || 'https://lms.kluniversity.in/login/index.php'}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-2 px-3 rounded-xl bg-surface-subtle hover:bg-surface-border dark:bg-stone-800 dark:hover:bg-stone-700 text-surface-dark dark:text-stone-200 font-semibold text-xs transition-colors flex items-center justify-center space-x-1.5 border border-surface-border dark:border-stone-700"
+                    className="w-full py-2 px-3 rounded-xl bg-surface-subtle hover:bg-surface-border dark:bg-stone-800 dark:hover:bg-stone-700 text-[#3b2b23] dark:text-stone-200 font-semibold text-xs transition-colors flex items-center justify-center space-x-1.5 border border-[#e3d6cb] dark:border-stone-700"
                   >
                     <span>Open in LMS</span>
                     <ExternalLink size={13} />
@@ -421,54 +421,54 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
       </div>
 
       {/* KL University Quick LMS Resources */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-surface-border dark:border-stone-800 p-6 space-y-4">
-        <h3 className="font-bold text-base text-surface-dark dark:text-white flex items-center space-x-2">
-          <GraduationCap size={18} className="text-brand-800 dark:text-amber-300" />
+      <div className="bg-[#fffaf4] dark:bg-stone-900 rounded-2xl border border-[#e3d6cb] dark:border-stone-800 p-6 space-y-4">
+        <h3 className="font-bold text-base text-[#3b2b23] dark:text-white flex items-center space-x-2">
+          <GraduationCap size={18} className="text-[#7c4f2c] dark:text-amber-300" />
           <span>KL Food Technology Academic Handouts & LMS Repositories</span>
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
           <div
             onClick={() => onNavigate('mock-exam')}
-            className="p-3.5 rounded-xl border border-surface-border dark:border-stone-800 hover:border-brand-800 hover:bg-brand-50/50 dark:hover:bg-stone-800/60 cursor-pointer transition-all space-y-1.5 group"
+            className="p-3.5 rounded-xl border border-[#e3d6cb] dark:border-stone-800 hover:border-brand-800 hover:bg-brand-50/50 dark:hover:bg-stone-800/60 cursor-pointer transition-all space-y-1.5 group"
           >
             <div className="flex items-center justify-between">
-              <span className="font-bold text-surface-dark dark:text-white group-hover:text-brand-800">
+              <span className="font-bold text-[#3b2b23] dark:text-white group-hover:text-[#7c4f2c]">
                 In-Sem Question Bank
               </span>
-              <FileSpreadsheet size={15} className="text-brand-800 dark:text-amber-300" />
+              <FileSpreadsheet size={15} className="text-[#7c4f2c] dark:text-amber-300" />
             </div>
-            <p className="text-[11px] text-surface-muted leading-relaxed">
+            <p className="text-[11px] text-[#806f61] leading-relaxed">
               Solve KL previous 3-year In-Sem & End-Sem question papers with strict rubric evaluation.
             </p>
           </div>
 
           <div
             onClick={() => onNavigate('pdf-analyzer')}
-            className="p-3.5 rounded-xl border border-surface-border dark:border-stone-800 hover:border-brand-800 hover:bg-brand-50/50 dark:hover:bg-stone-800/60 cursor-pointer transition-all space-y-1.5 group"
+            className="p-3.5 rounded-xl border border-[#e3d6cb] dark:border-stone-800 hover:border-brand-800 hover:bg-brand-50/50 dark:hover:bg-stone-800/60 cursor-pointer transition-all space-y-1.5 group"
           >
             <div className="flex items-center justify-between">
-              <span className="font-bold text-surface-dark dark:text-white group-hover:text-brand-800">
+              <span className="font-bold text-[#3b2b23] dark:text-white group-hover:text-[#7c4f2c]">
                 LMS PDF Past Papers
               </span>
-              <Download size={15} className="text-brand-800 dark:text-amber-300" />
+              <Download size={15} className="text-[#7c4f2c] dark:text-amber-300" />
             </div>
-            <p className="text-[11px] text-surface-muted leading-relaxed">
+            <p className="text-[11px] text-[#806f61] leading-relaxed">
               Extract marks pattern, recurring questions, and 10M keywords from uploaded question papers.
             </p>
           </div>
 
           <div
             onClick={() => onNavigate('planner')}
-            className="p-3.5 rounded-xl border border-surface-border dark:border-stone-800 hover:border-brand-800 hover:bg-brand-50/50 dark:hover:bg-stone-800/60 cursor-pointer transition-all space-y-1.5 group"
+            className="p-3.5 rounded-xl border border-[#e3d6cb] dark:border-stone-800 hover:border-brand-800 hover:bg-brand-50/50 dark:hover:bg-stone-800/60 cursor-pointer transition-all space-y-1.5 group"
           >
             <div className="flex items-center justify-between">
-              <span className="font-bold text-surface-dark dark:text-white group-hover:text-brand-800">
+              <span className="font-bold text-[#3b2b23] dark:text-white group-hover:text-[#7c4f2c]">
                 KL Exam Day Planner
               </span>
-              <Calendar size={15} className="text-brand-800 dark:text-amber-300" />
+              <Calendar size={15} className="text-[#7c4f2c] dark:text-amber-300" />
             </div>
-            <p className="text-[11px] text-surface-muted leading-relaxed">
+            <p className="text-[11px] text-[#806f61] leading-relaxed">
               Structured 7-day study plan covering Unit I through Unit V before KL In-Sem examinations.
             </p>
           </div>
