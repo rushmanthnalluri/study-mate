@@ -25,6 +25,8 @@ import { PaperAnalyzerScreen } from './screens/PaperAnalyzerScreen';
 import { GlossaryScreen } from './screens/GlossaryScreen';
 import { KnowledgeBaseScreen } from './screens/KnowledgeBaseScreen';
 import { MockExamScreen } from './screens/MockExamScreen';
+import { QuizScreen } from './screens/QuizScreen';
+import { StudyStudioScreen } from './screens/StudyStudioScreen';
 import { AdminPortalScreen } from './screens/AdminPortalScreen';
 import { LmsSyncScreen } from './screens/LmsSyncScreen';
 import { AiChatbotScreen } from './screens/AiChatbotScreen';
@@ -378,7 +380,7 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
       {/* Main Screen Content Body */}
       <main
         className={`flex-1 mx-auto w-full px-4 pt-3 ${
-          ['generate-notes', 'admin', 'mock-exam', 'dashboard', 'lms-sync', 'chatbot'].includes(currentScreen)
+          ['generate-notes', 'admin', 'mock-exam', 'quiz', 'studio', 'dashboard', 'lms-sync', 'chatbot'].includes(currentScreen)
             ? 'max-w-6xl'
             : 'max-w-xl'
         }`}
@@ -396,6 +398,14 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
               setCurrentScreen('generate-notes');
             }}
           />
+        )}
+
+        {currentScreen === 'quiz' && (
+          <QuizScreen onNavigate={setCurrentScreen} subjects={subjects} selectedDepartment={selectedDepartment} />
+        )}
+
+        {currentScreen === 'studio' && (
+          <StudyStudioScreen note={currentNote} onNavigate={setCurrentScreen} />
         )}
 
         {currentScreen === 'mock-exam' && (
