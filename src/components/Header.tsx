@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Department, ScreenId, UserProfile } from '../types';
-import { GraduationCap, LayoutDashboard, Calendar, Layers, FileSearch, BookMarked, FolderTree, FileSpreadsheet, Moon, Sun, Menu, X, ShieldCheck, Bot, Settings, RefreshCw } from 'lucide-react';
+import { GraduationCap, LayoutDashboard, Award, Sparkles, Calendar, Layers, FileSearch, BookMarked, FolderTree, FileSpreadsheet, Moon, Sun, Menu, X, ShieldCheck, Bot, Settings, RefreshCw } from 'lucide-react';
 
 interface HeaderProps {
   currentScreen: ScreenId;
@@ -28,6 +28,8 @@ export const Header: React.FC<HeaderProps> = ({
 
   const items: Array<{id: ScreenId; label: string; icon: React.ElementType}> = [
     { id: 'mock-exam', label: 'Mock Paper', icon: FileSpreadsheet },
+    { id: 'quiz', label: 'Quiz', icon: Award },
+    { id: 'studio', label: 'Studio', icon: Sparkles },
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'flashcards', label: 'Flashcards', icon: Layers },
     { id: 'pdf-analyzer', label: 'Past Papers', icon: FileSearch },
