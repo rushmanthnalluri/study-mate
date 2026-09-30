@@ -74,7 +74,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
 
   // Fetch admin stats on mount
   useEffect(() => {
-    fetch('/api/admin/stats', { headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` } })
+    fetch('/api/admin/stats', { headers: { Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '') } })
       .then((res) => res.json())
       .then((data) => {
         if (data.totalSubjects) {
@@ -90,7 +90,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
 
   useEffect(() => {
     if (activeTab !== 'ai-config') return;
-    fetch('/api/admin/ai-config', { headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` } })
+    fetch('/api/admin/ai-config', { headers: { Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '') } })
       .then(res => res.json())
       .then(data => {
         setAiProvider(data.provider || 'offline');
@@ -110,7 +110,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}`
+          Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '')
         },
         body: JSON.stringify({ provider: aiProvider, model: aiModel, apiKey: aiKey })
       });
@@ -189,7 +189,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     try {
       const res = await fetch('/api/admin/subjects', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` },
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '') },
         body: JSON.stringify({
           name: newSubjName.trim(),
           code: newSubjCode.trim(),
@@ -227,7 +227,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     try {
       const res = await fetch('/api/admin/resources', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` },
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '') },
         body: JSON.stringify({
           subjectName: selectedSubjName,
           department: 'Food Technology',
@@ -261,7 +261,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     try {
       const res = await fetch(`/api/admin/subjects/${encodeURIComponent(subjName)}?department=Food+Technology`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` }
+        headers: { Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '') }
       });
       if (!res.ok) throw new Error('Failed to delete subject');
       await onRefreshSubjects();
