@@ -46,10 +46,10 @@ export const GenerateNotesScreen: React.FC<GenerateNotesScreenProps> = ({
   if (!note) {
     return (
       <div className="text-center py-12 space-y-4">
-        <h3 className="text-base font-semibold text-surface-dark">No notes generated yet</h3>
+        <h3 className="text-base font-semibold text-[#3b2b23]">No notes generated yet</h3>
         <button
           onClick={() => onNavigate('enter-topic')}
-          className="bg-brand-800 text-white px-4 py-2 rounded-xl text-xs font-semibold"
+          className="bg-[#7c4f2c] text-white px-4 py-2 rounded-xl text-xs font-semibold"
         >
           Enter a Topic
         </button>
@@ -192,15 +192,15 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
         <div className="flex items-center space-x-2">
           <button
             onClick={() => onNavigate('enter-topic')}
-            className="p-1.5 rounded-lg border border-surface-border bg-white text-surface-muted hover:text-surface-dark transition-colors"
+            className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#806f61] hover:text-[#3b2b23] transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
           <div>
-            <span className="text-[10px] font-condensed font-bold tracking-wider uppercase text-brand-800">
+            <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#7c4f2c]">
               Step 04 of 06
             </span>
-            <h1 className="text-lg font-serif font-bold text-surface-dark leading-tight">
+            <h1 className="text-lg font-sans font-bold text-[#3b2b23] leading-tight">
               KL Exam Notes
             </h1>
           </div>
@@ -209,16 +209,16 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
         <div className="flex items-center space-x-1">
           <button
             onClick={() => setShowSelfTest(true)}
-            className="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 font-semibold transition-colors"
+            className="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg bg-[#fbf3e9] text-[#714628] border border-amber-300 hover:bg-[#f0e0cf] font-semibold transition-colors"
             title="Test Recall & Grade Me"
           >
-            <Award size={14} className="text-amber-700" />
+            <Award size={14} className="text-[#8d5a37]" />
             <span className="hidden sm:inline">Self-Test</span>
           </button>
           <button
             onClick={handleDownloadMarkdown}
             title="Download Markdown Notes"
-            className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-surface-border bg-white text-surface-dark hover:bg-surface-subtle transition-colors text-xs font-medium flex items-center space-x-1"
+            className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#3b2b23] hover:bg-surface-subtle transition-colors text-xs font-medium flex items-center space-x-1"
           >
             <Download size={14} />
             <span className="hidden md:inline">Download</span>
@@ -226,14 +226,14 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
           <button
             onClick={handlePrint}
             title="Print or Save PDF"
-            className="p-1.5 rounded-lg border border-surface-border bg-white text-surface-muted hover:text-brand-800 transition-colors"
+            className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#806f61] hover:text-[#7c4f2c] transition-colors"
           >
             <Printer size={15} />
           </button>
           <button
             onClick={handleCopyAll}
             title="Copy Complete Exam Sheet"
-            className="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg border border-surface-border bg-white text-surface-dark hover:bg-surface-subtle transition-colors font-medium"
+            className="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#3b2b23] hover:bg-surface-subtle transition-colors font-medium"
           >
             {copiedSection === 'all' ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
             <span className="hidden sm:inline">{copiedSection === 'all' ? 'Copied' : 'Copy'}</span>
@@ -243,7 +243,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
             className={`flex items-center space-x-1 text-xs px-3 py-1.5 rounded-lg font-semibold transition-all ${
               isSaved
                 ? 'bg-emerald-50 text-emerald-800 border border-emerald-300'
-                : 'bg-brand-800 text-white hover:bg-brand-900 shadow-sm'
+                : 'bg-[#7c4f2c] text-white hover:bg-[#7c4f2c] shadow-sm'
             }`}
           >
             {isSaved ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
@@ -253,23 +253,23 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
       </div>
 
       {/* Note Meta Header Card */}
-      <div className="bg-white border border-surface-border rounded-xl p-4 shadow-mobile-card space-y-2">
+      <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-4 shadow-sm space-y-2">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-surface-subtle text-surface-dark border border-surface-border">
+          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-surface-subtle text-[#3b2b23] border border-[#e3d6cb]">
             {note.code}
           </span>
-          <span className="text-[10px] font-condensed font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-brand-50 text-brand-800">
+          <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#f4eadf] text-[#7c4f2c]">
             Food Technology
           </span>
-          <span className="text-[10px] text-surface-muted">
+          <span className="text-[10px] text-[#806f61]">
             {note.subject}
           </span>
         </div>
-        <h2 className="text-base sm:text-xl font-serif font-bold text-surface-dark leading-snug">
+        <h2 className="text-base sm:text-xl font-sans font-bold text-[#3b2b23] leading-snug">
           {note.topic}
         </h2>
-        <p className="text-[11px] text-surface-muted font-sans flex items-center space-x-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-brand-800"></span>
+        <p className="text-[11px] text-[#806f61] font-sans flex items-center space-x-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#7c4f2c]"></span>
           <span>{note.unit}</span>
         </p>
       </div>
@@ -292,8 +292,8 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-brand-800 text-white shadow-sm'
-                    : 'bg-white text-surface-dark border border-surface-border hover:bg-surface-subtle'
+                    ? 'bg-[#7c4f2c] text-white shadow-sm'
+                    : 'bg-[#fffaf4] text-[#3b2b23] border border-[#e3d6cb] hover:bg-surface-subtle'
                 }`}
               >
                 {tab.label}
@@ -303,13 +303,13 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
           {/* 🔑 SECTION: Essential Scoring Keywords */}
           {(activeTab === 'all' || activeTab === '2m' || activeTab === '5m') && (
-            <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3.5 space-y-2">
+            <div className="bg-[#fbf3e9]/70 border border-[#e2c8ad]/80 rounded-xl p-3.5 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-condensed font-bold uppercase tracking-wider text-amber-900 flex items-center space-x-1.5">
-                  <Sparkles size={14} className="text-amber-700" />
+                <span className="text-xs font-sans font-bold uppercase tracking-wider text-[#714628] flex items-center space-x-1.5">
+                  <Sparkles size={14} className="text-[#8d5a37]" />
                   <span>Key Words Looked For by KL Evaluators</span>
                 </span>
-                <span className="text-[10px] text-amber-700 font-medium">
+                <span className="text-[10px] text-[#8d5a37] font-medium">
                   Must include in answer
                 </span>
               </div>
@@ -318,7 +318,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                   <span
                     key={i}
                     onClick={() => handleCopy(kw, `kw-${i}`)}
-                    className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-white border border-amber-200 text-xs font-medium text-stone-800 hover:border-amber-400 cursor-pointer shadow-2xs transition-colors"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-[#fffaf4] border border-[#e2c8ad] text-xs font-medium text-stone-800 hover:border-amber-400 cursor-pointer shadow-2xs transition-colors"
                   >
                     <span>{kw}</span>
                     {copiedSection === `kw-${i}` ? (
@@ -332,30 +332,30 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
           {/* 📌 SECTION: 2 Marks Answer */}
           {(activeTab === 'all' || activeTab === '2m') && (
-            <div className="bg-white border border-surface-border rounded-xl p-4 shadow-mobile-card space-y-2.5">
-              <div className="flex items-center justify-between border-b border-surface-border/60 pb-2">
+            <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-4 shadow-sm space-y-2.5">
+              <div className="flex items-center justify-between border-b border-[#e3d6cb]/60 pb-2">
                 <div className="flex items-center space-x-2">
                   <span className="px-2 py-0.5 rounded text-xs font-bold font-mono bg-blue-50 text-blue-800 border border-blue-200">
                     2 Marks
                   </span>
-                  <span className="text-xs text-surface-muted italic">
+                  <span className="text-xs text-[#806f61] italic">
                     Direct Definition / Formula (20-40 words)
                   </span>
                 </div>
                 <button
                   onClick={() => handleCopy(note.twoMarks.answer, '2m')}
-                  className="text-xs text-surface-muted hover:text-brand-800 flex items-center space-x-1"
+                  className="text-xs text-[#806f61] hover:text-[#7c4f2c] flex items-center space-x-1"
                 >
                   {copiedSection === '2m' ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
                   <span>{copiedSection === '2m' ? 'Copied' : 'Copy'}</span>
                 </button>
               </div>
 
-              <h3 className="text-xs font-semibold text-surface-dark">
+              <h3 className="text-xs font-semibold text-[#3b2b23]">
                 Q: {note.twoMarks.question}
               </h3>
 
-              <div className="text-xs sm:text-sm text-surface-dark leading-relaxed font-sans bg-surface-subtle p-3 rounded-lg border border-surface-border/50">
+              <div className="text-xs sm:text-sm text-[#3b2b23] leading-relaxed font-sans bg-surface-subtle p-3 rounded-lg border border-[#e3d6cb]/50">
                 {note.twoMarks.answer}
               </div>
             </div>
@@ -363,40 +363,40 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
           {/* 📝 SECTION: 5 Marks Answer */}
           {(activeTab === 'all' || activeTab === '5m') && (
-            <div className="bg-white border border-surface-border rounded-xl p-4 shadow-mobile-card space-y-2.5">
-              <div className="flex items-center justify-between border-b border-surface-border/60 pb-2">
+            <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-4 shadow-sm space-y-2.5">
+              <div className="flex items-center justify-between border-b border-[#e3d6cb]/60 pb-2">
                 <div className="flex items-center space-x-2">
                   <span className="px-2 py-0.5 rounded text-xs font-bold font-mono bg-purple-50 text-purple-800 border border-purple-200">
                     5 Marks
                   </span>
-                  <span className="text-xs text-surface-muted italic">
+                  <span className="text-xs text-[#806f61] italic">
                     Structured Points & Principle (~150 words)
                   </span>
                 </div>
                 <button
                   onClick={() => handleCopy(note.fiveMarks.answer, '5m')}
-                  className="text-xs text-surface-muted hover:text-brand-800 flex items-center space-x-1"
+                  className="text-xs text-[#806f61] hover:text-[#7c4f2c] flex items-center space-x-1"
                 >
                   {copiedSection === '5m' ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
                   <span>{copiedSection === '5m' ? 'Copied' : 'Copy'}</span>
                 </button>
               </div>
 
-              <h3 className="text-xs font-semibold text-surface-dark">
+              <h3 className="text-xs font-semibold text-[#3b2b23]">
                 Q: {note.fiveMarks.question}
               </h3>
 
-              <div className="text-xs sm:text-sm text-surface-dark leading-relaxed font-sans space-y-2 prose prose-sm max-w-none">
+              <div className="text-xs sm:text-sm text-[#3b2b23] leading-relaxed font-sans space-y-2 prose prose-sm max-w-none">
                 {note.fiveMarks.answer.split('\n\n').map((paragraph, idx) => {
                   if (paragraph.startsWith('###')) {
                     return (
-                      <h4 key={idx} className="font-bold text-surface-dark text-xs sm:text-sm mt-2 text-brand-900">
+                      <h4 key={idx} className="font-bold text-[#3b2b23] text-xs sm:text-sm mt-2 text-[#7c4f2c]">
                         {paragraph.replace('###', '').trim()}
                       </h4>
                     );
                   }
                   return (
-                    <p key={idx} className="text-surface-dark/90 leading-relaxed whitespace-pre-line">
+                    <p key={idx} className="text-[#3b2b23]/90 leading-relaxed whitespace-pre-line">
                       {paragraph}
                     </p>
                   );
@@ -412,43 +412,43 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
           {/* 📚 SECTION: 10 Marks Answer */}
           {(activeTab === 'all' || activeTab === '10m') && (
-            <div className="bg-white border border-surface-border rounded-xl p-4 sm:p-5 shadow-mobile-card space-y-3">
-              <div className="flex items-center justify-between border-b border-surface-border/60 pb-2">
+            <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-4 sm:p-5 shadow-sm space-y-3">
+              <div className="flex items-center justify-between border-b border-[#e3d6cb]/60 pb-2">
                 <div className="flex items-center space-x-2">
                   <span className="px-2 py-0.5 rounded text-xs font-bold font-mono bg-emerald-50 text-emerald-800 border border-emerald-200">
                     10 Marks
                   </span>
-                  <span className="text-xs text-surface-muted italic">
+                  <span className="text-xs text-[#806f61] italic">
                     Comprehensive KL Exam Essay (350-500 words)
                   </span>
                 </div>
                 <button
                   onClick={() => handleCopy(note.tenMarks.answer, '10m')}
-                  className="text-xs text-surface-muted hover:text-brand-800 flex items-center space-x-1"
+                  className="text-xs text-[#806f61] hover:text-[#7c4f2c] flex items-center space-x-1"
                 >
                   {copiedSection === '10m' ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
                   <span>{copiedSection === '10m' ? 'Copied' : 'Copy'}</span>
                 </button>
               </div>
 
-              <h3 className="text-xs sm:text-sm font-semibold text-surface-dark">
+              <h3 className="text-xs sm:text-sm font-semibold text-[#3b2b23]">
                 Q: {note.tenMarks.question}
               </h3>
 
-              <div className="text-xs sm:text-sm text-surface-dark leading-relaxed font-sans space-y-3">
+              <div className="text-xs sm:text-sm text-[#3b2b23] leading-relaxed font-sans space-y-3">
                 {note.tenMarks.answer.split('\n\n').map((paragraph, idx) => {
                   if (paragraph.startsWith('###')) {
                     return (
                       <h4
                         key={idx}
-                        className="font-bold text-surface-dark text-xs sm:text-sm pt-2 text-brand-900 border-b border-surface-border/40 pb-1"
+                        className="font-bold text-[#3b2b23] text-xs sm:text-sm pt-2 text-[#7c4f2c] border-b border-[#e3d6cb]/40 pb-1"
                       >
                         {paragraph.replace('###', '').trim()}
                       </h4>
                     );
                   }
                   return (
-                    <p key={idx} className="text-surface-dark/90 leading-relaxed whitespace-pre-line">
+                    <p key={idx} className="text-[#3b2b23]/90 leading-relaxed whitespace-pre-line">
                       {paragraph}
                     </p>
                   );
@@ -460,18 +460,18 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
         {/* Right Inspector: LAPTOP MODEL GROUNDING RESOURCES (4 cols on laptop) */}
         <div className="hidden lg:block lg:col-span-4 space-y-3 sticky top-20">
-          <div className="bg-white border border-surface-border rounded-xl p-4 shadow-mobile-card space-y-3">
-            <div className="flex items-center justify-between border-b border-surface-border pb-2">
-              <span className="text-xs font-condensed uppercase tracking-wider font-bold text-surface-dark flex items-center space-x-1.5">
-                <BookOpen size={14} className="text-brand-800" />
+          <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-4 shadow-sm space-y-3">
+            <div className="flex items-center justify-between border-b border-[#e3d6cb] pb-2">
+              <span className="text-xs font-sans uppercase tracking-wider font-bold text-[#3b2b23] flex items-center space-x-1.5">
+                <BookOpen size={14} className="text-[#7c4f2c]" />
                 <span>Grounded Resources (Laptop View)</span>
               </span>
-              <span className="text-[10px] bg-brand-50 text-brand-800 font-bold px-1.5 py-0.5 rounded">
+              <span className="text-[10px] bg-[#f4eadf] text-[#7c4f2c] font-bold px-1.5 py-0.5 rounded">
                 KL Drive KB
               </span>
             </div>
 
-            <p className="text-[11px] text-surface-muted leading-relaxed">
+            <p className="text-[11px] text-[#806f61] leading-relaxed">
               These answers are directly synthesized and verified from the official subject resources in the knowledge base library:
             </p>
 
@@ -482,16 +482,16 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                   <div
                     key={res.id}
                     onClick={() => setSelectedCitation(selectedCitation === res.id ? null : res.id)}
-                    className="p-2.5 rounded-lg border border-surface-border/80 hover:border-brand-300 bg-surface-subtle cursor-pointer transition-all space-y-1 group"
+                    className="p-2.5 rounded-lg border border-[#e3d6cb]/80 hover:border-brand-300 bg-surface-subtle cursor-pointer transition-all space-y-1 group"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <Icon size={14} className="text-brand-800" />
-                        <span className="text-xs font-bold text-surface-dark group-hover:text-brand-800">
+                        <Icon size={14} className="text-[#7c4f2c]" />
+                        <span className="text-xs font-bold text-[#3b2b23] group-hover:text-[#7c4f2c]">
                           {res.title}
                         </span>
                       </div>
-                      <span className="text-[9px] font-mono text-surface-muted bg-white px-1.5 py-0.2 rounded border border-surface-border">
+                      <span className="text-[9px] font-mono text-[#806f61] bg-[#fffaf4] px-1.5 py-0.2 rounded border border-[#e3d6cb]">
                         {res.file}
                       </span>
                     </div>
@@ -504,11 +504,11 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
               })}
             </div>
 
-            <div className="pt-2 border-t border-surface-border flex items-center justify-between text-xs">
-              <span className="text-[11px] text-surface-muted">Need to add more materials?</span>
+            <div className="pt-2 border-t border-[#e3d6cb] flex items-center justify-between text-xs">
+              <span className="text-[11px] text-[#806f61]">Need to add more materials?</span>
               <button
                 onClick={() => onNavigate('admin')}
-                className="text-xs font-semibold text-brand-800 hover:underline flex items-center space-x-1"
+                className="text-xs font-semibold text-[#7c4f2c] hover:underline flex items-center space-x-1"
               >
                 <span>Admin Portal</span>
                 <ChevronRight size={13} />
@@ -517,12 +517,12 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
           </div>
 
           {/* Quick Evaluator Tips Card */}
-          <div className="bg-surface-subtle border border-surface-border rounded-xl p-3.5 space-y-1.5">
-            <span className="text-xs font-bold text-surface-dark flex items-center space-x-1.5">
-              <Award size={14} className="text-brand-800" />
+          <div className="bg-surface-subtle border border-[#e3d6cb] rounded-xl p-3.5 space-y-1.5">
+            <span className="text-xs font-bold text-[#3b2b23] flex items-center space-x-1.5">
+              <Award size={14} className="text-[#7c4f2c]" />
               <span>Food Tech Evaluator Check:</span>
             </span>
-            <ul className="text-[11px] text-surface-muted space-y-1 list-disc list-inside">
+            <ul className="text-[11px] text-[#806f61] space-y-1 list-disc list-inside">
               <li>Check D-value, z-value units (minutes, °C).</li>
               <li>Include labeled temperature/time combinations.</li>
               <li>State the relevant FSSAI / Codex regulation.</li>
@@ -537,14 +537,14 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
       )}
 
       {/* Bottom Sticky Action Bar */}
-      <div className="fixed bottom-14 left-0 right-0 z-30 bg-white/90 backdrop-blur-md border-t border-surface-border py-2 px-4 print:hidden">
+      <div className="fixed bottom-14 left-0 right-0 z-30 bg-[#fffaf4]/90 backdrop-blur-md border-t border-[#e3d6cb] py-2 px-4 print:hidden">
         <div className="max-w-md mx-auto flex items-center justify-between space-x-2">
           <button
             onClick={() => onSaveNote(note)}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition-all ${
               isSaved
                 ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
-                : 'bg-brand-800 text-white hover:bg-brand-900'
+                : 'bg-[#7c4f2c] text-white hover:bg-[#7c4f2c]'
             }`}
           >
             {isSaved ? <BookmarkCheck size={15} /> : <Bookmark size={15} />}
@@ -553,9 +553,9 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
           <button
             onClick={onOpenFeedback}
-            className="flex-1 py-2 px-3 rounded-xl text-xs font-semibold bg-surface-subtle hover:bg-brand-50 border border-surface-border text-surface-dark flex items-center justify-center space-x-1.5 transition-colors"
+            className="flex-1 py-2 px-3 rounded-xl text-xs font-semibold bg-surface-subtle hover:bg-[#f4eadf] border border-[#e3d6cb] text-[#3b2b23] flex items-center justify-center space-x-1.5 transition-colors"
           >
-            <MessageSquareText size={15} className="text-brand-800" />
+            <MessageSquareText size={15} className="text-[#7c4f2c]" />
             <span>Give Feedback (06)</span>
           </button>
         </div>
