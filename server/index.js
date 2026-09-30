@@ -87,7 +87,19 @@ const defaultFoodTechCourses = [
 if (!fs.existsSync(usersFile)) {
   fs.writeFileSync(usersFile, '[]', 'utf8');
 }
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || true }));
+const configuredClientOrigin = (process.env.CLIENT_ORIGIN || '').trim();
+app.use(cors({
+  origin(origin, callback) {
+    // Same-origin requests have no Origin header and should always work.
+    if (!origin) return callback(null, true);
+    if (configuredClientOrigin && origin === configuredClientOrigin) return callback(null, true);
+    // Permit local development only; production must set CLIENT_ORIGIN explicitly.
+    if (/^https?:\\/\\/localhost(?::\\d+)?$/.test(origin) || /^https?:\\/\\/127\\.0\\.0\\.1(?::\\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS origin not allowed.'));
+  }
+}));
 app.use(express.json({ limit: '2mb' }));
 
 // Production security middleware.
