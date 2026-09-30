@@ -273,7 +273,7 @@ export async function getChatMessages(userId = 'default') {
   if (!fs.existsSync(chatHistoryFile)) return [];
   try {
     const list = JSON.parse(fs.readFileSync(chatHistoryFile, 'utf8'));
-    return list.filter(m => !userId || m.userId === userId || m.userId === 'default');
+    return list.filter(m => m.userId === userId);
   } catch (e) {
     return [];
   }
