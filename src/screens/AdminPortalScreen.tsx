@@ -74,7 +74,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
 
   // Fetch admin stats on mount
   useEffect(() => {
-    fetch('/api/admin/stats', { headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` })
+    fetch('/api/admin/stats', { headers: { Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}` } })
       .then((res) => res.json())
       .then((data) => {
         if (data.totalSubjects) {
