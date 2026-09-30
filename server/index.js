@@ -94,8 +94,14 @@ app.use(cors({
     if (!origin) return callback(null, true);
     if (configuredClientOrigin && origin === configuredClientOrigin) return callback(null, true);
     // Permit local development only; production must set CLIENT_ORIGIN explicitly.
-    if (/^https?:\\/\\/localhost(?::\\d+)?$/.test(origin) || /^https?:\\/\\/127\\.0\\.0\\.1(?::\\d+)?$/.test(origin)) {
-      return callback(null, true);
+    try {
+      const parsed = new URL(origin);
+      const isLocalhost = parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1';
+      if (isLocalhost && (parsed.protocol === 'http:' || parsed.protocol === 'https:')) {
+        return callback(null, true);
+      }
+    } catch {
+      // Fall through to the rejection below.
     }
     return callback(new Error('CORS origin not allowed.'));
   }
