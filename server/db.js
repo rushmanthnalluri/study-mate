@@ -36,7 +36,6 @@ const UserSchema = new mongoose.Schema({
   lmsUsername: { type: String },
   lmsLastSynced: { type: String },
   enrolledCourses: { type: Array, default: [] },
-  aiSettings: { type: Object }
 }, { timestamps: true });
 
 const SavedNoteSchema = new mongoose.Schema({
