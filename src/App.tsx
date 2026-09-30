@@ -48,7 +48,7 @@ export const App: React.FC = () => {
       return null;
     }
   });
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(() => !Boolean(localStorage.getItem('studymate_user')));
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   
   const defaultFoodTechSubj = fallbackSubjects[0];
@@ -361,8 +361,44 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
     currentNote && savedNotes.some((n) => n.topic === currentNote.topic && n.subject === currentNote.subject)
   );
 
+  const signOut = () => {
+    localStorage.removeItem('studymate_user');
+    localStorage.removeItem('studymate_token');
+    localStorage.removeItem('studymate_saved_notes');
+    setCurrentUser(null);
+    setSavedNotes([]);
+    setCurrentNote(null);
+    setCurrentScreen('home');
+    setIsAuthModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-[#f4eadf] dark:bg-[#211a16] text-[#3b2b23] dark:text-[#fff8f1] flex flex-col transition-colors">
+      {!currentUser && (
+        <div className="min-h-screen w-full bg-[radial-gradient(circle_at_top,#fffaf4_0%,#f4eadf_55%,#ead8c7_100%)] px-5 py-10">
+          <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-4xl items-center justify-center">
+            <div className="grid w-full overflow-hidden rounded-[36px] border border-[#dfc8b1] bg-[#fffaf4]/95 shadow-[0_30px_90px_rgba(75,55,42,0.16)] md:grid-cols-[1.05fr_.95fr]">
+              <div className="hidden bg-[#3b2b23] p-10 text-white md:flex md:flex-col md:justify-between">
+                <div>
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#d7a86e] text-[#3b2b23]"><GraduationCap size={28}/></div>
+                  <p className="mt-8 text-[11px] font-black uppercase tracking-[.22em] text-[#e8caa9]">StudyMate AI</p>
+                  <h1 className="mt-3 text-4xl font-black leading-tight">Your private academic workspace.</h1>
+                  <p className="mt-4 max-w-sm text-sm leading-6 text-[#eadbc9]">Create an account to generate notes, take tests, build flashcards, use AI tutoring and keep your study history private to your account.</p>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-[11px] font-bold text-[#eadbc9]"><span className="rounded-2xl bg-white/10 p-3">AI notes & tutor</span><span className="rounded-2xl bg-white/10 p-3">Quiz & model tests</span><span className="rounded-2xl bg-white/10 p-3">Flashcards & voice</span><span className="rounded-2xl bg-white/10 p-3">Flowcharts & mind maps</span></div>
+              </div>
+              <div className="flex flex-col justify-center p-7 sm:p-10">
+                <p className="text-[10px] font-black uppercase tracking-[.2em] text-[#a0704b]">Account required</p>
+                <h2 className="mt-2 text-3xl font-black text-[#3b2b23]">Sign in to continue</h2>
+                <p className="mt-3 text-sm leading-6 text-[#806f61]">There is no guest mode. Your saved work and AI conversations belong to your account.</p>
+                <button onClick={()=>setIsAuthModalOpen(true)} className="auth-primary mt-7">Sign in or create account <ArrowRight size={16}/></button>
+                <p className="mt-4 text-center text-[11px] text-[#907d6d]">App-wide AI provider keys are managed only by the administrator.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {currentUser && <>
       {/* Top Header */}
       <Header
         currentScreen={currentScreen}
@@ -592,6 +628,15 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
         savedCount={savedNotes.length}
       />
 
+      <button
+        type="button"
+        onClick={signOut}
+        className="fixed bottom-20 right-4 z-30 hidden rounded-xl border border-[#dfc8b1] bg-[#fffaf4] px-3 py-2 text-[10px] font-black text-[#6f4a31] shadow-md hover:bg-[#f4e8dc] sm:block print:hidden"
+      >
+        Sign out
+      </button>
+
+      </>}
       {/* KL University & LMS Authentication Modal */}
       <AuthModal
         isOpen={isAuthModalOpen}
