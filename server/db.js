@@ -128,7 +128,7 @@ export async function getAiConfig() {
 export async function saveAiConfig(config) {
   const payload = { ...config, id: 'global', updatedAt: new Date().toISOString() };
   if (isMongoConnected && AiConfigModel) {
-    return AiConfigModel.findOneAndUpdate({ id: 'global' }, payload, { upsert: true, new: true }).lean();
+    return AiConfigModel.findOneAndUpdate({ id: 'global' }, payload, { upsert: true, returnDocument: 'after' }).lean();
   }
   return payload;
 }
