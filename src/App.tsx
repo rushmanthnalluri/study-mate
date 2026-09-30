@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GraduationCap } from 'lucide-react';
+import { GraduationCap, ArrowRight } from 'lucide-react';
 import {
   Department,
   Subject,
