@@ -706,7 +706,7 @@ app.post('/api/auth/kl-lms/sync', requireAuth, async (req, res) => {
 });
 
 // ==========================================
- // CENTRAL AI CONFIGURATION — ADMIN ONLY
+// CENTRAL AI CONFIGURATION — ADMIN ONLY
 // API keys are encrypted before persistence and never returned to the browser.
 const getConfigSecret = () => process.env.STUDYMATE_CONFIG_SECRET || '';
 const encryptionKey = () => crypto.createHash('sha256').update(getConfigSecret()).digest();
@@ -773,6 +773,167 @@ app.put('/api/admin/ai-config', requireAdmin, async (req, res) => {
     res.json({ success: true, provider, model: model.trim(), configured: provider === 'offline' || Boolean(apiKey.trim()) });
   } catch {
     res.status(500).json({ error: 'AI configuration could not be saved.' });
+  }
+});
+
+// ==========================================
+// QUIZ / MODEL TEST ENGINE
+// Uses the same centrally managed AI configuration as the tutor.
+// Every generated assessment is authenticated and scoped to the requested subject.
+// ==========================================
+
+const parseJsonPayload = (text) => {
+  const cleaned = String(text || '')
+    .replace(/^\s*```(?:json)?\s*/i, '')
+    .replace(/\s*```\s*$/i, '')
+    .trim();
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    const start = cleaned.indexOf('[');
+    const end = cleaned.lastIndexOf(']');
+    if (start >= 0 && end > start) return JSON.parse(cleaned.slice(start, end + 1));
+    throw new Error('AI returned invalid quiz JSON.');
+  }
+};
+
+const validateQuizQuestions = (value, count) => {
+  if (!Array.isArray(value)) return [];
+  return value.slice(0, count).filter((q) =>
+    q &&
+    typeof q.question === 'string' &&
+    q.question.trim() &&
+    Array.isArray(q.options) &&
+    q.options.length === 4 &&
+    q.options.every(o => typeof o === 'string' && o.trim()) &&
+    Number.isInteger(q.answer) &&
+    q.answer >= 0 &&
+    q.answer < 4 &&
+    typeof q.explanation === 'string'
+  ).map((q, index) => ({
+    id: `quiz-${Date.now()}-${index}`,
+    question: q.question.trim(),
+    options: q.options.map(o => o.trim()),
+    answer: q.answer,
+    explanation: q.explanation.trim(),
+    topic: typeof q.topic === 'string' ? q.topic.trim() : ''
+  }));
+};
+
+const buildOfflineQuiz = (subjectMeta, count) => {
+  const bank = Array.isArray(subjectMeta.questionBank) ? subjectMeta.questionBank.filter(q => q?.question) : [];
+  if (!bank.length) return [];
+
+  const pool = [...bank].sort(() => Math.random() - 0.5);
+  const selected = pool.slice(0, Math.min(count, pool.length));
+  const units = [...new Set(bank.map(q => String(q.unit ?? '').trim()).filter(Boolean))];
+
+  return selected.map((item, index) => {
+    const unit = String(item.unit ?? '').trim();
+    const distractors = units.filter(u => u !== unit).slice(0, 3);
+    while (distractors.length < 3) distractors.push(`Unit ${distractors.length + 1}`);
+    const options = [`Unit ${unit || 'covered in the question bank'}`, ...distractors.map(u => `Unit ${u}`)];
+    return {
+      id: `quiz-${Date.now()}-${index}`,
+      question: `Which unit is this question mapped to?\n\n${item.question}`,
+      options,
+      answer: 0,
+      explanation: `This question is indexed under Unit ${unit || 'the subject question bank'} in the StudyMate knowledge base.`,
+      topic: item.topic || ''
+    };
+  });
+};
+
+app.post('/api/quiz/generate', requireAuth, async (req, res) => {
+  try {
+    const { subjectId, mode = 'quiz' } = req.body || {};
+    const requestedCount = mode === 'model' ? 20 : 10;
+    const all = getAllSubjects('All');
+    const subjectMeta = all.find(s => s.id === subjectId);
+    if (!subjectMeta) return res.status(404).json({ error: 'Subject not found.' });
+
+    const config = await loadCentralAiConfig();
+    let questions = [];
+
+    if (config.provider === 'groq' && config.apiKey) {
+      try {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${config.apiKey}` },
+          body: JSON.stringify({
+            model: config.model || 'llama-3.3-70b-versatile',
+            temperature: 0.2,
+            messages: [
+              {
+                role: 'system',
+                content: 'You are an academic assessment generator. Return ONLY valid JSON: an array of objects with question, options (exactly 4 strings), answer (0-3), explanation, and topic. Do not use markdown fences. Questions must be objectively answerable and grounded in the supplied question bank. Avoid duplicate questions.'
+              },
+              {
+                role: 'user',
+                content: JSON.stringify({
+                  subject: subjectMeta.name,
+                  department: subjectMeta.department,
+                  mode,
+                  count: requestedCount,
+                  questionBank: subjectMeta.questionBank
+                })
+              }
+            ]
+          })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          questions = validateQuizQuestions(data?.choices?.[0]?.message?.content, requestedCount);
+        }
+      } catch (err) {
+        console.warn('Groq quiz generation failed; using deterministic bank fallback:', err.message);
+      }
+    }
+
+    if (!questions.length && config.provider === 'gemini' && config.apiKey) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-1.5-flash'}:generateContent?key=${config.apiKey}`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: 'You are an academic assessment generator. Return ONLY valid JSON: an array of objects with question, options (exactly 4 strings), answer (0-3), explanation, and topic. No markdown fences. Questions must be objectively answerable and grounded in the supplied question bank.' }]
+            },
+            contents: [{
+              role: 'user',
+              parts: [{ text: JSON.stringify({ subject: subjectMeta.name, department: subjectMeta.department, mode, count: requestedCount, questionBank: subjectMeta.questionBank }) }]
+            }],
+            generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
+          })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          questions = validateQuizQuestions(data?.candidates?.[0]?.content?.parts?.[0]?.text, requestedCount);
+        }
+      } catch (err) {
+        console.warn('Gemini quiz generation failed; using deterministic bank fallback:', err.message);
+      }
+    }
+
+    if (!questions.length) {
+      questions = buildOfflineQuiz(subjectMeta, requestedCount);
+    }
+
+    if (!questions.length) {
+      return res.status(422).json({ error: 'No usable questions are available for this subject yet.' });
+    }
+
+    res.json({
+      success: true,
+      provider: config.provider,
+      mode,
+      subject: subjectMeta.name,
+      questions
+    });
+  } catch (err) {
+    console.error('Quiz generation error:', err);
+    res.status(500).json({ error: 'Quiz generation failed.' });
   }
 });
 
