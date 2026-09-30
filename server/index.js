@@ -617,6 +617,21 @@ app.post('/api/auth/signup', async (req, res) => {
   }
 });
 
+// Update the authenticated user's profile. Role and AI settings are immutable here.
+app.put('/api/auth/profile', requireAuth, async (req, res) => {
+  try {
+    const { name, klId, department } = req.body || {};
+    if (!name || !klId || !department) return res.status(400).json({ error: 'Name, KL ID and department are required.' });
+    req.user.name = String(name).trim();
+    req.user.klId = String(klId).trim();
+    req.user.department = String(department).trim();
+    await saveUser(req.user);
+    res.json({ success: true, user: sanitizeUser(req.user) });
+  } catch {
+    res.status(500).json({ error: 'Profile could not be updated.' });
+  }
+});
+
 // POST connect with KL LMS (lms.kluniversity.in)
 app.post('/api/auth/kl-lms/connect', requireAuth, async (req, res) => {
   try {
