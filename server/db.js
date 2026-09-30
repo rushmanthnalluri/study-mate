@@ -268,6 +268,17 @@ export async function saveChatMessage(msg) {
   return msg;
 }
 
+export async function clearStudyMateData() {
+  const files = [usersFile, savedNotesFile, feedbackFile, chatHistoryFile];
+  for (const file of files) fs.writeFileSync(file, '[]', 'utf8');
+  if (isMongoConnected) {
+    await Promise.all([
+      UserModel?.deleteMany({}), SavedNoteModel?.deleteMany({}),
+      FeedbackModel?.deleteMany({}), ChatMessageModel?.deleteMany({})
+    ]);
+  }
+}
+
 export function isDatabaseConnected() {
   return isMongoConnected;
 }
