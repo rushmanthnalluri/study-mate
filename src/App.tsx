@@ -139,50 +139,23 @@ export const App: React.FC = () => {
     }
   }, [currentScreen, currentUser?.role]);
 
-  // Fetch feedback signals
+  // Fetch only real feedback for the authenticated account.
   useEffect(() => {
-    fetch('/api/feedback/summary')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.recent) {
-          setFeedbacks(data.recent);
-        }
+    if (!currentUser) {
+      setFeedbacks([]);
+      return;
+    }
+
+    fetch('/api/feedback/summary', { headers: authHeaders() })
+      .then(async (res) => {
+        if (!res.ok) return null;
+        return res.json();
       })
-      .catch(() => {
-        setFeedbacks([
-          {
-            id: 'fb-1',
-            topic: "Banker's Algorithm for Deadlock Avoidance",
-            department: "CSE",
-            subject: "Operating Systems",
-            source: "Top student",
-            rating: "useful",
-            comment: "Writing Need = Max - Alloc upfront got me 10/10 in KL In-Sem 2!",
-            createdAt: new Date().toISOString()
-          },
-          {
-            id: 'fb-2',
-            topic: "Thermal Death Kinetics (D, z, F Values)",
-            department: "Food Technology",
-            subject: "Food Microbiology",
-            source: "Professor",
-            rating: "useful",
-            comment: "Includes explicit mention of Clostridium botulinum D121=0.21 min, exactly what we check during evaluation.",
-            createdAt: new Date().toISOString()
-          },
-          {
-            id: 'fb-3',
-            topic: "Radix-2 DIT FFT Butterfly Algorithm",
-            department: "ECE",
-            subject: "Digital Signal Processing",
-            source: "Student",
-            rating: "useful",
-            comment: "The butterfly flowchart made it so simple to memorize before the exam.",
-            createdAt: new Date().toISOString()
-          }
-        ]);
-      });
-  }, []);
+      .then((data) => {
+        setFeedbacks(Array.isArray(data?.recent) ? data.recent : []);
+      })
+      .catch(() => setFeedbacks([]));
+  }, [currentUser?.id]);
 
   // Persist saved notes to localStorage
   useEffect(() => {
@@ -348,12 +321,7 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
         setFeedbacks([json.feedback, ...feedbacks]);
       }
     } catch {
-      const localItem: FeedbackItem = {
-        id: `fb-${Date.now()}`,
-        ...data,
-        createdAt: new Date().toISOString()
-      };
-      setFeedbacks([localItem, ...feedbacks]);
+      // Do not fabricate a successful feedback record when the server is unavailable.
     }
   };
 
@@ -365,6 +333,8 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
     localStorage.removeItem('studymate_user');
     localStorage.removeItem('studymate_token');
     localStorage.removeItem('studymate_saved_notes');
+    localStorage.removeItem(`studymate_chat_history_${currentUser?.id || ''}`);
+    localStorage.removeItem('studymate_chat_history');
     setCurrentUser(null);
     setSavedNotes([]);
     setCurrentNote(null);
