@@ -608,11 +608,20 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
         currentUser={currentUser}
-        onSaveProfile={(updated) => {
-          setCurrentUser(updated);
+        onSaveProfile={async (updated) => {
           try {
-            localStorage.setItem('studymate_user', JSON.stringify(updated));
-          } catch (e) {}
+            const res = await fetch('/api/auth/profile', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json', ...authHeaders() },
+              body: JSON.stringify({ name: updated.name, klId: updated.klId, department: updated.department })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Profile update failed');
+            setCurrentUser(data.user);
+            localStorage.setItem('studymate_user', JSON.stringify(data.user));
+          } catch (error) {
+            console.error('Profile update failed:', error);
+          }
         }}
         onResetData={() => {
           localStorage.removeItem('studymate_saved_notes');
