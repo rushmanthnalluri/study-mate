@@ -87,8 +87,34 @@ const defaultFoodTechCourses = [
 if (!fs.existsSync(usersFile)) {
   fs.writeFileSync(usersFile, '[]', 'utf8');
 }
-app.use(cors());
-app.use(express.json());
+app.use(cors({ origin: process.env.CLIENT_ORIGIN || true }));
+app.use(express.json({ limit: '2mb' }));
+
+// Production security middleware.
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), geolocation=(), payment=(), usb=()');
+  next();
+});
+
+const rateBuckets = new Map();
+const rateLimit = (windowMs, max) => (req, res, next) => {
+  const key = (req.ip || 'unknown') + ':' + req.path;
+  const now = Date.now();
+  const current = rateBuckets.get(key);
+  if (!current || now - current.start > windowMs) {
+    rateBuckets.set(key, { start: now, count: 1 });
+    return next();
+  }
+  current.count += 1;
+  if (current.count > max) return res.status(429).json({ error: 'Too many requests. Please try again shortly.' });
+  next();
+};
+
+
 
 // Helper: Get subjects across departments (defaults to Food Technology)
 function getAllSubjects(deptFilter = 'Food Technology') {
@@ -472,7 +498,11 @@ const authenticateRequest = async (req) => {
   if (!token) return null;
   const users = await getAllUsers();
   const hashed = tokenHash(token);
-  return users.find(u => u.authTokenHash === hashed) || null;
+  const user = users.find(u => u.authTokenHash === hashed) || null;
+  if (!user) return null;
+  const issued = Date.parse(user.authTokenIssuedAt || '');
+  if (!Number.isFinite(issued) || Date.now() - issued > 30 * 24 * 60 * 60 * 1000) return null;
+  return user;
 };
 async function requireAuth(req, res, next) {
   try {
@@ -527,7 +557,7 @@ app.get('/api/auth/me', requireAuth, (req, res) => {
 });
 
 // POST login — existing accounts only; no automatic account creation.
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', rateLimit(15 * 60 * 1000, 20), async (req, res) => {
   try {
     const { usernameOrEmail, password } = req.body || {};
     if (!usernameOrEmail || !password) {
@@ -562,7 +592,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // POST signup — every account is a real persisted student account.
-app.post('/api/auth/signup', async (req, res) => {
+app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => {
   try {
     const { name, klId, email, password, department = 'Food Technology', linkLms = false } = req.body || {};
     if (!name || !email || !password) {
