@@ -1094,6 +1094,6 @@ if (fs.existsSync(distPath)) {
   });
 }
 
-, () => {
-  console.log(`StudyMate AI Food Technology server running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`StudyMate AI server running on port ${PORT}`);
 });
