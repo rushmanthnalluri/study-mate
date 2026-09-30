@@ -1,24 +1,6 @@
 import React from 'react';
 import { Department, Subject, ScreenId, ExamNote } from '../types';
-import {
-  ArrowRight,
-  BookOpen,
-  Clock,
-  Award,
-  CheckCircle2,
-  ChevronRight,
-  Sparkles,
-  FileText,
-  Layers,
-  Calendar,
-  LayoutDashboard,
-  FileSearch,
-  BookMarked,
-  FileSpreadsheet,
-  GraduationCap,
-  RefreshCw,
-  Bot
-} from 'lucide-react';
+import { ArrowRight, BookOpen, Clock3, Award, ChevronRight, Sparkles, FileText, Layers, Calendar, FileSearch, FileSpreadsheet, GraduationCap, RefreshCw, Bot } from 'lucide-react';
 
 interface HomeScreenProps {
   subjects: Subject[];
@@ -31,318 +13,127 @@ interface HomeScreenProps {
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
-  subjects,
-  selectedDepartment,
-  onSelectDepartment,
-  onSelectSubject,
-  onNavigate,
-  recentNotes,
-  onOpenNote
+  subjects, selectedDepartment, onSelectDepartment, onSelectSubject, onNavigate, recentNotes, onOpenNote
 }) => {
   const departments: Department[] = ['All', 'CSE', 'AIDS', 'ECE', 'EEE', 'Food Technology'];
+  const filteredSubjects = subjects.filter(s => selectedDepartment === 'All' || s.department === selectedDepartment);
 
-  const filteredSubjects = subjects.filter(
-    (s) => selectedDepartment === 'All' || s.department === selectedDepartment
-  );
+  const features = [
+    { id: 'mock-exam' as ScreenId, title: 'Mock papers', text: 'Build a complete exam sheet', icon: FileSpreadsheet, tone: 'bg-[#f7e8dd] text-[#8d4d32]' },
+    { id: 'flashcards' as ScreenId, title: 'Flashcards', text: 'Fast 2-mark recall', icon: Layers, tone: 'bg-[#f4ecd8] text-[#846b29]' },
+    { id: 'pdf-analyzer' as ScreenId, title: 'Past papers', text: 'Extract exam patterns', icon: FileSearch, tone: 'bg-[#e8eee7] text-[#527052]' },
+    { id: 'planner' as ScreenId, title: 'Study planner', text: 'Organize your units', icon: Calendar, tone: 'bg-[#eee6f0] text-[#765b7f]' }
+  ];
 
   return (
-    <div className="space-y-5 pb-24 animate-fade-in">
-      {/* Hero Banner / Academic Introduction */}
-      <div className="bg-gradient-to-br from-brand-900 via-brand-800 to-stone-900 text-white rounded-2xl p-5 shadow-elevated relative overflow-hidden">
-        <div className="absolute -right-6 -bottom-6 w-36 h-36 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
-        <div className="relative z-10 space-y-2.5">
-          <div className="inline-flex items-center space-x-1.5 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-condensed font-semibold tracking-wider text-amber-300 uppercase">
-            <Sparkles size={13} />
-            <span>KL University Exam Mode v0.1</span>
+    <div className="space-y-6 pb-28">
+      <section className="relative overflow-hidden rounded-[30px] border border-[#dfc7b2] bg-[#7c4f2c] p-6 text-[#fffaf4] shadow-[0_18px_50px_rgba(107,67,38,0.18)] sm:p-8">
+        <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[#e7bd91]/20 blur-2xl" />
+        <div className="absolute -bottom-20 left-1/2 h-40 w-40 rounded-full bg-[#d9a26e]/15 blur-2xl" />
+        <div className="relative">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#f4d8b7]">
+            <Sparkles size={13} /> KL exam workspace
           </div>
+          <h1 className="max-w-2xl text-3xl font-black tracking-tight sm:text-5xl">Study smarter. Write with structure.</h1>
+          <p className="mt-4 max-w-xl text-sm leading-7 text-[#f0ddc9] sm:text-base">Generate exam-ready notes, practice papers, flashcards and revision material from one account-based workspace.</p>
 
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-white leading-tight">
-            Study the way KL exams expect.
-          </h1>
-
-          <p className="text-xs sm:text-sm text-brand-100/90 leading-relaxed font-sans max-w-lg">
-            Grounded in KL course materials, previous semester papers, and exact examiner mark rubrics across all engineering departments.
-          </p>
-
-          {/* Primary Action Button */}
-          <div className="pt-2 flex flex-col sm:flex-row gap-2">
-            <button
-              onClick={() => onNavigate('select-subject')}
-              className="inline-flex items-center justify-center space-x-2 bg-white text-brand-900 hover:bg-brand-50 px-5 py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98]"
-            >
-              <span>Pick Subject & Generate Notes</span>
-              <ArrowRight size={16} />
+          <div className="mt-7 grid gap-2.5 sm:grid-cols-2">
+            <button onClick={() => onNavigate('select-subject')} className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#fffaf4] px-5 py-3 text-sm font-extrabold text-[#6f4528] shadow-md transition-transform hover:-translate-y-0.5 active:scale-[0.98]">
+              Pick subject & generate <ArrowRight size={17} />
             </button>
-            <button
-              onClick={() => onNavigate('mock-exam')}
-              className="inline-flex items-center justify-center space-x-1.5 bg-amber-400 hover:bg-amber-300 text-stone-950 px-4 py-3 rounded-xl font-bold text-xs transition-colors shadow-sm"
-            >
-              <FileSpreadsheet size={15} />
-              <span>Full Mock Exam Paper</span>
+            <button onClick={() => onNavigate('mock-exam')} className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-[#e4bd8e] bg-[#dca866] px-5 py-3 text-sm font-extrabold text-[#3e2a1d] transition-transform hover:-translate-y-0.5 active:scale-[0.98]">
+              <FileSpreadsheet size={17} /> Full mock paper
             </button>
-            <button
-              onClick={() => onNavigate('chatbot')}
-              className="inline-flex items-center justify-center space-x-1.5 bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-stone-950 px-4 py-3 rounded-xl font-bold text-xs transition-colors shadow-sm"
-            >
-              <Bot size={15} />
-              <span>Ask AI Tutor</span>
+            <button onClick={() => onNavigate('chatbot')} className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-extrabold text-white transition-colors hover:bg-white/15">
+              <Bot size={17} /> Ask AI tutor
             </button>
-            <button
-              onClick={() => onNavigate('lms-sync')}
-              className="inline-flex items-center justify-center space-x-1.5 bg-brand-700/80 hover:bg-brand-600 text-white px-3.5 py-3 rounded-xl font-bold text-xs transition-colors border border-brand-500/30 backdrop-blur-sm"
-            >
-              <RefreshCw size={14} className="text-amber-300" />
-              <span>KL LMS Sync</span>
+            <button onClick={() => onNavigate('lms-sync')} className="flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-[#513b2f] px-5 py-3 text-sm font-extrabold text-[#f7e8d7] transition-colors hover:bg-[#604737]">
+              <RefreshCw size={17} /> KL LMS
             </button>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* KL University LMS Sync Quick Callout */}
-      <div
-        onClick={() => onNavigate('lms-sync')}
-        className="bg-gradient-to-r from-amber-500/10 via-brand-500/10 to-amber-500/10 border border-amber-300/80 dark:border-amber-700/60 rounded-2xl p-3.5 flex items-center justify-between cursor-pointer hover:bg-amber-100/40 dark:hover:bg-amber-950/40 transition-all group shadow-sm"
-      >
-        <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-amber-400 text-brand-950 flex items-center justify-center font-bold text-sm shadow-sm group-hover:scale-105 transition-transform shrink-0">
-            <GraduationCap size={20} />
-          </div>
+      <button onClick={() => onNavigate('lms-sync')} className="group flex w-full items-center justify-between gap-4 rounded-[24px] border border-[#dfc8b3] bg-[#fffaf4] p-4 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+        <div className="flex items-center gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ead4bd] text-[#714628]"><GraduationCap size={21} /></span>
+          <span>
+            <span className="flex items-center gap-2 text-xs font-extrabold text-[#4b392e]">KL LMS workspace <span className="h-2 w-2 rounded-full bg-[#83a66f]" /></span>
+            <span className="mt-1 block text-[11px] leading-5 text-[#8a7768]">Connect your account to keep courses, attendance and deadlines organized.</span>
+          </span>
+        </div>
+        <ChevronRight size={18} className="shrink-0 text-[#9c7453] transition-transform group-hover:translate-x-1" />
+      </button>
+
+      <section>
+        <div className="mb-3 flex items-end justify-between">
           <div>
-            <div className="flex items-center space-x-2">
-              <h4 className="text-xs font-bold text-brand-950 dark:text-amber-200">
-                KL University LMS Moodle Integrated
-              </h4>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            </div>
-            <p className="text-[11px] text-surface-muted dark:text-stone-300">
-              Track 85% attendance eligibility, In-Sem assignments, and synced Food Tech courses directly from <span className="font-mono font-semibold">lms.kluniversity.in</span>.
-            </p>
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a0704b]">Workspace</p>
+            <h2 className="mt-1 text-xl font-black tracking-tight text-[#3b2b23]">Everything for exam week</h2>
           </div>
+          <span className="text-[10px] font-bold text-[#8b796b]">4 tools</span>
         </div>
-        <div className="flex items-center space-x-1 text-xs font-bold text-brand-900 dark:text-amber-300 group-hover:translate-x-0.5 transition-transform shrink-0 ml-2">
-          <span className="hidden sm:inline">Open LMS Gateway</span>
-          <ChevronRight size={14} />
-        </div>
-      </div>
-
-      {/* Feature Suite Hub */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-condensed uppercase tracking-wider font-bold text-surface-muted block">
-            KL Exam Preparation Suite
-          </span>
-          <span className="text-[10px] text-brand-800 font-semibold">
-            All Depts Supported
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {/* Mock Exam Paper */}
-          <div
-            onClick={() => onNavigate('mock-exam')}
-            className="bg-white border border-surface-border p-3 rounded-xl shadow-mobile-card hover:border-brand-400 cursor-pointer transition-all flex flex-col justify-between group"
-          >
-            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-800 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
-              <FileSpreadsheet size={18} />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-surface-dark group-hover:text-brand-800">
-                Mock Paper
-              </h4>
-              <p className="text-[10px] text-surface-muted mt-0.5">
-                Full 75M exam sheet
-              </p>
-            </div>
-          </div>
-
-          {/* Flashcards */}
-          <div
-            onClick={() => onNavigate('flashcards')}
-            className="bg-white border border-surface-border p-3 rounded-xl shadow-mobile-card hover:border-brand-400 cursor-pointer transition-all flex flex-col justify-between group"
-          >
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-800 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
-              <Layers size={18} />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-surface-dark group-hover:text-brand-800">
-                Flashcards
-              </h4>
-              <p className="text-[10px] text-surface-muted mt-0.5">
-                Rapid 2M recall
-              </p>
-            </div>
-          </div>
-
-          {/* Past Papers */}
-          <div
-            onClick={() => onNavigate('pdf-analyzer')}
-            className="bg-white border border-surface-border p-3 rounded-xl shadow-mobile-card hover:border-brand-400 cursor-pointer transition-all flex flex-col justify-between group"
-          >
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
-              <FileSearch size={18} />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-surface-dark group-hover:text-brand-800">
-                Past Papers
-              </h4>
-              <p className="text-[10px] text-surface-muted mt-0.5">
-                Inspect KL papers
-              </p>
-            </div>
-          </div>
-
-          {/* Exam Planner */}
-          <div
-            onClick={() => onNavigate('planner')}
-            className="bg-white border border-surface-border p-3 rounded-xl shadow-mobile-card hover:border-brand-400 cursor-pointer transition-all flex flex-col justify-between group"
-          >
-            <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-800 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
-              <Calendar size={18} />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-surface-dark group-hover:text-brand-800">
-                Study Planner
-              </h4>
-              <p className="text-[10px] text-surface-muted mt-0.5">
-                Unit countdown
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Department Filter Pills */}
-      <div>
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-xs font-condensed uppercase tracking-wider font-bold text-surface-muted">
-            Choose Department
-          </span>
-          <span className="text-[11px] text-surface-muted">
-            {filteredSubjects.length} Subjects available
-          </span>
-        </div>
-        <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
-          {departments.map((dept) => {
-            const isSelected = selectedDepartment === dept;
-            return (
-              <button
-                key={dept}
-                onClick={() => onSelectDepartment(dept)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-                  isSelected
-                    ? 'bg-brand-800 text-white shadow-sm ring-1 ring-brand-800'
-                    : 'bg-white text-surface-dark border border-surface-border hover:bg-surface-subtle'
-                }`}
-              >
-                {dept === 'All' ? 'All Depts' : dept}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Recent Subjects & Knowledge Base Catalog */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-serif font-bold text-surface-dark flex items-center space-x-2">
-            <BookOpen size={16} className="text-brand-800" />
-            <span>KL Knowledge Base Subjects</span>
-          </h2>
-          <button
-            onClick={() => onNavigate('select-subject')}
-            className="text-xs font-semibold text-brand-800 hover:underline flex items-center space-x-0.5"
-          >
-            <span>View All</span>
-            <ChevronRight size={14} />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {filteredSubjects.slice(0, 4).map((subject) => (
-            <div
-              key={subject.id}
-              onClick={() => onSelectSubject(subject)}
-              className="bg-white border border-surface-border rounded-xl p-3.5 shadow-mobile-card hover:border-brand-300 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-surface-subtle text-surface-muted border border-surface-border">
-                    {subject.code}
-                  </span>
-                  <span className="text-[10px] font-bold font-condensed uppercase px-1.5 py-0.5 rounded bg-brand-50 text-brand-800">
-                    {subject.department}
-                  </span>
-                </div>
-                <h3 className="font-semibold text-surface-dark text-xs sm:text-sm group-hover:text-brand-800 transition-colors line-clamp-1">
-                  {subject.name}
-                </h3>
-                <p className="text-[11px] text-surface-muted mt-1">
-                  {subject.units?.length || 5} Course Units • {subject.questionCount || 4}+ Previous Exam Questions
-                </p>
-              </div>
-
-              <div className="mt-2.5 pt-2 border-t border-surface-border/50 flex items-center justify-between text-xs font-medium text-brand-800">
-                <span>Select & Generate</span>
-                <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {features.map(({id,title,text,icon:Icon,tone}) => (
+            <button key={id} onClick={() => onNavigate(id)} className="group rounded-[22px] border border-[#e3d6cb] bg-[#fffaf4] p-4 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-[#cfb49b] hover:shadow-md">
+              <span className={`mb-5 flex h-10 w-10 items-center justify-center rounded-2xl ${tone}`}><Icon size={18} /></span>
+              <span className="block text-xs font-extrabold text-[#4b392e]">{title}</span>
+              <span className="mt-1 block text-[10px] leading-4 text-[#907d6d]">{text}</span>
+            </button>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Recent Revision Notes */}
-      {recentNotes.length > 0 && (
-        <div className="space-y-2.5">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-serif font-bold text-surface-dark flex items-center space-x-2">
-              <Clock size={15} className="text-brand-800" />
-              <span>Recent Revision Notes</span>
-            </h2>
-            <button
-              onClick={() => onNavigate('save')}
-              className="text-xs font-semibold text-brand-800 hover:underline"
-            >
-              See all ({recentNotes.length})
-            </button>
-          </div>
+      <section>
+        <div className="mb-3 flex items-center justify-between">
+          <div><p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#a0704b]">Catalog</p><h2 className="mt-1 text-xl font-black tracking-tight text-[#3b2b23]">Choose your department</h2></div>
+          <span className="text-[10px] font-bold text-[#8b796b]">{filteredSubjects.length} subjects</span>
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {departments.map(dept => {
+            const active = selectedDepartment === dept;
+            return <button key={dept} onClick={() => onSelectDepartment(dept)} className={`whitespace-nowrap rounded-full border px-4 py-2 text-[11px] font-extrabold transition-all ${active ? 'border-[#7c4f2c] bg-[#7c4f2c] text-white shadow-sm' : 'border-[#e2d5ca] bg-[#fffaf4] text-[#715f51] hover:bg-[#f5ebe2]'}`}>{dept === 'All' ? 'All departments' : dept}</button>;
+          })}
+        </div>
+      </section>
 
-          <div className="space-y-2">
-            {recentNotes.slice(0, 3).map((note, index) => (
-              <div
-                key={index}
-                onClick={() => onOpenNote(note)}
-                className="bg-white border border-surface-border rounded-xl p-3 shadow-mobile-card hover:border-brand-300 transition-all cursor-pointer flex items-center justify-between"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-lg bg-brand-50 text-brand-800 flex items-center justify-center font-bold text-xs">
-                    <FileText size={16} />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-semibold text-surface-dark line-clamp-1">
-                      {note.topic}
-                    </h4>
-                    <p className="text-[10px] text-surface-muted">
-                      {note.subject} • {note.department}
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight size={16} className="text-surface-muted" />
+      <section>
+        <div className="mb-3 flex items-center justify-between">
+          <div className="flex items-center gap-2"><BookOpen size={17} className="text-[#9a633e]" /><h2 className="text-lg font-black tracking-tight text-[#3b2b23]">Knowledge base</h2></div>
+          <button onClick={() => onNavigate('select-subject')} className="inline-flex items-center gap-1 text-xs font-extrabold text-[#8b5633]">View all <ChevronRight size={14} /></button>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {filteredSubjects.slice(0, 6).map(subject => (
+            <button key={subject.id} onClick={() => onSelectSubject(subject)} className="group rounded-[22px] border border-[#e3d6cb] bg-[#fffaf4] p-4 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#c9aa8d] hover:shadow-md">
+              <div className="flex items-center justify-between gap-2">
+                <span className="rounded-lg bg-[#f4eadf] px-2 py-1 font-mono text-[9px] font-bold text-[#8a6b55]">{subject.code}</span>
+                <span className="rounded-full bg-[#f7eee6] px-2 py-1 text-[9px] font-extrabold text-[#8d5a37]">{subject.department}</span>
               </div>
+              <h3 className="mt-3 text-sm font-extrabold text-[#4b392e] group-hover:text-[#7c4f2c]">{subject.name}</h3>
+              <p className="mt-1 text-[10px] text-[#907d6d]">{subject.units?.length || 5} units • {subject.questionCount || 0} indexed questions</p>
+              <span className="mt-4 flex items-center justify-between border-t border-[#eee2d8] pt-3 text-[10px] font-extrabold text-[#8d5a37]">Generate notes <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" /></span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {recentNotes.length > 0 && (
+        <section className="rounded-[24px] border border-[#e2d4c7] bg-[#fbf4ed] p-4">
+          <div className="mb-3 flex items-center justify-between"><div className="flex items-center gap-2"><Clock3 size={16} className="text-[#9a633e]" /><h2 className="text-sm font-black text-[#4b392e]">Your recent revision</h2></div><button onClick={() => onNavigate('save')} className="text-[10px] font-extrabold text-[#8d5a37]">See all</button></div>
+          <div className="space-y-2">
+            {recentNotes.slice(0,3).map((note,index) => (
+              <button key={index} onClick={() => onOpenNote(note)} className="flex w-full items-center justify-between rounded-2xl border border-[#e7d9cd] bg-[#fffaf4] p-3 text-left hover:border-[#cdb29a]">
+                <span className="flex min-w-0 items-center gap-3"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#f0dfd0] text-[#8d5a37]"><FileText size={15} /></span><span className="min-w-0"><span className="block truncate text-xs font-extrabold text-[#4b392e]">{note.topic}</span><span className="mt-0.5 block truncate text-[10px] text-[#907d6d]">{note.subject} • {note.department}</span></span></span>
+                <ChevronRight size={16} className="shrink-0 text-[#a68c79]" />
+              </button>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-      {/* Evaluator Guarantee Card */}
-      <div className="bg-surface-subtle border border-surface-border rounded-xl p-3.5 space-y-1.5">
-        <div className="flex items-center space-x-2 text-brand-900 font-semibold text-xs">
-          <Award size={16} className="text-brand-800" />
-          <span>The KL Exam Format Guarantee</span>
-        </div>
-        <p className="text-[11px] text-surface-muted leading-relaxed">
-          Every note generated by StudyMate AI strictly conforms to KL University marking rubrics: concise 2-mark definitions, 5-mark structured answers with flowcharts, and 10-mark full academic essays with keyword scoring density.
-        </p>
-      </div>
+      <section className="rounded-[24px] border border-[#dec8b1] bg-[#f0e0cf] p-5">
+        <div className="flex items-start gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#7c4f2c] text-[#f3d39f]"><Award size={18} /></span><div><h3 className="text-sm font-black text-[#4b392e]">Structured exam answers</h3><p className="mt-1 text-[11px] leading-5 text-[#745f4f]">StudyMate formats generated material around definitions, key points, equations, diagrams and revision cues so your preparation stays organized.</p></div></div>
+      </section>
     </div>
   );
 };
