@@ -1,27 +1,6 @@
 import React, { useState } from 'react';
 import { Department, ScreenId, UserProfile } from '../types';
-import {
-  GraduationCap,
-  Sparkles,
-  BookOpen,
-  LayoutDashboard,
-  Calendar,
-  Layers,
-  FileSearch,
-  BookMarked,
-  FolderTree,
-  FileSpreadsheet,
-  Moon,
-  Sun,
-  Menu,
-  X,
-  ShieldCheck,
-  User,
-  LogIn,
-  RefreshCw,
-  Bot,
-  Settings
-} from 'lucide-react';
+import { GraduationCap, LayoutDashboard, Calendar, Layers, FileSearch, BookMarked, FolderTree, FileSpreadsheet, Moon, Sun, Menu, X, ShieldCheck, Bot, Settings, RefreshCw } from 'lucide-react';
 
 interface HeaderProps {
   currentScreen: ScreenId;
@@ -37,352 +16,105 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  currentScreen,
-  selectedDepartment,
-  onSelectDepartment,
-  onNavigate,
-  departments,
-  isNightMode = false,
-  onToggleNightMode,
-  currentUser,
-  onOpenAuthModal,
-  onOpenSettings
+  currentScreen, selectedDepartment, onSelectDepartment, onNavigate, departments,
+  isNightMode = false, onToggleNightMode, currentUser, onOpenSettings
 }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const navigateTo = (screen: ScreenId) => {
+  const navigate = (screen: ScreenId) => {
     onNavigate(screen);
-    setMobileMenuOpen(false);
+    setOpen(false);
   };
 
+  const items: Array<{id: ScreenId; label: string; icon: React.ElementType}> = [
+    { id: 'mock-exam', label: 'Mock Paper', icon: FileSpreadsheet },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'flashcards', label: 'Flashcards', icon: Layers },
+    { id: 'pdf-analyzer', label: 'Past Papers', icon: FileSearch },
+    { id: 'planner', label: 'Planner', icon: Calendar },
+    { id: 'knowledge-base', label: 'Knowledge', icon: FolderTree },
+    { id: 'glossary', label: 'Glossary', icon: BookMarked },
+    { id: 'lms-sync', label: 'LMS', icon: RefreshCw },
+    { id: 'chatbot', label: 'AI Tutor', icon: Bot }
+  ];
+
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md border-b border-surface-border dark:border-stone-800 transition-all print:hidden">
-      {/* Top micro status bar */}
-      <div className="bg-brand-900 text-brand-100 px-4 py-1.5 text-[11px] font-medium flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span className="font-condensed tracking-wider uppercase text-[12px]">KL University • All Engineering Depts</span>
-        </div>
-        <div className="flex items-center space-x-3 text-brand-200">
-          <span className="hidden sm:inline font-mono">Exam Syllabus 2024-26</span>
-          <a
-            href="https://foodsciencedaily.com/login?next=%2Fdashboard"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-white transition-colors underline decoration-brand-400 underline-offset-2 flex items-center space-x-1"
-          >
-            <span>Food Science Daily</span>
-            <span aria-hidden="true">&rarr;</span>
-          </a>
+    <header className="sticky top-0 z-40 border-b border-[#e6d9cc] bg-[#fffaf4]/95 shadow-[0_8px_30px_rgba(75,55,42,0.06)] backdrop-blur-xl dark:border-[#3b2d25] dark:bg-[#211a16]/95 print:hidden">
+      <div className="bg-[#3b2b23] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#eadbc9]">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#b9d9a3]" /> KL University • StudyMate</span>
+          <span className="hidden sm:block text-[#d8b895]">Account-based academic workspace</span>
         </div>
       </div>
 
-      {/* Main navigation header */}
-      <div className="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between">
-        <div
-          onClick={() => navigateTo('home')}
-          className="flex items-center space-x-2.5 cursor-pointer group"
-        >
-          <div className="w-9 h-9 rounded-xl bg-brand-800 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
-            <GraduationCap size={20} className="text-amber-300" />
-          </div>
-          <div>
-            <div className="flex items-center space-x-1.5">
-              <span className="font-bold text-lg text-surface-dark dark:text-white tracking-tight leading-none">
-                StudyMate <span className="text-brand-800 font-extrabold">AI</span>
-              </span>
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-condensed font-bold bg-brand-100 text-brand-900 uppercase tracking-wider">
-                KL Exam Mode
-              </span>
-            </div>
-            <p className="text-[11px] text-surface-muted leading-tight font-serif italic">
-              Study the way KL exams expect
-            </p>
-          </div>
-        </div>
+      <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
+        <button onClick={() => navigate('home')} className="group flex min-w-0 items-center gap-3 text-left">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#7c4f2c] text-[#f3d39f] shadow-sm transition-transform group-hover:-translate-y-0.5">
+            <GraduationCap size={22} />
+          </span>
+          <span className="hidden min-w-0 sm:block">
+            <span className="block truncate text-[17px] font-black tracking-tight text-[#3b2b23] dark:text-[#fff8f1]">StudyMate <span className="text-[#a9683d]">AI</span></span>
+            <span className="block text-[10px] font-semibold text-[#907d6d]">KL exam preparation suite</span>
+          </span>
+        </button>
 
-        {/* Desktop Quick Nav Links */}
-        <div className="hidden lg:flex items-center space-x-1 text-xs font-semibold text-surface-dark">
-          <button
-            onClick={() => navigateTo('mock-exam')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors flex items-center space-x-1 ${
-              currentScreen === 'mock-exam' ? 'bg-brand-50 text-brand-800' : 'hover:bg-surface-subtle'
-            }`}
-          >
-            <FileSpreadsheet size={14} />
-            <span>Mock Paper</span>
-          </button>
-          <button
-            onClick={() => navigateTo('dashboard')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors flex items-center space-x-1 ${
-              currentScreen === 'dashboard' ? 'bg-brand-50 text-brand-800' : 'hover:bg-surface-subtle'
-            }`}
-          >
-            <LayoutDashboard size={14} />
-            <span>Dashboard</span>
-          </button>
-          <button
-            onClick={() => navigateTo('flashcards')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors flex items-center space-x-1 ${
-              currentScreen === 'flashcards' ? 'bg-brand-50 text-brand-800' : 'hover:bg-surface-subtle'
-            }`}
-          >
-            <Layers size={14} />
-            <span>Flashcards</span>
-          </button>
-          <button
-            onClick={() => navigateTo('pdf-analyzer')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors flex items-center space-x-1 ${
-              currentScreen === 'pdf-analyzer' ? 'bg-brand-50 text-brand-800' : 'hover:bg-surface-subtle'
-            }`}
-          >
-            <FileSearch size={14} />
-            <span>Papers</span>
-          </button>
-          <button
-            onClick={() => navigateTo('planner')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors flex items-center space-x-1 ${
-              currentScreen === 'planner' ? 'bg-brand-50 text-brand-800' : 'hover:bg-surface-subtle'
-            }`}
-          >
-            <Calendar size={14} />
-            <span>Planner</span>
-          </button>
-          <button
-            onClick={() => navigateTo('knowledge-base')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors flex items-center space-x-1 ${
-              currentScreen === 'knowledge-base' ? 'bg-brand-50 text-brand-800' : 'hover:bg-surface-subtle'
-            }`}
-          >
-            <FolderTree size={14} />
-            <span>Drive KB</span>
-          </button>
-          <button
-            onClick={() => navigateTo('glossary')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors flex items-center space-x-1 ${
-              currentScreen === 'glossary' ? 'bg-brand-50 text-brand-800' : 'hover:bg-surface-subtle'
-            }`}
-          >
-            <BookMarked size={14} />
-            <span>Glossary</span>
-          </button>
-          <button
-            onClick={() => navigateTo('lms-sync')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors flex items-center space-x-1 ${
-              currentScreen === 'lms-sync'
-                ? 'bg-amber-100 text-amber-950 font-bold border border-amber-300 shadow-sm'
-                : 'hover:bg-amber-50 text-amber-900 font-semibold'
-            }`}
-          >
-            <RefreshCw size={14} className={currentScreen === 'lms-sync' ? 'text-amber-800' : 'text-amber-700'} />
-            <span>KL LMS</span>
-          </button>
-          <button
-            onClick={() => navigateTo('chatbot')}
-            className={`px-2.5 py-1.5 rounded-lg transition-colors flex items-center space-x-1 ${
-              currentScreen === 'chatbot'
-                ? 'bg-brand-800 text-white font-bold shadow-sm'
-                : 'hover:bg-brand-50 text-brand-900 font-semibold'
-            }`}
-          >
-            <Bot size={14} className={currentScreen === 'chatbot' ? 'text-amber-300' : 'text-brand-800'} />
-            <span>AI Tutor</span>
-          </button>
+        <nav className="hidden flex-1 items-center justify-center gap-1 xl:flex">
+          {items.map(({id,label,icon:Icon}) => (
+            <button key={id} onClick={() => navigate(id)} className={`inline-flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-[11px] font-bold transition-all ${currentScreen === id ? 'bg-[#efe0d1] text-[#754925] shadow-sm' : 'text-[#746357] hover:bg-[#f7eee6] hover:text-[#4b392e]'}`}>
+              <Icon size={14} />
+              {label}
+            </button>
+          ))}
           {currentUser?.role === 'admin' && (
-            <button
-              onClick={() => navigateTo('admin')}
-              className={`px-3 py-2 rounded-xl transition-all flex items-center space-x-1.5 ${currentScreen === 'admin' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}
-            >
-              <ShieldCheck size={14} />
-              <span className="font-bold">Admin</span>
+            <button onClick={() => navigate('admin')} className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-[11px] font-extrabold ${currentScreen === 'admin' ? 'bg-[#3b2b23] text-white' : 'bg-[#f0e5da] text-[#4b392e] hover:bg-[#e6d7c7]'}`}>
+              <ShieldCheck size={14} /> Admin
             </button>
           )}
-        </div>
+        </nav>
 
-        {/* Right side controls: User Pill, Dept Switcher, Night Toggle & Settings */}
-        <div className="flex items-center space-x-2">
-          {currentUser ? (
-            <button
-              onClick={() => navigateTo('lms-sync')}
-              title={`User: ${currentUser.name} (${currentUser.klId}) - Click for LMS Sync`}
-              className="flex items-center space-x-1.5 px-2 py-1 rounded-lg bg-brand-50 hover:bg-brand-100 border border-brand-200/80 text-brand-900 transition-colors cursor-pointer"
-            >
-              <div className="w-5 h-5 rounded-full bg-brand-800 text-amber-300 text-[10px] font-bold flex items-center justify-center">
-                {currentUser.name ? currentUser.name.charAt(0) : 'K'}
-              </div>
-              <span className="font-mono text-xs font-semibold hidden md:inline">
-                {currentUser.klId}
-              </span>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="KL LMS Connected" />
-            </button>
-          ) : onOpenAuthModal ? (
-            <button
-              onClick={onOpenAuthModal}
-              className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-brand-800 hover:bg-brand-900 text-white text-xs font-bold transition-colors shadow-sm"
-            >
-              <LogIn size={13} />
-              <span className="hidden sm:inline">Sign In / LMS</span>
-            </button>
-          ) : null}
+        <div className="ml-auto flex items-center gap-2">
+          <div className="hidden items-center gap-2 rounded-2xl border border-[#e5d7c8] bg-[#f8f0e8] px-2.5 py-1.5 sm:flex dark:border-[#49372c] dark:bg-[#2c211b]">
+            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#e2c2a3] text-[11px] font-black text-[#5b3822]">{currentUser?.name?.charAt(0).toUpperCase()}</span>
+            <div className="max-w-28">
+              <p className="truncate text-[11px] font-extrabold text-[#4b392e] dark:text-[#fff8f1]">{currentUser?.name}</p>
+              <p className="truncate font-mono text-[9px] text-[#907d6d]">{currentUser?.klId}</p>
+            </div>
+          </div>
 
           {onToggleNightMode && (
-            <button
-              onClick={onToggleNightMode}
-              title={isNightMode ? "Switch to Day Mode" : "Switch to Late Night Study Mode"}
-              className="p-1.5 rounded-lg border border-surface-border text-surface-muted hover:text-surface-dark transition-colors"
-            >
-              {isNightMode ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} />}
+            <button onClick={onToggleNightMode} title="Toggle night mode" className="rounded-xl border border-[#dfd1c4] bg-white p-2 text-[#6f5d50] hover:bg-[#f6eee7] dark:border-[#4a382d] dark:bg-[#2c211b]">
+              {isNightMode ? <Sun size={16} /> : <Moon size={16} />}
             </button>
           )}
-
           {onOpenSettings && (
-            <button
-              onClick={onOpenSettings}
-              title="Settings & AI Model Provider"
-              className="p-1.5 rounded-lg border border-surface-border text-surface-muted hover:text-surface-dark transition-colors"
-            >
+            <button onClick={onOpenSettings} title="Account settings" className="rounded-xl border border-[#dfd1c4] bg-white p-2 text-[#6f5d50] hover:bg-[#f6eee7] dark:border-[#4a382d] dark:bg-[#2c211b]">
               <Settings size={16} />
             </button>
           )}
-
-          <div className="relative">
-            <select
-              value={selectedDepartment}
-              onChange={(e) => onSelectDepartment(e.target.value as Department)}
-              className="appearance-none bg-surface-subtle border border-surface-border text-xs font-semibold text-surface-dark rounded-lg pl-3 pr-7 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-800/30 cursor-pointer"
-            >
-              <option value="All">All Depts</option>
-              <option value="CSE">CSE</option>
-              <option value="AIDS">AI & DS</option>
-              <option value="ECE">ECE</option>
-              <option value="EEE">EEE</option>
-              <option value="Food Technology">Food Tech</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-surface-muted">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-1.5 rounded-lg border border-surface-border text-surface-dark hover:bg-surface-subtle transition-colors"
-            aria-label="Toggle Navigation Menu"
-          >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          <select value={selectedDepartment} onChange={e => onSelectDepartment(e.target.value as Department)} className="hidden rounded-xl border border-[#dfd1c4] bg-white px-3 py-2 text-[11px] font-bold text-[#59473a] outline-none focus:ring-2 focus:ring-[#c28b5b]/30 md:block dark:border-[#4a382d] dark:bg-[#2c211b] dark:text-[#fff8f1]">
+            {departments.map(d => <option key={d} value={d}>{d === 'Food Technology' ? 'Food Tech' : d === 'All' ? 'All Depts' : d}</option>)}
+          </select>
+          <button onClick={() => setOpen(v => !v)} className="rounded-xl border border-[#dfd1c4] bg-white p-2 text-[#59473a] hover:bg-[#f6eee7] xl:hidden dark:border-[#4a382d] dark:bg-[#2c211b] dark:text-white">
+            {open ? <X size={19} /> : <Menu size={19} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer Menu for Features */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-b border-surface-border px-4 py-3 space-y-2.5 animate-fade-in shadow-elevated">
-          {/* Mobile User Profile Bar */}
-          <div className="flex items-center justify-between p-2 rounded-xl bg-brand-50 dark:bg-stone-800 border border-brand-200 dark:border-stone-700">
-            <div className="flex items-center space-x-2">
-              <div className="w-7 h-7 rounded-lg bg-brand-800 text-amber-300 flex items-center justify-center font-bold text-xs">
-                {currentUser?.name ? currentUser.name.charAt(0) : 'K'}
-              </div>
-              <div className="text-left">
-                <p className="text-xs font-bold text-surface-dark dark:text-white leading-tight">
-                  {currentUser?.name || 'KL Student'}
-                </p>
-                <p className="text-[10px] text-surface-muted font-mono">
-                  ID: {currentUser?.klId || '2100030045'} • {currentUser?.isLmsConnected !== false ? 'LMS Connected' : 'Guest'}
-                </p>
-              </div>
-            </div>
-            {onOpenAuthModal && (
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenAuthModal();
-                }}
-                className="text-xs font-semibold text-brand-800 dark:text-amber-300 hover:underline px-2 py-1"
-              >
-                {currentUser ? 'Switch' : 'Sign In'}
+      {open && (
+        <div className="border-t border-[#eadfd4] bg-[#fffaf4] px-4 py-4 xl:hidden dark:border-[#3b2d25] dark:bg-[#211a16]">
+          <div className="mb-3 flex items-center gap-3 rounded-2xl border border-[#eadfd4] bg-[#f8f0e8] p-3 dark:border-[#46352b] dark:bg-[#2c211b]">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#7c4f2c] text-[#f3d39f] font-black">{currentUser?.name?.charAt(0).toUpperCase()}</span>
+            <div><p className="text-xs font-extrabold">{currentUser?.name}</p><p className="font-mono text-[10px] text-[#907d6d]">{currentUser?.klId}</p></div>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {items.map(({id,label,icon:Icon}) => (
+              <button key={id} onClick={() => navigate(id)} className={`flex items-center gap-2 rounded-2xl border px-3 py-3 text-left text-xs font-bold ${currentScreen === id ? 'border-[#cba27d] bg-[#efe0d1] text-[#754925]' : 'border-[#eadfd4] bg-white text-[#59473a] hover:bg-[#f8f0e8]'}`}>
+                <Icon size={15} /> {label}
               </button>
-            )}
-          </div>
-
-          <div className="text-[10px] font-condensed uppercase tracking-wider font-bold text-surface-muted mb-1">
-            KL Exam Mode Suite
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-xs font-semibold text-surface-dark">
-            <button
-              onClick={() => navigateTo('lms-sync')}
-              className="p-2.5 rounded-xl border border-amber-300 bg-amber-50/80 flex items-center space-x-2 text-amber-950 font-bold hover:bg-amber-100 col-span-2 shadow-sm"
-            >
-              <RefreshCw size={16} className="text-amber-800" />
-              <span>KL LMS Portal & Attendance Tracker</span>
-            </button>
-            <button
-              onClick={() => navigateTo('mock-exam')}
-              className="p-2.5 rounded-xl border border-surface-border bg-surface-subtle flex items-center space-x-2 hover:bg-brand-50 hover:text-brand-800"
-            >
-              <FileSpreadsheet size={16} className="text-brand-800" />
-              <span>Mock Paper</span>
-            </button>
-            <button
-              onClick={() => navigateTo('dashboard')}
-              className="p-2.5 rounded-xl border border-surface-border bg-surface-subtle flex items-center space-x-2 hover:bg-brand-50 hover:text-brand-800"
-            >
-              <LayoutDashboard size={16} className="text-brand-800" />
-              <span>Dashboard</span>
-            </button>
-            <button
-              onClick={() => navigateTo('flashcards')}
-              className="p-2.5 rounded-xl border border-surface-border bg-surface-subtle flex items-center space-x-2 hover:bg-brand-50 hover:text-brand-800"
-            >
-              <Layers size={16} className="text-brand-800" />
-              <span>Flashcards</span>
-            </button>
-            <button
-              onClick={() => navigateTo('pdf-analyzer')}
-              className="p-2.5 rounded-xl border border-surface-border bg-surface-subtle flex items-center space-x-2 hover:bg-brand-50 hover:text-brand-800"
-            >
-              <FileSearch size={16} className="text-brand-800" />
-              <span>Past Papers</span>
-            </button>
-            <button
-              onClick={() => navigateTo('planner')}
-              className="p-2.5 rounded-xl border border-surface-border bg-surface-subtle flex items-center space-x-2 hover:bg-brand-50 hover:text-brand-800"
-            >
-              <Calendar size={16} className="text-brand-800" />
-              <span>Exam Planner</span>
-            </button>
-            <button
-              onClick={() => navigateTo('knowledge-base')}
-              className="p-2.5 rounded-xl border border-surface-border bg-surface-subtle flex items-center space-x-2 hover:bg-brand-50 hover:text-brand-800"
-            >
-              <FolderTree size={16} className="text-brand-800" />
-              <span>Drive KB</span>
-            </button>
-            <button
-              onClick={() => navigateTo('chatbot')}
-              className="p-2.5 rounded-xl border border-brand-200 bg-brand-50 flex items-center space-x-2 text-brand-900 font-bold hover:bg-brand-100 col-span-2 shadow-sm"
-            >
-              <Bot size={16} className="text-amber-700" />
-              <span>StudyMate AI Academic Tutor (Ask Doubts)</span>
-            </button>
-            <button
-              onClick={() => navigateTo('admin')}
-              className="p-2.5 rounded-xl border border-surface-border bg-surface-subtle flex items-center space-x-2 text-surface-dark font-bold hover:bg-brand-50"
-            >
-              <ShieldCheck size={16} className="text-brand-800" />
-              <span>Admin Portal</span>
-            </button>
-            {onOpenSettings && (
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenSettings();
-                }}
-                className="p-2.5 rounded-xl border border-surface-border bg-surface-subtle flex items-center space-x-2 text-surface-dark font-bold hover:bg-brand-50"
-              >
-                <Settings size={16} className="text-brand-800" />
-                <span>AI Settings</span>
+            ))}
+            {currentUser?.role === 'admin' && (
+              <button onClick={() => navigate('admin')} className="flex items-center gap-2 rounded-2xl border border-[#cdb9a7] bg-[#3b2b23] px-3 py-3 text-left text-xs font-bold text-white">
+                <ShieldCheck size={15} /> Admin Console
               </button>
             )}
           </div>
