@@ -436,7 +436,7 @@ app.post('/api/chat', requireAuth, async (req, res) => {
     // Persist bot reply
     await saveChatMessage({
       id: `chat-${Date.now()}-bot`,
-      userId: userId || 'default',
+      userId: req.user.id,
       role: 'assistant',
       content: reply.content,
       subject: subject || 'General',
