@@ -12,3 +12,36 @@ button { -webkit-tap-highlight-color:transparent; }
 .scrollbar-none::-webkit-scrollbar{display:none}.scrollbar-none{scrollbar-width:none}
 .safe-bottom{padding-bottom:max(.5rem,env(safe-area-inset-bottom));}
 @media print { body{background:#fff!important;color:#000!important} header,nav,button,.print\\:hidden{display:none!important} main{max-width:100%!important;padding:0!important;margin:0!important} }
+
+
+.auth-input {
+  width: 100%;
+  border: 1px solid #dfd1c4;
+  border-radius: 14px;
+  background: #fffdf9;
+  color: #3b2b23;
+  padding: 11px 13px;
+  font-size: 12px;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.auth-input::placeholder { color: #a08d7d; }
+.auth-input:focus { border-color: #b97745; box-shadow: 0 0 0 3px rgba(185,119,69,.14); background: #fff; }
+.auth-primary {
+  width: 100%;
+  min-height: 46px;
+  border-radius: 15px;
+  background: #7c4f2c;
+  color: #fffaf4;
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 8px 20px rgba(124,79,44,.18);
+  transition: transform .15s ease, background .15s ease, opacity .15s ease;
+}
+.auth-primary:hover { background: #643c20; transform: translateY(-1px); }
+.auth-primary:active { transform: translateY(0); }
+.auth-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
