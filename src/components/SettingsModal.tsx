@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Department, UserProfile } from '../types';
-import { X, UserRound, ShieldCheck, LogOut, Save, Trash2 } from 'lucide-react';
+import { X, UserRound, ShieldCheck, Save, Trash2, KeyRound } from 'lucide-react';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -8,12 +8,16 @@ interface SettingsModalProps {
   currentUser: UserProfile | null;
   onSaveProfile: (profile: UserProfile) => void;
   onResetData: () => void;
+  onChangePassword: (currentPassword:string,newPassword:string) => Promise<void>;
 }
 
-export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser, onSaveProfile, onResetData }) => {
+export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser, onSaveProfile, onResetData, onChangePassword }) => {
   const [name, setName] = useState('');
   const [department, setDepartment] = useState<Department>('Food Technology');
   const [klId, setKlId] = useState('');
+  const [currentPassword,setCurrentPassword]=useState('');
+  const [newPassword,setNewPassword]=useState('');
+  const [passwordMessage,setPasswordMessage]=useState('');
 
   useEffect(() => {
     if (currentUser) {
@@ -62,6 +66,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
               <option>Food Technology</option><option>CSE</option><option>AIDS</option><option>ECE</option><option>EEE</option>
             </select>
           </label>
+
+          <div className="rounded-2xl border border-[#e7d4bd] bg-[#fbf3e9] p-4">
+            <div className="mb-3 flex items-center gap-2"><KeyRound size={16} className="text-[#9b633c]"/><p className="text-xs font-extrabold text-[#4b392e]">Change password</p></div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <input className="auth-input" type="password" autoComplete="current-password" placeholder="Current password" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)}/>
+              <input className="auth-input" type="password" autoComplete="new-password" minLength={8} placeholder="New password" value={newPassword} onChange={e=>setNewPassword(e.target.value)}/>
+            </div>
+            <button type="button" disabled={!currentPassword||newPassword.length<8} onClick={async()=>{try{await onChangePassword(currentPassword,newPassword);setCurrentPassword('');setNewPassword('');setPasswordMessage('Password changed successfully.');}catch(e){setPasswordMessage(e instanceof Error?e.message:'Password change failed.');}}} className="mt-3 rounded-xl bg-[#3b2b23] px-3 py-2 text-xs font-bold text-white disabled:opacity-40">Update password</button>
+            {passwordMessage&&<p className="mt-2 text-[11px] font-semibold text-[#6f594a]">{passwordMessage}</p>}
+          </div>
 
           <div className="rounded-2xl border border-[#e7d4bd] bg-[#fbf3e9] p-4">
             <div className="flex items-start gap-3">
