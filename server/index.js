@@ -672,6 +672,28 @@ app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => 
   }
 });
 
+// Change password and rotate the bearer session.
+app.post('/api/auth/password', requireAuth, rateLimit(15 * 60 * 1000, 5), async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body || {};
+    if (!currentPassword || !newPassword || String(newPassword).length < 8 || String(newPassword).length > 128) {
+      return res.status(400).json({ error: 'Current password and a new password of 8-128 characters are required.' });
+    }
+    if (!req.user.passwordHash || !verifyPassword(String(currentPassword), req.user.passwordHash)) {
+      return res.status(401).json({ error: 'Current password is incorrect.' });
+    }
+    const token = issueAuthToken();
+    req.user.passwordHash = hashPassword(String(newPassword));
+    req.user.authTokenHash = tokenHash(token);
+    req.user.authTokenIssuedAt = new Date().toISOString();
+    delete req.user.password;
+    await saveUser(req.user);
+    res.json({ success: true, token, user: sanitizeUser(req.user) });
+  } catch {
+    res.status(500).json({ error: 'Password could not be changed.' });
+  }
+});
+
 // Update the authenticated user's profile. Role and AI settings are immutable here.
 app.put('/api/auth/profile', requireAuth, async (req, res) => {
   try {
