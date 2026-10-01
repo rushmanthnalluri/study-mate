@@ -22,7 +22,11 @@ test('all personalized API routes require authentication', () => {
     "app.post('/api/auth/kl-lms/sync', requireAuth",
     "app.post('/api/quiz/generate', requireAuth",
     "app.post('/api/quiz/attempts', requireAuth",
-    "app.get('/api/quiz/attempts', requireAuth"
+    "app.get('/api/quiz/attempts', requireAuth",
+    "app.post('/api/studio/sources', requireAuth",
+    "app.get('/api/studio/sources', requireAuth",
+    "app.delete('/api/studio/sources/:id', requireAuth",
+    "app.post('/api/studio/ask', requireAuth"
   ];
   for (const route of required) assert.ok(server.includes(route), route);
 });
