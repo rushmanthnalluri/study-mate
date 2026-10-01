@@ -68,6 +68,15 @@ const FeedbackSchema = new mongoose.Schema({
   createdAt: { type: String }
 }, { timestamps: true });
 
+const StudySourceSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true },
+  userId: { type: String, required: true, index: true },
+  name: { type: String, required: true },
+  mimeType: { type: String, default: 'text/plain' },
+  content: { type: String, required: true },
+  createdAt: { type: String, required: true }
+}, { timestamps: true });
+
 const QuizAttemptSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   userId: { type: String, required: true, index: true },
@@ -96,6 +105,7 @@ export let SavedNoteModel;
 export let FeedbackModel;
 export let ChatMessageModel;
 export let QuizAttemptModel;
+export let StudySourceModel;
 
 let isMongoConnected = false;
 let mongoRequired = Boolean(process.env.MONGODB_URI);
@@ -129,6 +139,7 @@ export async function initDatabase() {
       FeedbackModel = mongoose.models.Feedback || mongoose.model('Feedback', FeedbackSchema);
       ChatMessageModel = mongoose.models.ChatMessage || mongoose.model('ChatMessage', ChatMessageSchema);
       QuizAttemptModel = mongoose.models.QuizAttempt || mongoose.model('QuizAttempt', QuizAttemptSchema);
+      StudySourceModel = mongoose.models.StudySource || mongoose.model('StudySource', StudySourceSchema);
       return true;
     } catch (err) {
       console.warn('⚠️ [MongoDB Warning] Could not connect to MONGODB_URI. Falling back gracefully to JSON storage.', err.message);
@@ -290,6 +301,39 @@ export async function addFeedback(feedback) {
 }
 
 
+
+// -------------------------------------------------------------
+// STUDY SOURCES
+// -------------------------------------------------------------
+export async function addStudySource(source) {
+  assertStorageReady();
+  if (isMongoConnected && StudySourceModel) return StudySourceModel.create(source).then(doc => doc.toObject());
+  const file = path.join(dataDir, 'study-sources.json');
+  const list = fs.existsSync(file) ? await readJson(file) : [];
+  list.unshift(source);
+  atomicWriteJson(file, list.slice(0, 1000));
+  return source;
+}
+
+export async function getStudySources(userId, limit = 20) {
+  assertStorageReady();
+  if (!userId) throw new Error('Study sources require an authenticated user.');
+  if (isMongoConnected && StudySourceModel) return StudySourceModel.find({ userId }).sort({ createdAt: -1 }).limit(limit).lean();
+  const file = path.join(dataDir, 'study-sources.json');
+  const list = fs.existsSync(file) ? await readJson(file) : [];
+  return list.filter(s => s.userId === userId).slice(0, limit);
+}
+
+export async function deleteStudySource(id, userId) {
+  assertStorageReady();
+  if (!userId) throw new Error('Study sources require an authenticated user.');
+  if (isMongoConnected && StudySourceModel) return StudySourceModel.deleteOne({ id, userId });
+  const file = path.join(dataDir, 'study-sources.json');
+  const list = fs.existsSync(file) ? await readJson(file) : [];
+  atomicWriteJson(file, list.filter(s => !(s.id === id && s.userId === userId)));
+  return true;
+}
+
 // -------------------------------------------------------------
 // QUIZ ATTEMPTS
 // -------------------------------------------------------------
@@ -359,12 +403,12 @@ export async function saveChatMessage(msg) {
 
 export async function clearStudyMateData() {
   assertStorageReady();
-  const files = [usersFile, savedNotesFile, feedbackFile, chatHistoryFile, path.join(dataDir, 'quiz-attempts.json')];
+  const files = [usersFile, savedNotesFile, feedbackFile, chatHistoryFile, path.join(dataDir, 'quiz-attempts.json'), path.join(dataDir, 'study-sources.json')];
   for (const file of files) fs.writeFileSync(file, '[]', 'utf8');
   if (isMongoConnected) {
     await Promise.all([
       UserModel?.deleteMany({}), SavedNoteModel?.deleteMany({}),
-      FeedbackModel?.deleteMany({}), ChatMessageModel?.deleteMany({}), QuizAttemptModel?.deleteMany({})
+      FeedbackModel?.deleteMany({}), ChatMessageModel?.deleteMany({}), QuizAttemptModel?.deleteMany({}), StudySourceModel?.deleteMany({})
     ]);
   }
 }
