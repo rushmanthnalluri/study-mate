@@ -341,6 +341,8 @@ export const App: React.FC = () => {
         </div>
       )}
       {currentUser && <>
+      <a href="#main-content" className="sr-only-focusable fixed left-3 top-3 z-[100] rounded-xl bg-[#3b2b23] px-4 py-3 text-sm font-bold text-white shadow-lg">Skip to main content</a>
+
       {/* Top Header */}
       <Header
         currentScreen={currentScreen}
@@ -357,6 +359,8 @@ export const App: React.FC = () => {
 
       {/* Main Screen Content Body */}
       <main
+        id="main-content"
+        tabIndex={-1}
         className={`flex-1 mx-auto w-full px-4 pt-3 ${
           ['generate-notes', 'admin', 'mock-exam', 'quiz', 'studio', 'dashboard', 'lms-sync', 'chatbot'].includes(currentScreen)
             ? 'max-w-6xl'
