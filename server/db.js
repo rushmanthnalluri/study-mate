@@ -86,6 +86,17 @@ export let FeedbackModel;
 export let ChatMessageModel;
 
 let isMongoConnected = false;
+let mongoRequired = Boolean(process.env.MONGODB_URI);
+
+function assertStorageReady() {
+  if (mongoRequired && !isMongoConnected) throw new Error('Database unavailable.');
+}
+
+function atomicWriteJson(file, value) {
+  const temp = file + '.tmp-' + process.pid + '-' + Date.now();
+  fs.writeFileSync(temp, JSON.stringify(value, null, 2), 'utf8');
+  fs.renameSync(temp, file);
+}
 
 export async function initDatabase() {
   const mongoUri = process.env.MONGODB_URI;
@@ -97,6 +108,7 @@ export async function initDatabase() {
         bufferCommands: false
       });
       isMongoConnected = true;
+      mongoRequired = true;
       console.log('🍃 [Render MongoDB] Connected successfully to MongoDB instance!');
 
       AiConfigModel = mongoose.models.AiConfig || mongoose.model('AiConfig', AiConfigSchema);
@@ -110,7 +122,8 @@ export async function initDatabase() {
       isMongoConnected = false;
     }
   } else {
-    console.log('📁 [Storage] Running in resilient file-based storage mode. (Set MONGODB_URI on Render to enable MongoDB).');
+    mongoRequired = false;
+    console.log('📁 [Storage] Running in local file-based storage mode.');
   }
 
   return false;
@@ -118,6 +131,7 @@ export async function initDatabase() {
 
 // -------------------------------------------------------------
 export async function getAiConfig() {
+  assertStorageReady();
   if (isMongoConnected && AiConfigModel) {
     try {
       return await AiConfigModel.findOne({ id: 'global' }).lean();
@@ -127,6 +141,7 @@ export async function getAiConfig() {
 }
 
 export async function saveAiConfig(config) {
+  assertStorageReady();
   const payload = { ...config, id: 'global', updatedAt: new Date().toISOString() };
   if (isMongoConnected && AiConfigModel) {
     return AiConfigModel.findOneAndUpdate({ id: 'global' }, payload, { upsert: true, returnDocument: 'after' }).lean();
@@ -138,6 +153,7 @@ export async function saveAiConfig(config) {
 // USER OPERATIONS (Dual Mongo / File Support)
 // -------------------------------------------------------------
 export async function getAllUsers() {
+  assertStorageReady();
   if (isMongoConnected && UserModel) {
     try {
       const docs = await UserModel.find({}).lean();
@@ -155,36 +171,26 @@ export async function getAllUsers() {
 }
 
 export async function saveUser(user) {
-  // Update file storage
+  assertStorageReady();
+  if (isMongoConnected && UserModel) {
+    return UserModel.findOneAndUpdate(
+      { id: user.id },
+      user,
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ).lean();
+  }
   const users = await getAllUsers();
   const existingIdx = users.findIndex(u => u.id === user.id || u.klId === user.klId || u.email === user.email);
-  if (existingIdx >= 0) {
-    users[existingIdx] = { ...users[existingIdx], ...user };
-  } else {
-    users.push(user);
-  }
-  fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf8');
-
-  // Update MongoDB if connected
-  if (isMongoConnected && UserModel) {
-    try {
-      await UserModel.findOneAndUpdate(
-        { id: user.id },
-        user,
-        { upsert: true, new: true }
-      );
-    } catch (e) {
-      console.warn('Failed to upsert user in MongoDB:', e.message);
-    }
-  }
-
+  if (existingIdx >= 0) users[existingIdx] = { ...users[existingIdx], ...user };
+  else users.push(user);
+  atomicWriteJson(usersFile, users);
   return user;
 }
-
 // -------------------------------------------------------------
 // SAVED NOTES OPERATIONS
 // -------------------------------------------------------------
 export async function getSavedNotes(userId = null) {
+  assertStorageReady();
   if (isMongoConnected && SavedNoteModel) {
     try {
       const docs = await SavedNoteModel.find(userId ? { userId } : {}).sort({ createdAt: -1 }).lean();
@@ -201,6 +207,7 @@ export async function getSavedNotes(userId = null) {
 }
 
 export async function addSavedNote(note) {
+  assertStorageReady();
   // File fallback must preserve every user's records. Never replace the
   // complete file with a single user's filtered view.
   let notes = [];
@@ -219,21 +226,12 @@ export async function addSavedNote(note) {
   // another user's records.
   notes = notes.filter(n => !(n.userId === ownerId && n.topic === note.topic && n.subject === note.subject));
   notes.unshift(note);
-  fs.writeFileSync(savedNotesFile, JSON.stringify(notes, null, 2), 'utf8');
-
-  if (isMongoConnected && SavedNoteModel) {
-    try {
-      await SavedNoteModel.findOneAndUpdate(
-        { id: note.id, userId: ownerId },
-        note,
-        { upsert: true, new: true }
-      );
-    } catch (e) {}
-  }
+  atomicWriteJson(savedNotesFile, notes);
   return note;
 }
 
 export async function deleteSavedNote(id, userId = null) {
+  assertStorageReady();
   const ownerId = String(userId || '');
   if (!ownerId) throw new Error('Saved notes require an authenticated user.');
 
@@ -247,13 +245,7 @@ export async function deleteSavedNote(id, userId = null) {
   }
 
   notes = notes.filter(n => !(n.id === id && n.userId === ownerId));
-  fs.writeFileSync(savedNotesFile, JSON.stringify(notes, null, 2), 'utf8');
-
-  if (isMongoConnected && SavedNoteModel) {
-    try {
-      await SavedNoteModel.deleteOne({ id, userId: ownerId });
-    } catch (e) {}
-  }
+  atomicWriteJson(savedNotesFile, notes);
   return true;
 }
 
@@ -261,6 +253,7 @@ export async function deleteSavedNote(id, userId = null) {
 // FEEDBACK OPERATIONS
 // -------------------------------------------------------------
 export async function getFeedbacks() {
+  assertStorageReady();
   if (isMongoConnected && FeedbackModel) {
     try {
       const docs = await FeedbackModel.find({}).sort({ createdAt: -1 }).lean();
@@ -276,22 +269,19 @@ export async function getFeedbacks() {
 }
 
 export async function addFeedback(feedback) {
+  assertStorageReady();
   const list = await getFeedbacks();
   list.unshift(feedback);
-  fs.writeFileSync(feedbackFile, JSON.stringify(list, null, 2), 'utf8');
-
-  if (isMongoConnected && FeedbackModel) {
-    try {
-      await FeedbackModel.create(feedback);
-    } catch (e) {}
-  }
+  atomicWriteJson(feedbackFile, list);
   return feedback;
 }
 
 // -------------------------------------------------------------
 // CHATBOT MESSAGE PERSISTENCE
 // -------------------------------------------------------------
-export async function getChatMessages(userId = 'default') {
+export async function getChatMessages(userId) {
+  assertStorageReady();
+  if (!userId) throw new Error('Chat history requires an authenticated user.');
   if (isMongoConnected && ChatMessageModel) {
     try {
       const docs = await ChatMessageModel.find({ userId }).sort({ createdAt: 1 }).lean();
@@ -308,6 +298,8 @@ export async function getChatMessages(userId = 'default') {
 }
 
 export async function saveChatMessage(msg) {
+  assertStorageReady();
+  if (!msg?.userId) throw new Error('Chat messages require an authenticated user.');
   let list = [];
   if (fs.existsSync(chatHistoryFile)) {
     try {
@@ -317,7 +309,7 @@ export async function saveChatMessage(msg) {
   list.push(msg);
   // Keep last 100 messages in local file
   if (list.length > 100) list = list.slice(-100);
-  fs.writeFileSync(chatHistoryFile, JSON.stringify(list, null, 2), 'utf8');
+  atomicWriteJson(chatHistoryFile, list);
 
   if (isMongoConnected && ChatMessageModel) {
     try {
@@ -328,6 +320,7 @@ export async function saveChatMessage(msg) {
 }
 
 export async function clearStudyMateData() {
+  assertStorageReady();
   const files = [usersFile, savedNotesFile, feedbackFile, chatHistoryFile];
   for (const file of files) fs.writeFileSync(file, '[]', 'utf8');
   if (isMongoConnected) {
