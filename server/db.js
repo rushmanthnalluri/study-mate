@@ -109,6 +109,18 @@ export let StudySourceModel;
 
 let isMongoConnected = false;
 let mongoRequired = Boolean(process.env.MONGODB_URI);
+let mongoConnectionGuardsAttached = false;
+
+function attachMongoConnectionGuards() {
+  if (mongoConnectionGuardsAttached) return;
+  mongoConnectionGuardsAttached = true;
+  mongoose.connection.on('connected', () => {
+    if (mongoRequired) isMongoConnected = true;
+  });
+  mongoose.connection.on('disconnected', () => {
+    isMongoConnected = false;
+  });
+}
 
 function assertStorageReady() {
   if (mongoRequired && !isMongoConnected) throw new Error('Database unavailable.');
@@ -122,6 +134,7 @@ function atomicWriteJson(file, value) {
 
 export async function initDatabase() {
   const mongoUri = process.env.MONGODB_URI;
+  attachMongoConnectionGuards();
 
   if (mongoUri) {
     try {
