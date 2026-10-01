@@ -65,6 +65,7 @@ export const App: React.FC = () => {
   });
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [appError, setAppError] = useState<string>('');
   const [isNightMode, setIsNightMode] = useState<boolean>(() => {
     return localStorage.getItem('studymate_night_mode') === 'true';
   });
@@ -206,6 +207,7 @@ export const App: React.FC = () => {
 
   const handleGenerate = async (topic: string, forcedSubject?: string, forcedDept?: Department) => {
     setIsLoading(true);
+    setAppError('');
     const dept = forcedDept || currentSubject?.department || selectedDepartment || 'General Engineering';
     const subjName = forcedSubject || currentSubject?.name || 'Core Curriculum';
 
@@ -213,85 +215,19 @@ export const App: React.FC = () => {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeaders() },
-        body: JSON.stringify({
-          department: dept,
-          subject: subjName,
-          topic
-        })
+        body: JSON.stringify({ department: dept, subject: subjName, topic })
       });
-
-      if (!res.ok) throw new Error('Generation failed');
-      const data: ExamNote = await res.json();
-      setCurrentNote(data);
-      setCurrentScreen('generate-notes');
-    } catch {
-      // Offline fallback generation
-      const matched = Object.entries(fallbackGoldAnswers).find(
-        ([key]) =>
-          key.toLowerCase().includes(topic.toLowerCase()) || topic.toLowerCase().includes(key.toLowerCase())
-      );
-
-      if (matched) {
-        setCurrentNote(matched[1]);
-      } else {
-        const generated: ExamNote = {
-          topic,
-          subject: subjName,
-          department: dept as Department,
-          code: currentSubject?.code || '21KL3001',
-          unit: 'Unit: Core Curriculum Principles',
-          keywords: [topic, 'Fundamental Concept', 'Governing Equation', 'KL Marks Rubric', 'System Stability', 'Optimization'],
-          twoMarks: {
-            question: `Define ${topic} according to KL University curriculum.`,
-            answer: `${topic} is a foundational concept defined under KL University curriculum as the systematic architecture and mechanism governing state transitions, ensuring deterministic performance and regulatory compliance.`
-          },
-          fiveMarks: {
-            question: `Explain the working principle and structural components of ${topic}.`,
-            answer: `### Working Principle
-${topic} enforces stability and optimal parameter execution in ${subjName}.
-
-### Key Architectural Tenets
-1. **Mathematical Invariant:** Governed by closed-form relations to evaluate stability.
-2. **Operational Phases:** Structured in sequential stages to reduce computational overhead.
-3. **Boundary Verification:** Parameters checked against safety thresholds.
-4. **Engineering Standards:** Complies with standard KL academic rubrics.`
-          },
-          tenMarks: {
-            question: `Explain ${topic} in detail with governing equations, mechanism, diagram, and industrial applications.`,
-            answer: `### 1. Introduction & Context in KL Exams
-In university examinations for ${dept}, **${topic}** evaluates conceptual depth, mathematical rigor, and engineering applications.
-
-### 2. Governing Laws & Principles
-System performance is modeled using differential or state-space relations that bound operating parameters.
-
-### 3. Step-by-Step Mechanism
-- Phase 1 (Setup): Boundary parameters and initial conditions verified.
-- Phase 2 (Core Computation): Iterative transformation of input vectors.
-- Phase 3 (Verification): Consistency checks applied to prevent instability.
-- Phase 4 (Output): Deterministic state produced for downstream systems.
-
-### 4. Technical Trade-offs & Advantages
-- High predictability and determinism.
-- Requires bounded operational regimes to prevent degradation.
-
-### 5. Practical Engineering Applications
-Widely deployed in real-time embedded systems, software pipelines, and automated test benches.
-
-### 6. KL Evaluator Key Conclusion
-To score maximum marks, ensure keywords are emphasized and the process flowchart is clearly labeled.`
-          },
-          diagram: {
-            type: 'mermaid',
-            code: `flowchart TD
-    In["Input Parameters: ${topic}"] --> Check{"Stability Validation"}
-    Check -- Pass --> Exec["Core Execution Pipeline"]
-    Exec --> Out["Deterministic Exam-Ready Output"]
-    Check -- Fail --> Rec["Error Recovery Step"]`
-          }
-        };
-        setCurrentNote(generated);
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        signOut();
+        throw new Error('Your session expired. Please sign in again.');
       }
+      if (!res.ok) throw new Error(data?.error || 'Note generation failed.');
+      const note: ExamNote = data;
+      setCurrentNote(note);
       setCurrentScreen('generate-notes');
+    } catch (err) {
+      setAppError(err instanceof Error ? err.message : 'Note generation failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -410,6 +346,12 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {appError && currentUser && (
+        <div role="alert" className="mx-auto mt-3 flex w-full max-w-7xl items-center justify-between gap-3 rounded-2xl border border-[#efc4b8] bg-[#fff0ec] px-4 py-3 text-xs font-semibold text-[#8f3328]">
+          <span>{appError}</span>
+          <button onClick={() => setAppError('')} className="rounded-lg px-2 py-1 hover:bg-[#f8d9d1]" aria-label="Dismiss error">Dismiss</button>
         </div>
       )}
       {currentUser && <>
