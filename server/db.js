@@ -334,3 +334,10 @@ export async function clearStudyMateData() {
 export function isDatabaseConnected() {
   return isMongoConnected;
 }
+
+export async function closeDatabase() {
+  if (isMongoConnected) {
+    await mongoose.disconnect();
+    isMongoConnected = false;
+  }
+}
