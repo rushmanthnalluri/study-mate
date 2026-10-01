@@ -130,6 +130,12 @@ test('MongoDB cross-user isolation', { skip: !enabled }, async () => {
     assert.deepEqual((await getQuizAttempts(userA)).map(a => a.userId), [userA]);
     assert.deepEqual((await getQuizAttempts(userB)).map(a => a.userId), [userB]);
 
+    await db.saveFlashcardProgress({ userId: userA, flashcardId: 'fc-test', mastered: true, nextReviewAt: new Date(Date.now() + 86400000).toISOString() });
+    await db.saveFlashcardProgress({ userId: userB, flashcardId: 'fc-test', mastered: false, nextReviewAt: new Date().toISOString() });
+    assert.deepEqual((await db.getFlashcardProgress(userA)).map(p => p.userId), [userA]);
+    assert.equal((await db.getFlashcardProgress(userA))[0].mastered, true);
+    assert.deepEqual((await db.getFlashcardProgress(userB)).map(p => p.userId), [userB]);
+
     await saveChatMessage({
       id: `chat-a-${suffix}`,
       userId: userA,
