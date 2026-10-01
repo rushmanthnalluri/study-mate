@@ -38,6 +38,8 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
   const [isFlipped, setIsFlipped] = useState(false);
   const [masteredIds, setMasteredIds] = useState<string[]>([]);
   const [reviewDueIds, setReviewDueIds] = useState<string[]>([]);
+  const [reviewSchedule, setReviewSchedule] = useState<Record<string,string>>({});
+  const [progressError, setProgressError] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('studymate_token');
@@ -49,23 +51,12 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
         const mastered = rows.filter((p:any) => p.mastered).map((p:any) => String(p.flashcardId));
         const schedule: Record<string,string> = {};
         rows.forEach((p:any) => { if (p.nextReviewAt) schedule[String(p.flashcardId)] = p.nextReviewAt; });
+        setReviewSchedule(schedule);
         setMasteredIds(mastered);
         setReviewDueIds(mastered.filter((id:string) => !schedule[id] || new Date(schedule[id]).getTime() <= Date.now()));
-        try {
-          const user = JSON.parse(localStorage.getItem('studymate_user') || 'null');
-          if (user?.id) localStorage.removeItem(`studymate_flashcard_progress_${user.id}`);
-        } catch {}
       })
       .catch(() => {});
   }, []);
-
-  const persistProgress = (nextMastered:string[], nextSchedule:Record<string,string>) => {
-    try {
-      const user = JSON.parse(localStorage.getItem('studymate_user') || 'null');
-      if (!user?.id) return;
-      localStorage.setItem(`studymate_flashcard_progress_${user.id}`, JSON.stringify({ masteredIds: nextMastered, schedule: nextSchedule }));
-    } catch {}
-  };
 
   // Quiz state
   const [quizIndex, setQuizIndex] = useState(0);
@@ -94,29 +85,35 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
     setCurrentIndex((prev) => (prev - 1 + filteredCards.length) % (filteredCards.length || 1));
   };
 
-  const handleToggleMastered = (id: string) => {
-    const wasMastered = masteredIds.includes(id);
-    const nextMastered = wasMastered ? masteredIds.filter(i => i !== id) : [...masteredIds, id];
-    const nextSchedule: Record<string,string> = {};
-    try {
-      const user = JSON.parse(localStorage.getItem('studymate_user') || 'null');
-      const stored = user?.id ? JSON.parse(localStorage.getItem(`studymate_flashcard_progress_${user.id}`) || '{}') : {};
-      Object.assign(nextSchedule, stored.schedule || {});
-    } catch {}
-    nextSchedule[id] = new Date(Date.now() + (wasMastered ? 24*60*60*1000 : 7*24*60*60*1000)).toISOString();
-    setMasteredIds(nextMastered);
-    setReviewDueIds(nextMastered.filter(i => !nextSchedule[i] || new Date(nextSchedule[i]).getTime() <= Date.now()));
-    persistProgress(nextMastered, nextSchedule);
+  const handleToggleMastered = async (id: string) => {
     const token = localStorage.getItem('studymate_token');
-    if (token) {
-      fetch(`/api/flashcards/progress/${encodeURIComponent(id)}`, {
+    if (!token) {
+      setProgressError('Your session is missing. Please sign in again.');
+      return;
+    }
+    setProgressError('');
+    const wasMastered = masteredIds.includes(id);
+    const previousMastered = masteredIds;
+    const previousSchedule = reviewSchedule;
+    const nextMastered = wasMastered ? masteredIds.filter(i => i !== id) : [...masteredIds, id];
+    const nextDate = new Date(Date.now() + (wasMastered ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000)).toISOString();
+    const nextSchedule = { ...reviewSchedule, [id]: nextDate };
+    setMasteredIds(nextMastered);
+    setReviewSchedule(nextSchedule);
+    setReviewDueIds(nextMastered.filter(i => !nextSchedule[i] || new Date(nextSchedule[i]).getTime() <= Date.now()));
+    try {
+      const r = await fetch(`/api/flashcards/progress/${encodeURIComponent(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
-          mastered: !wasMastered,
-          nextReviewAt: nextSchedule[id]
-        })
-      }).catch(() => {});
+        body: JSON.stringify({ mastered: !wasMastered, nextReviewAt: nextDate })
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.error || 'Progress could not be saved.');
+    } catch (e) {
+      setMasteredIds(previousMastered);
+      setReviewSchedule(previousSchedule);
+      setReviewDueIds(previousMastered.filter(i => !previousSchedule[i] || new Date(previousSchedule[i]).getTime() <= Date.now()));
+      setProgressError(e instanceof Error ? e.message : 'Progress could not be saved.');
     }
   };
 
@@ -237,7 +234,9 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
       {/* ========================================================================= */}
       {activeTab === 'flashcards' && (
         <>
-          {/* Progress Bar */}
+          {progressError && <div role="alert" className="rounded-xl border border-[#efc4b8] bg-[#fff0ec] px-3 py-2 text-[11px] font-semibold text-[#8f3328]">{progressError}</div>}
+
+      {/* Progress Bar */}
           <div className="space-y-1">
             <div className="flex justify-between text-xs text-[#806f61] font-medium">
               <span>Card {filteredCards.length > 0 ? currentIndex + 1 : 0} of {filteredCards.length}</span>
