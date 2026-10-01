@@ -123,3 +123,29 @@ npm run build
 Styled with the clean editorial typography of [Food Science Daily](https://foodsciencedaily.com/login?next=%2Fdashboard):
 - **Typography**: Inter (UI), Barlow Condensed (eyebrows/badges), Source Serif 4 (scholarly headers), IBM Plex Mono (technical terms).
 - **Colors**: Food Science Daily Maroon (`#831d32`), warm off-white surface (`#fbfaf8`), subtle borders, emerald and amber accents.
+
+
+## Production hardening
+
+StudyMate now enforces authenticated account access for personalized study data, administrator-only AI configuration, server-side session validation and revocation, production-origin CORS, security headers, bounded request bodies, rate limiting, AI provider timeouts, safe API error responses, and fail-closed MongoDB behavior when MONGODB_URI is configured.
+
+### Study workspace
+
+- AI-generated exam notes and authenticated saved notes
+- Timed quiz and model-test engine with persisted assessment history
+- Account-scoped flashcard mastery and review scheduling
+- Notebook-style Studio with browser audio/voice, flowcharts and mind maps
+- Private text/Markdown study-source upload and source-grounded Q&A
+- Authenticated profile and password rotation
+
+### Verification
+
+Run:
+
+    npm ci
+    npm test
+    npm run build
+
+CI runs the security regression suite and production frontend build on pushes and pull requests to main.
+
+See SECURITY.md for the security model and .env.example for required environment variables.
