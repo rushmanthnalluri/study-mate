@@ -17,7 +17,8 @@ import {
   saveChatMessage,
   isDatabaseConnected,
   getAiConfig,
-  saveAiConfig
+  saveAiConfig,
+  closeDatabase
 } from './db.js';
 import { generateChatbotReply } from './chatbot.js';
 
@@ -1300,6 +1301,18 @@ app.get('*', (req, res) => {
   });
 }
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`StudyMate AI server running on port ${PORT}`);
 });
+
+const shutdown = async (signal) => {
+  console.log(`StudyMate shutdown requested: ${signal}`);
+  server.close(async () => {
+    try { await closeDatabase(); } catch (err) { console.error('Database shutdown error:', err?.message); }
+    process.exit(0);
+  });
+  setTimeout(() => process.exit(1), 10000).unref();
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
