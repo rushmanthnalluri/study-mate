@@ -66,7 +66,7 @@ app.use(cors({
     try {
       const parsed = new URL(origin);
       const isLocalhost = parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1';
-      if (isLocalhost && (parsed.protocol === 'http:' || parsed.protocol === 'https:')) {
+      if (process.env.NODE_ENV !== 'production' && isLocalhost && (parsed.protocol === 'http:' || parsed.protocol === 'https:')) {
         return callback(null, true);
       }
     } catch {
