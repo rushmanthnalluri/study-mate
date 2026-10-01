@@ -26,6 +26,7 @@ import {
   deleteStudySource
 } from './db.js';
 import { generateChatbotReply } from './chatbot.js';
+import { extractPdfText } from './pdf-extractor.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -1009,6 +1010,49 @@ app.post('/api/quiz/generate', requireAuth, rateLimit(60 * 1000, 8), async (req,
 });
 
 // ==========================================
+// Private PDF -> private Notebook source ingestion.
+// The PDF is parsed server-side and only extracted text is persisted.
+app.post('/api/studio/sources/pdf', requireAuth, rateLimit(60 * 60 * 1000, 20), express.raw({ type: ['application/pdf', 'application/octet-stream'], limit: '12mb' }), async (req, res) => {
+  try {
+    const buffer = Buffer.isBuffer(req.body) ? req.body : Buffer.alloc(0);
+    if (!buffer.length) return res.status(400).json({ error: 'PDF file is required.' });
+    if (buffer.length > 10 * 1024 * 1024) return res.status(413).json({ error: 'PDF is too large. Maximum size is 10 MB.' });
+
+    let content;
+    try {
+      content = extractPdfText(buffer);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'PDF could not be extracted.';
+      return res.status(422).json({ error: message });
+    }
+
+    const requestedName = String(req.headers['x-filename'] || 'Uploaded PDF')
+      .replace(/[\\r\\n]/g, ' ')
+      .trim()
+      .slice(0, 200);
+    const name = requestedName.toLowerCase().endsWith('.pdf') ? requestedName : requestedName + '.pdf';
+
+    const source = await addStudySource({
+      id: crypto.randomUUID(),
+      userId: req.user.id,
+      name,
+      mimeType: 'application/pdf',
+      content,
+      createdAt: new Date().toISOString()
+    });
+
+    res.status(201).json({
+      id: source.id,
+      name: source.name,
+      mimeType: source.mimeType,
+      createdAt: source.createdAt,
+      characters: content.length
+    });
+  } catch {
+    res.status(500).json({ error: 'PDF source could not be saved.' });
+  }
+});
+
 // Private Notebook-style source workspace.
 app.post('/api/studio/sources', requireAuth, rateLimit(60 * 60 * 1000, 30), async (req, res) => {
   try {
