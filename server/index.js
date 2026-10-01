@@ -1178,7 +1178,14 @@ app.put('/api/flashcards/progress/:flashcardId', requireAuth, rateLimit(60 * 60 
     const flashcardId = String(req.params.flashcardId || '').trim();
     if (!/^[A-Za-z0-9._:-]{1,120}$/.test(flashcardId)) return res.status(400).json({ error: 'Invalid flashcard ID.' });
     const mastered = req.body?.mastered === true;
-    const nextReviewAt = req.body?.nextReviewAt ? new Date(req.body.nextReviewAt).toISOString() : undefined;
+    let nextReviewAt;
+    if (req.body?.nextReviewAt !== undefined && req.body?.nextReviewAt !== null && req.body?.nextReviewAt !== '') {
+      const parsed = new Date(req.body.nextReviewAt);
+      if (Number.isNaN(parsed.getTime())) return res.status(400).json({ error: 'Invalid review date.' });
+      const maxReviewDate = Date.now() + 366 * 24 * 60 * 60 * 1000;
+      if (parsed.getTime() > maxReviewDate) return res.status(400).json({ error: 'Review date is too far in the future.' });
+      nextReviewAt = parsed.toISOString();
+    }
     const saved = await saveFlashcardProgress({ userId: req.user.id, flashcardId, mastered, nextReviewAt });
     res.json(saved);
   } catch {
