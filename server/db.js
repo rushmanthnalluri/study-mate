@@ -158,11 +158,9 @@ export async function getAiConfig() {
   assertStorageReady();
   if (isMongoConnected && AiConfigModel) {
     try {
-      try {
-        return await AiConfigModel.findOne({ id: 'global' }).lean();
-      } catch (e) {
-        throw new Error('Database unavailable.');
-      }
+      return await AiConfigModel.findOne({ id: 'global' }).lean();
+    } catch (e) {
+      throw new Error('Database unavailable.');
     }
   }
   return null;
