@@ -19,12 +19,17 @@ try {
 
   const applied = await migrations.findOne({ version: CURRENT_SCHEMA_VERSION });
   if (!applied) {
-    await db.collection('flashcardprogresses').createIndex(
-      { userId: 1, flashcardId: 1 },
-      { unique: true, name: 'user_flashcard_unique' }
-    ).catch(error => {
-      if (error?.code !== 85 && error?.codeName !== 'IndexOptionsConflict') throw error;
-    });
+    const indexes = await db.collection('flashcardprogresses').listIndexes().toArray();
+    const equivalent = indexes.find(index =>
+      index.unique === true &&
+      JSON.stringify(index.key) === JSON.stringify({ userId: 1, flashcardId: 1 })
+    );
+    if (!equivalent) {
+      await db.collection('flashcardprogresses').createIndex(
+        { userId: 1, flashcardId: 1 },
+        { unique: true, name: 'user_flashcard_unique' }
+      );
+    }
 
     await migrations.insertOne({
       version: CURRENT_SCHEMA_VERSION,
