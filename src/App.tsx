@@ -358,7 +358,10 @@ To score maximum marks, ensure keywords are emphasized and the process flowchart
     currentNote && savedNotes.some((n) => n.topic === currentNote.topic && n.subject === currentNote.subject)
   );
 
-  const signOut = () => {
+  const signOut = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', headers: authHeaders() });
+    } catch {}
     localStorage.removeItem('studymate_user');
     localStorage.removeItem('studymate_token');
     localStorage.removeItem('studymate_saved_notes');
