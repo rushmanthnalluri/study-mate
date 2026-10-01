@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Department, UserProfile } from '../types';
 import { X, GraduationCap, LockKeyhole, Mail, UserRound, ArrowRight, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 
@@ -22,6 +22,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      previous?.focus?.();
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -84,7 +99,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 <p className="text-xs text-[#eadbc9]">Your personal KL exam workspace</p>
               </div>
             </div>
-            <button onClick={onClose} aria-label="Close" className="rounded-xl p-2 text-[#eadbc9] hover:bg-white/10 hover:text-white">
+            <button type="button" onClick={onClose} aria-label="Close sign-in dialog" className="rounded-xl p-2 text-[#eadbc9] hover:bg-white/10 hover:text-white">
               <X size={19} />
             </button>
           </div>
@@ -99,6 +114,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
             <button
               key={tab}
               type="button"
+              aria-selected={mode === tab}
+              role="tab"
               onClick={() => { setMode(tab); resetMessage(); }}
               className={`py-3.5 text-sm font-bold transition-colors ${mode === tab ? 'bg-[#fffaf4] text-[#7c4f2c] border-b-2 border-[#b97745]' : 'text-[#806f61] hover:text-[#4b392e]'}`}
             >
@@ -108,7 +125,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
         </div>
 
         <form onSubmit={submit} className="space-y-4 p-6">
-          {error && <div className="rounded-2xl border border-[#efc4b8] bg-[#fff0ec] px-4 py-3 text-xs font-semibold text-[#a03e2f]">{error}</div>}
+          {error && <div role="alert" aria-live="assertive" className="rounded-2xl border border-[#efc4b8] bg-[#fff0ec] px-4 py-3 text-xs font-semibold text-[#a03e2f]">{error}</div>}
 
           {mode === 'login' ? (
             <>
@@ -124,7 +141,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 <div className="relative">
                   <LockKeyhole className="absolute left-3.5 top-3.5 text-[#9a8676]" size={16} />
                   <input type={showPassword ? 'text' : 'password'} value={loginPassword} onChange={e => setLoginPassword(e.target.value)} required autoComplete="current-password" placeholder="Your password" className="auth-input pl-10 pr-10" />
-                  <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-2.5 top-2.5 rounded-lg p-1.5 text-[#8d7868] hover:bg-[#f0e3d6]">{showPassword ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                  <button type="button" onClick={() => setShowPassword(v => !v)} aria-label={showPassword ? 'Hide password' : 'Show password'} className="absolute right-2.5 top-2.5 rounded-lg p-1.5 text-[#8d7868] hover:bg-[#f0e3d6]">{showPassword ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                 </div>
               </div>
               <button disabled={busy} className="auth-primary" type="submit">
@@ -168,7 +185,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
             </>
           )}
         </form>
-      </div>
       </div>
     </div>
   );
