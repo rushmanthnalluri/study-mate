@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Department, ScreenId, Subject, ExamNote } from '../types';
 import {
   TrendingUp,
@@ -21,18 +21,33 @@ interface DashboardScreenProps {
   selectedDepartment: Department;
 }
 
+type Attempt = { id: string; subject: string; mode: 'quiz' | 'model'; score: number; total: number; percentage: number; completedAt: string };
+
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   onNavigate,
   subjects,
   savedNotes,
   selectedDepartment
 }) => {
+  const [attempts, setAttempts] = useState<Attempt[]>([]);
+  useEffect(() => {
+    const token = localStorage.getItem('studymate_token');
+    if (!token) return;
+    fetch('/api/quiz/attempts?limit=20', { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.ok ? r.json() : [])
+      .then(data => setAttempts(Array.isArray(data) ? data : []))
+      .catch(() => setAttempts([]));
+  }, []);
+
   const totalSubjects = subjects.length;
   const savedCount = savedNotes.length;
   const reviewedCount = savedNotes.filter((n) => n.isReviewed).length;
 
   // Calculate readiness metric
-  const readinessPercent = Math.min(100, Math.round((savedCount * 12 + reviewedCount * 8) + 20));
+  const averageScore = attempts.length ? Math.round(attempts.reduce((sum, a) => sum + a.percentage, 0) / attempts.length) : 0;
+  const readinessPercent = attempts.length
+    ? Math.min(100, Math.round(averageScore * 0.65 + Math.min(100, savedCount * 12 + reviewedCount * 8 + 10) * 0.35))
+    : Math.min(100, Math.round((savedCount * 12 + reviewedCount * 8) + 20));
 
   const deptStats = ['CSE', 'AIDS', 'ECE', 'EEE', 'Food Technology'].map((dept) => {
     const deptSubjs = subjects.filter((s) => s.department === dept);
@@ -77,7 +92,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-[#f0e0cf] max-w-xs leading-relaxed">
-              Based on {savedCount} saved KL exam notes, {reviewedCount} reviewed answers, and question bank coverage.
+              Based on {savedCount} saved notes, {reviewedCount} reviewed answers, and {attempts.length} recorded assessments.
             </p>
           </div>
 
@@ -140,6 +155,19 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           <span className="text-[10px] text-emerald-600 block">
             Verified
           </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2.5">
+        <div className="rounded-xl border border-[#e3d6cb] bg-[#fffaf4] p-3 text-center shadow-sm">
+          <span className="block text-[10px] uppercase tracking-wider text-[#806f61]">Assessment Average</span>
+          <span className="text-xl font-black text-[#7c4f2c]">{attempts.length ? `${averageScore}%` : '—'}</span>
+          <span className="block text-[10px] text-[#806f61]">{attempts.length ? `${attempts.length} attempts` : 'Take a quiz to start'}</span>
+        </div>
+        <div className="rounded-xl border border-[#e3d6cb] bg-[#fffaf4] p-3 text-center shadow-sm">
+          <span className="block text-[10px] uppercase tracking-wider text-[#806f61]">Latest Test</span>
+          <span className="text-xl font-black text-[#7c4f2c]">{attempts[0] ? `${attempts[0].percentage}%` : '—'}</span>
+          <span className="block truncate text-[10px] text-[#806f61]">{attempts[0]?.subject || 'No test recorded'}</span>
         </div>
       </div>
 
