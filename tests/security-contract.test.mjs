@@ -104,7 +104,7 @@ test('flashcard progress is server-backed and scoped to the authenticated accoun
   assert.match(db, /FlashcardProgressSchema/);
   assert.match(db, /FlashcardProgressSchema\.index\(\{ userId: 1, flashcardId: 1 \}, \{ unique: true \}\)/);
   assert.match(db, /find\(\{ userId \}\)/);
-  assert.match(db, /findOneAndUpdate\(\s*\{ userId: payload\.userId, flashcardId: payload\.flashcardId \}/s);
+  assert.match(db, /findOneAndUpdate\(\s*\{ userId, flashcardId \}/s);
 });
 
 
