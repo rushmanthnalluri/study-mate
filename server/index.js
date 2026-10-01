@@ -892,6 +892,7 @@ app.post('/api/quiz/generate', requireAuth, rateLimit(60 * 1000, 8), async (req,
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${config.apiKey}` },
+          signal: AbortSignal.timeout(15000),
           body: JSON.stringify({
             model: config.model || 'llama-3.3-70b-versatile',
             temperature: 0.2,
