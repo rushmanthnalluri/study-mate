@@ -44,6 +44,10 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - name: Run MongoDB migrations
+        env:
+          MONGODB_URI: mongodb://127.0.0.1:27017/studymate_ci
+        run: npm run db:migrate
       - name: Run MongoDB isolation tests
         env:
           MONGODB_URI: mongodb://127.0.0.1:27017/studymate_ci
