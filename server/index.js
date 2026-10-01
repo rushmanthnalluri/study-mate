@@ -18,7 +18,9 @@ import {
   isDatabaseConnected,
   getAiConfig,
   saveAiConfig,
-  closeDatabase
+  closeDatabase,
+  addQuizAttempt,
+  getQuizAttempts
 } from './db.js';
 import { generateChatbotReply } from './chatbot.js';
 
@@ -972,6 +974,44 @@ app.post('/api/quiz/generate', requireAuth, rateLimit(60 * 1000, 8), async (req,
 });
 
 // ==========================================
+// Persist assessment results for the authenticated account.
+app.post('/api/quiz/attempts', requireAuth, rateLimit(60 * 60 * 1000, 30), async (req, res) => {
+  try {
+    const { subject, mode, score, total } = req.body || {};
+    const cleanSubject = String(subject || '').trim();
+    const cleanMode = mode === 'model' ? 'model' : mode === 'quiz' ? 'quiz' : '';
+    const numericScore = Number(score);
+    const numericTotal = Number(total);
+    if (!cleanSubject || !cleanMode || !Number.isInteger(numericScore) || !Number.isInteger(numericTotal) ||
+        numericTotal < 1 || numericTotal > 100 || numericScore < 0 || numericScore > numericTotal) {
+      return res.status(400).json({ error: 'Invalid assessment result.' });
+    }
+    const attempt = {
+      id: crypto.randomUUID(),
+      userId: req.user.id,
+      subject: cleanSubject.slice(0, 200),
+      mode: cleanMode,
+      score: numericScore,
+      total: numericTotal,
+      percentage: Math.round((numericScore / numericTotal) * 100),
+      completedAt: new Date().toISOString()
+    };
+    const saved = await addQuizAttempt(attempt);
+    res.status(201).json(saved);
+  } catch {
+    res.status(500).json({ error: 'Assessment result could not be saved.' });
+  }
+});
+
+app.get('/api/quiz/attempts', requireAuth, async (req, res) => {
+  try {
+    const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
+    res.json(await getQuizAttempts(req.user.id, limit));
+  } catch {
+    res.status(500).json({ error: 'Assessment history could not be loaded.' });
+  }
+});
+
 // 🛠️ ADMIN PORTAL API ENDPOINTS
 // ==========================================
 
