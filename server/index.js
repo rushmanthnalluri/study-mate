@@ -45,44 +45,7 @@ if (!fs.existsSync(savedNotesFile)) {
 if (!fs.existsSync(feedbackFile)) {
   fs.writeFileSync(feedbackFile, '[]', 'utf8');
 }
-const defaultFoodTechCourses = [
-  {
-    code: '21BT2210',
-    name: 'Food Microbiology',
-    faculty: 'Dr. V. Ramanathan',
-    attendance: '92%',
-    inSemGrade: 'A+',
-    upcomingDeadline: 'Assignment 2: Thermal Death Kinetics Derivation (Due Oct 5)',
-    lmsCourseUrl: 'https://lms.kluniversity.in/course/view.php?id=21210'
-  },
-  {
-    code: '21BT3112',
-    name: 'Dairy Technology',
-    faculty: 'Dr. M. Sangeetha',
-    attendance: '89%',
-    inSemGrade: 'A',
-    upcomingDeadline: 'Lab Report: HTST Pasteurization FDV Valve Test (Due Oct 8)',
-    lmsCourseUrl: 'https://lms.kluniversity.in/course/view.php?id=31112'
-  },
-  {
-    code: '21BT2108',
-    name: 'Food Chemistry and Nutrition',
-    faculty: 'Prof. K. Ananya',
-    attendance: '94%',
-    inSemGrade: 'O',
-    upcomingDeadline: 'Quiz: Maillard Reaction & Lipid Auto-oxidation (Due Oct 12)',
-    lmsCourseUrl: 'https://lms.kluniversity.in/course/view.php?id=21108'
-  },
-  {
-    code: '21BT2205',
-    name: 'Food Processing and Engineering',
-    faculty: 'Dr. P. Venkateswarlu',
-    attendance: '86%',
-    inSemGrade: 'A',
-    upcomingDeadline: 'Project: Freezing Curve Analysis with Planck Equation (Due Oct 15)',
-    lmsCourseUrl: 'https://lms.kluniversity.in/course/view.php?id=22205'
-  }
-];
+const defaultFoodTechCourses = [];
 
 if (!fs.existsSync(usersFile)) {
   fs.writeFileSync(usersFile, '[]', 'utf8');
@@ -119,11 +82,16 @@ app.use((req, res, next) => {
 });
 
 const rateBuckets = new Map();
+const RATE_BUCKET_MAX = 5000;
 const rateLimit = (windowMs, max) => (req, res, next) => {
   const key = (req.ip || 'unknown') + ':' + req.path;
   const now = Date.now();
   const current = rateBuckets.get(key);
   if (!current || now - current.start > windowMs) {
+    if (!current && rateBuckets.size >= RATE_BUCKET_MAX) {
+      const oldestKey = rateBuckets.keys().next().value;
+      if (oldestKey) rateBuckets.delete(oldestKey);
+    }
     rateBuckets.set(key, { start: now, count: 1 });
     return next();
   }
@@ -684,14 +652,14 @@ app.post('/api/auth/kl-lms/connect', requireAuth, async (req, res) => {
     user.isLmsConnected = true;
     user.lmsUsername = lmsUsername.trim();
     user.lmsLastSynced = new Date().toISOString();
-    user.enrolledCourses = defaultFoodTechCourses;
+    user.enrolledCourses = user.enrolledCourses || [];
 
     await saveUser(user);
 
     const safeUser = sanitizeUser(user);
     res.json({
       success: true,
-      message: 'Connected to KL Learning Management System (lms.kluniversity.in)! Courses and attendance synced.',
+      message: 'KL LMS account connection recorded. Verified course and attendance data will appear after a successful LMS sync.',
       user: safeUser,
       syncedCourses: user.enrolledCourses
     });
@@ -709,16 +677,14 @@ app.post('/api/auth/kl-lms/sync', requireAuth, async (req, res) => {
 
     user.isLmsConnected = true;
     user.lmsLastSynced = new Date().toISOString();
-    if (!user.enrolledCourses || user.enrolledCourses.length === 0) {
-      user.enrolledCourses = defaultFoodTechCourses;
-    }
+    if (!user.enrolledCourses) user.enrolledCourses = [];
 
     await saveUser(user);
 
     const safeUser = sanitizeUser(user);
     res.json({
       success: true,
-      message: 'KL LMS courses, attendance, and assignment deadlines refreshed.',
+      message: 'KL LMS sync connection refreshed. No course or attendance data is fabricated; verified LMS data will appear when available.',
       user: safeUser,
       syncedCourses: user.enrolledCourses,
       lastSynced: user.lmsLastSynced
