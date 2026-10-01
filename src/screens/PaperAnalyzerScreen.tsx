@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Department, ScreenId, Subject, ExamQuestion } from '../types';
+import { Department, ScreenId, Subject } from '../types';
 import {
   FileText,
   UploadCloud,
@@ -21,32 +21,6 @@ interface PaperAnalyzerScreenProps {
   subjects: Subject[];
   onGenerateQuestion: (topic: string, subjectName: string, dept: Department) => void;
 }
-
-const SAMPLE_DOCS = [
-  {
-    title: 'Food Microbiology - Spoilage Kinetics Lecture.pdf',
-    subject: 'Food Microbiology',
-    dept: 'Food Technology' as Department,
-    content: `Unit 3: Spoilage of Animal and Plant Products
-Spoilage of milk and dairy products is caused primarily by psychrotrophic microorganisms such as Pseudomonas fluorescens which produce heat-stable extracellular proteases and lipases. These enzymes survive pasteurization (72°C for 15s) and cause bitterness and gelation during refrigerated storage.
-Thermal resistance parameters:
-D-value: Time in minutes at a given temperature to reduce microbial population by 90% (1-log).
-z-value: Temperature change required to alter D-value by a factor of 10.
-Botulinum Cook: 12D reduction for Clostridium botulinum in low-acid foods (pH > 4.6), requiring F0 = 3.0 minutes at 121.1°C.`
-  },
-  {
-    title: 'Dairy Technology - Homogenization & Membrane Processing.pptx',
-    subject: 'Dairy Technology',
-    dept: 'Food Technology' as Department,
-    content: `Lecture 8: Milk Homogenization and Membrane Filtration
-Homogenization principle: Reduction of fat globule size from 3–4 microns down to < 1 micron by subjecting milk to high pressure (Stage 1: 2000-2500 psi, Stage 2: 500 psi).
-Prevents creaming according to Stokes Law: Velocity is proportional to the square of globule radius.
-Membrane processes in dairy:
-1. Microfiltration (0.1 - 10 µm): Bacteria removal and casein separation.
-2. Ultrafiltration (0.01 - 0.1 µm): Protein concentration and whey processing.
-3. Reverse Osmosis (< 0.001 µm): Water removal and milk concentration.`
-  }
-];
 
 export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
   onNavigate,
@@ -143,35 +117,13 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
       </div>
 
       <p className="text-xs text-[#806f61]">
-        Upload or paste professor slides, notes, or question papers to extract key definitions, 2M/5M/10M exam questions, and model answers.
+        Paste text from professor slides, notes, or question papers to extract key definitions and 2M/5M/10M exam-question candidates. Real PDF files should be uploaded through Study Studio.
       </p>
 
-      {/* 1-Click Sample Handouts */}
-      <div className="bg-[#fbf3e9]/60 dark:bg-stone-900/60 border border-[#e2c8ad] dark:border-stone-800 rounded-2xl p-3.5 space-y-2">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#714628] dark:text-amber-300 flex items-center space-x-1">
-          <Sparkles size={12} />
-          <span>Quick 1-Click Sample Handouts:</span>
-        </span>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {SAMPLE_DOCS.map((sample, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => handleLoadSample(sample)}
-              className="text-left p-2.5 rounded-xl bg-[#fffaf4] dark:bg-stone-800 border border-[#e2c8ad]/80 dark:border-stone-700 hover:border-brand-800 transition-all flex items-center justify-between group shadow-2xs"
-            >
-              <div className="space-y-0.5">
-                <span className="text-[11px] font-bold text-[#3b2b23] dark:text-white block group-hover:text-[#7c4f2c]">
-                  {sample.title}
-                </span>
-                <span className="text-[10px] text-[#806f61]">
-                  {sample.subject} • KL Lecture Handout
-                </span>
-              </div>
-              <ArrowRight size={13} className="text-[#806f61] group-hover:text-[#7c4f2c] shrink-0 ml-2" />
-            </button>
-          ))}
-        </div>
+      <div className="bg-[#fbf3e9]/60 dark:bg-stone-900/60 border border-[#e2c8ad] dark:border-stone-800 rounded-2xl p-3.5">
+        <p className="text-[11px] leading-5 text-[#714628] dark:text-amber-300">
+          Need to analyze a real PDF? Open <button type="button" onClick={() => onNavigate('studio')} className="font-extrabold underline underline-offset-2">Study Studio</button> and upload it to your private source library. This analyzer intentionally uses real pasted text rather than fabricated sample documents.
+        </p>
       </div>
 
       {/* Upload or Paste Box */}
