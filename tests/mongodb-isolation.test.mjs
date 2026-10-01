@@ -24,6 +24,7 @@ test('MongoDB cross-user isolation', { skip: !enabled }, async () => {
     StudySourceModel,
     QuizAttemptModel,
     ChatMessageModel,
+    FlashcardProgressModel,
     closeDatabase
   } = db;
 
