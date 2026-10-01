@@ -63,3 +63,21 @@ test('production responses do not expose caught exception messages from API hand
   assert.doesNotMatch(server, /res.status(500).json({ error: err.message })/);
   assert.match(server, /Internal server error./);
 });
+
+
+test('offline quiz fallback only accepts administrator-managed structured MCQs', () => {
+  assert.match(server, /Array\.isArray\(q\.options\)/);
+  assert.match(server, /Number\.isInteger\(q\.answer\)/);
+  assert.doesNotMatch(server, /Which unit is this question mapped to/);
+});
+
+test('MongoDB connection failures do not silently fall back after startup', () => {
+  assert.doesNotMatch(db, /Mongo read error, falling back to file/);
+  assert.doesNotMatch(db, /Falling back gracefully to JSON storage/);
+  assert.match(db, /throw new Error\('Database unavailable\.'\)/);
+});
+
+test('Mongo-backed writes do not duplicate into local JSON storage', () => {
+  assert.match(db, /if \(isMongoConnected && ChatMessageModel\) \{\s*return ChatMessageModel\.create/);
+  assert.match(db, /if \(isMongoConnected && FeedbackModel\) \{\s*return FeedbackModel\.create/);
+});
