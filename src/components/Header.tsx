@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
-        <button onClick={() => navigate('home')} className="group flex min-w-0 items-center gap-3 text-left">
+        <button type="button" onClick={() => navigate('home')} aria-label="StudyMate home" className="group flex min-w-0 items-center gap-3 text-left">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#7c4f2c] text-[#f3d39f] shadow-sm transition-transform group-hover:-translate-y-0.5">
             <GraduationCap size={22} />
           </span>
@@ -62,13 +62,13 @@ export const Header: React.FC<HeaderProps> = ({
 
         <nav className="hidden flex-1 items-center justify-center gap-1 xl:flex">
           {items.map(({id,label,icon:Icon}) => (
-            <button key={id} onClick={() => navigate(id)} className={`inline-flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-[11px] font-bold transition-all ${currentScreen === id ? 'bg-[#efe0d1] text-[#754925] shadow-sm' : 'text-[#746357] hover:bg-[#f7eee6] hover:text-[#4b392e]'}`}>
+            <button key={id} type="button" onClick={() => navigate(id)} aria-current={currentScreen === id ? 'page' : undefined} className={`inline-flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-[11px] font-bold transition-all ${currentScreen === id ? 'bg-[#efe0d1] text-[#754925] shadow-sm' : 'text-[#746357] hover:bg-[#f7eee6] hover:text-[#4b392e]'}`}>
               <Icon size={14} />
               {label}
             </button>
           ))}
           {currentUser?.role === 'admin' && (
-            <button onClick={() => navigate('admin')} className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-[11px] font-extrabold ${currentScreen === 'admin' ? 'bg-[#3b2b23] text-white' : 'bg-[#f0e5da] text-[#4b392e] hover:bg-[#e6d7c7]'}`}>
+            <button type="button" onClick={() => navigate('admin')} aria-current={currentScreen === 'admin' ? 'page' : undefined} className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-[11px] font-extrabold ${currentScreen === 'admin' ? 'bg-[#3b2b23] text-white' : 'bg-[#f0e5da] text-[#4b392e] hover:bg-[#e6d7c7]'}`}>
               <ShieldCheck size={14} /> Admin
             </button>
           )}
@@ -84,19 +84,19 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {onToggleNightMode && (
-            <button onClick={onToggleNightMode} title="Toggle night mode" className="rounded-xl border border-[#dfd1c4] bg-white p-2 text-[#6f5d50] hover:bg-[#f6eee7] dark:border-[#4a382d] dark:bg-[#2c211b]">
+            <button type="button" onClick={onToggleNightMode} title="Toggle night mode" aria-label="Toggle night mode" className="rounded-xl border border-[#dfd1c4] bg-white p-2 text-[#6f5d50] hover:bg-[#f6eee7] dark:border-[#4a382d] dark:bg-[#2c211b]">
               {isNightMode ? <Sun size={16} /> : <Moon size={16} />}
             </button>
           )}
           {onOpenSettings && (
-            <button onClick={onOpenSettings} title="Account settings" className="rounded-xl border border-[#dfd1c4] bg-white p-2 text-[#6f5d50] hover:bg-[#f6eee7] dark:border-[#4a382d] dark:bg-[#2c211b]">
+            <button type="button" onClick={onOpenSettings} title="Account settings" aria-label="Open account settings" className="rounded-xl border border-[#dfd1c4] bg-white p-2 text-[#6f5d50] hover:bg-[#f6eee7] dark:border-[#4a382d] dark:bg-[#2c211b]">
               <Settings size={16} />
             </button>
           )}
           <select value={selectedDepartment} onChange={e => onSelectDepartment(e.target.value as Department)} className="hidden rounded-xl border border-[#dfd1c4] bg-white px-3 py-2 text-[11px] font-bold text-[#59473a] outline-none focus:ring-2 focus:ring-[#c28b5b]/30 md:block dark:border-[#4a382d] dark:bg-[#2c211b] dark:text-[#fff8f1]">
             {departments.map(d => <option key={d} value={d}>{d === 'Food Technology' ? 'Food Tech' : d === 'All' ? 'All Depts' : d}</option>)}
           </select>
-          <button onClick={() => setOpen(v => !v)} className="rounded-xl border border-[#dfd1c4] bg-white p-2 text-[#59473a] hover:bg-[#f6eee7] xl:hidden dark:border-[#4a382d] dark:bg-[#2c211b] dark:text-white">
+          <button type="button" onClick={() => setOpen(v => !v)} aria-label={open ? "Close navigation menu" : "Open navigation menu"} aria-expanded={open} className="rounded-xl border border-[#dfd1c4] bg-white p-2 text-[#59473a] hover:bg-[#f6eee7] xl:hidden dark:border-[#4a382d] dark:bg-[#2c211b] dark:text-white">
             {open ? <X size={19} /> : <Menu size={19} />}
           </button>
         </div>
@@ -110,12 +110,12 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
           <div className="grid grid-cols-2 gap-2">
             {items.map(({id,label,icon:Icon}) => (
-              <button key={id} onClick={() => navigate(id)} className={`flex items-center gap-2 rounded-2xl border px-3 py-3 text-left text-xs font-bold ${currentScreen === id ? 'border-[#cba27d] bg-[#efe0d1] text-[#754925]' : 'border-[#eadfd4] bg-white text-[#59473a] hover:bg-[#f8f0e8]'}`}>
+              <button key={id} type="button" onClick={() => navigate(id)} aria-current={currentScreen === id ? 'page' : undefined} className={`flex items-center gap-2 rounded-2xl border px-3 py-3 text-left text-xs font-bold ${currentScreen === id ? 'border-[#cba27d] bg-[#efe0d1] text-[#754925]' : 'border-[#eadfd4] bg-white text-[#59473a] hover:bg-[#f8f0e8]'}`}>
                 <Icon size={15} /> {label}
               </button>
             ))}
             {currentUser?.role === 'admin' && (
-              <button onClick={() => navigate('admin')} className="flex items-center gap-2 rounded-2xl border border-[#cdb9a7] bg-[#3b2b23] px-3 py-3 text-left text-xs font-bold text-white">
+              <button type="button" onClick={() => navigate('admin')} aria-current={currentScreen === 'admin' ? 'page' : undefined} className="flex items-center gap-2 rounded-2xl border border-[#cdb9a7] bg-[#3b2b23] px-3 py-3 text-left text-xs font-bold text-white">
                 <ShieldCheck size={15} /> Admin Console
               </button>
             )}
