@@ -47,7 +47,7 @@ test('admin configuration and mutation routes require administrator authorizatio
 });
 
 test('production database mode fails closed instead of silently falling back to files', () => {
-  assert.match(db, /let mongoRequired = Boolean(process.env.MONGODB_URI)/);
+  assert.ok(db.includes('let mongoRequired = Boolean(process.env.MONGODB_URI);'));
   assert.match(db, /function assertStorageReady()/);
   assert.match(db, /throw new Error('Database unavailable.')/);
 });
@@ -104,7 +104,7 @@ test('flashcard progress is server-backed and scoped to the authenticated accoun
   assert.match(db, /FlashcardProgressSchema/);
   assert.match(db, /FlashcardProgressSchema\.index\(\{ userId: 1, flashcardId: 1 \}, \{ unique: true \}\)/);
   assert.match(db, /find\(\{ userId \}\)/);
-  assert.match(db, /findOneAndUpdate\(\s*\{ userId, flashcardId \}/s);
+  assert.match(db, /findOneAndUpdate\([\s\S]*\{ userId, flashcardId \}/);
 });
 
 
@@ -136,8 +136,8 @@ test('Mermaid rendering uses strict security mode and accessible controls', () =
 test('account dialogs expose modal semantics', () => {
   const auth = fs.readFileSync(path.join(root, 'src', 'components', 'AuthModal.tsx'), 'utf8');
   const settings = fs.readFileSync(path.join(root, 'src', 'components', 'SettingsModal.tsx'), 'utf8');
-  assert.match(auth, /role="dialog"/);
-  assert.match(auth, /aria-modal="true"/);
-  assert.match(settings, /role="dialog"/);
-  assert.match(settings, /aria-modal="true"/);
+  assert.ok(auth.includes('role="dialog"'));
+  assert.ok(auth.includes('aria-modal="true"'));
+  assert.ok(settings.includes('role="dialog"'));
+  assert.ok(settings.includes('aria-modal="true"'));
 });
