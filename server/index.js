@@ -20,7 +20,10 @@ import {
   saveAiConfig,
   closeDatabase,
   addQuizAttempt,
-  getQuizAttempts
+  getQuizAttempts,
+  addStudySource,
+  getStudySources,
+  deleteStudySource
 } from './db.js';
 import { generateChatbotReply } from './chatbot.js';
 
@@ -974,6 +977,77 @@ app.post('/api/quiz/generate', requireAuth, rateLimit(60 * 1000, 8), async (req,
 });
 
 // ==========================================
+// Private Notebook-style source workspace.
+app.post('/api/studio/sources', requireAuth, rateLimit(60 * 60 * 1000, 30), async (req, res) => {
+  try {
+    const { name, mimeType = 'text/plain', content } = req.body || {};
+    const cleanName = String(name || 'Untitled source').trim().slice(0, 200);
+    const cleanContent = String(content || '').trim();
+    if (!cleanContent) return res.status(400).json({ error: 'Source content is required.' });
+    if (cleanContent.length > 100000) return res.status(413).json({ error: 'Source is too large. Maximum size is 100,000 characters.' });
+    const source = await addStudySource({
+      id: crypto.randomUUID(),
+      userId: req.user.id,
+      name: cleanName || 'Untitled source',
+      mimeType: String(mimeType).slice(0, 100),
+      content: cleanContent,
+      createdAt: new Date().toISOString()
+    });
+    res.status(201).json({ id: source.id, name: source.name, mimeType: source.mimeType, createdAt: source.createdAt });
+  } catch {
+    res.status(500).json({ error: 'Source could not be saved.' });
+  }
+});
+
+app.get('/api/studio/sources', requireAuth, async (req, res) => {
+  try {
+    const sources = await getStudySources(req.user.id, Math.min(50, Math.max(1, Number(req.query.limit) || 20)));
+    res.json(sources.map(({ content, ...meta }) => ({ ...meta, characters: content.length })));
+  } catch {
+    res.status(500).json({ error: 'Sources could not be loaded.' });
+  }
+});
+
+app.delete('/api/studio/sources/:id', requireAuth, async (req, res) => {
+  try {
+    await deleteStudySource(String(req.params.id), req.user.id);
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ error: 'Source could not be deleted.' });
+  }
+});
+
+app.post('/api/studio/ask', requireAuth, rateLimit(60 * 60 * 1000, 20), async (req, res) => {
+  try {
+    const sourceId = String(req.body?.sourceId || '');
+    const question = String(req.body?.question || '').trim();
+    if (!sourceId || !question || question.length > 1000) return res.status(400).json({ error: 'A source and question are required.' });
+    const sources = await getStudySources(req.user.id, 50);
+    const source = sources.find(s => s.id === sourceId);
+    if (!source) return res.status(404).json({ error: 'Source not found.' });
+    const groundedPrompt = [
+      'Answer only from the supplied study source.',
+      'If the source does not contain enough information, say so explicitly.',
+      'Do not invent facts or citations.',
+      '',
+      'SOURCE:',
+      source.content.slice(0, 80000),
+      '',
+      'QUESTION:',
+      question
+    ].join('\n');
+    const reply = await generateChatbotReply({
+      message: groundedPrompt,
+      history: [],
+      department: req.user.department || 'General',
+      subject: source.name
+    });
+    res.json({ answer: reply.content, source: { id: source.id, name: source.name }, provider: reply.provider });
+  } catch {
+    res.status(500).json({ error: 'Source-grounded answer could not be generated.' });
+  }
+});
+
 // Persist assessment results for the authenticated account.
 app.post('/api/quiz/attempts', requireAuth, rateLimit(60 * 60 * 1000, 30), async (req, res) => {
   try {
