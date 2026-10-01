@@ -68,6 +68,17 @@ const FeedbackSchema = new mongoose.Schema({
   createdAt: { type: String }
 }, { timestamps: true });
 
+const QuizAttemptSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true },
+  userId: { type: String, required: true, index: true },
+  subject: { type: String, required: true },
+  mode: { type: String, enum: ['quiz', 'model'], required: true },
+  score: { type: Number, min: 0, required: true },
+  total: { type: Number, min: 1, required: true },
+  percentage: { type: Number, min: 0, max: 100, required: true },
+  completedAt: { type: String, required: true }
+}, { timestamps: true });
+
 const ChatMessageSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   userId: { type: String },
@@ -84,6 +95,7 @@ export let UserModel;
 export let SavedNoteModel;
 export let FeedbackModel;
 export let ChatMessageModel;
+export let QuizAttemptModel;
 
 let isMongoConnected = false;
 let mongoRequired = Boolean(process.env.MONGODB_URI);
@@ -116,6 +128,7 @@ export async function initDatabase() {
       SavedNoteModel = mongoose.models.SavedNote || mongoose.model('SavedNote', SavedNoteSchema);
       FeedbackModel = mongoose.models.Feedback || mongoose.model('Feedback', FeedbackSchema);
       ChatMessageModel = mongoose.models.ChatMessage || mongoose.model('ChatMessage', ChatMessageSchema);
+      QuizAttemptModel = mongoose.models.QuizAttempt || mongoose.model('QuizAttempt', QuizAttemptSchema);
       return true;
     } catch (err) {
       console.warn('⚠️ [MongoDB Warning] Could not connect to MONGODB_URI. Falling back gracefully to JSON storage.', err.message);
@@ -276,6 +289,31 @@ export async function addFeedback(feedback) {
   return feedback;
 }
 
+
+// -------------------------------------------------------------
+// QUIZ ATTEMPTS
+// -------------------------------------------------------------
+export async function addQuizAttempt(attempt) {
+  assertStorageReady();
+  if (isMongoConnected && QuizAttemptModel) return QuizAttemptModel.create(attempt).then(doc => doc.toObject());
+  const file = path.join(dataDir, 'quiz-attempts.json');
+  const list = fs.existsSync(file) ? await readJson(file) : [];
+  list.unshift(attempt);
+  atomicWriteJson(file, list.slice(0, 5000));
+  return attempt;
+}
+
+export async function getQuizAttempts(userId, limit = 20) {
+  assertStorageReady();
+  if (!userId) throw new Error('Quiz history requires an authenticated user.');
+  if (isMongoConnected && QuizAttemptModel) {
+    return QuizAttemptModel.find({ userId }).sort({ completedAt: -1 }).limit(limit).lean();
+  }
+  const file = path.join(dataDir, 'quiz-attempts.json');
+  const list = fs.existsSync(file) ? await readJson(file) : [];
+  return list.filter(a => a.userId === userId).slice(0, limit);
+}
+
 // -------------------------------------------------------------
 // CHATBOT MESSAGE PERSISTENCE
 // -------------------------------------------------------------
@@ -321,12 +359,12 @@ export async function saveChatMessage(msg) {
 
 export async function clearStudyMateData() {
   assertStorageReady();
-  const files = [usersFile, savedNotesFile, feedbackFile, chatHistoryFile];
+  const files = [usersFile, savedNotesFile, feedbackFile, chatHistoryFile, path.join(dataDir, 'quiz-attempts.json')];
   for (const file of files) fs.writeFileSync(file, '[]', 'utf8');
   if (isMongoConnected) {
     await Promise.all([
       UserModel?.deleteMany({}), SavedNoteModel?.deleteMany({}),
-      FeedbackModel?.deleteMany({}), ChatMessageModel?.deleteMany({})
+      FeedbackModel?.deleteMany({}), ChatMessageModel?.deleteMany({}), QuizAttemptModel?.deleteMany({})
     ]);
   }
 }
