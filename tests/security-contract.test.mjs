@@ -27,7 +27,9 @@ test('all personalized API routes require authentication', () => {
     "app.post('/api/studio/sources/pdf', requireAuth",
     "app.get('/api/studio/sources', requireAuth",
     "app.delete('/api/studio/sources/:id', requireAuth",
-    "app.post('/api/studio/ask', requireAuth"
+    "app.post('/api/studio/ask', requireAuth",
+    "app.get('/api/flashcards/progress', requireAuth",
+    "app.put('/api/flashcards/progress/:flashcardId', requireAuth
   ];
   for (const route of required) assert.ok(server.includes(route), route);
 });
@@ -89,4 +91,12 @@ test('PDF Studio ingestion is authenticated and size-limited', () => {
   assert.match(server, /express\.raw\(\{ type: \['application\/pdf', 'application\/octet-stream'\], limit: '12mb' \}\)/);
   assert.match(server, /buffer\.length > 10 \* 1024 \* 1024/);
   assert.match(server, /extractPdfText\(buffer\)/);
+});
+
+
+test('flashcard progress is server-backed and scoped to the authenticated account', () => {
+  assert.match(db, /FlashcardProgressSchema/);
+  assert.match(db, /FlashcardProgressSchema\.index\(\{ userId: 1, flashcardId: 1 \}, \{ unique: true \}\)/);
+  assert.match(db, /find\(\{ userId \}\)/);
+  assert.match(db, /findOneAndUpdate\(\s*\{ userId: payload\.userId, flashcardId: payload\.flashcardId \}/s);
 });
