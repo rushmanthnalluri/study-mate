@@ -106,3 +106,15 @@ test('flashcard progress is server-backed and scoped to the authenticated accoun
   assert.match(db, /find\(\{ userId \}\)/);
   assert.match(db, /findOneAndUpdate\(\s*\{ userId: payload\.userId, flashcardId: payload\.flashcardId \}/s);
 });
+
+
+test('flashcard review schedules are validated server-side', () => {
+  assert.match(server, /Number\.isNaN\(parsed\.getTime\(\)\)/);
+  assert.match(server, /Review date is too far in the future/);
+  assert.match(server, /req\.user\.id/);
+});
+
+test('flashcard UI does not persist mastery as browser source of truth', () => {
+  const flashcards = fs.readFileSync(path.join(root, 'src', 'screens', 'FlashcardsScreen.tsx'), 'utf8');
+  assert.doesNotMatch(flashcards, /localStorage\.setItem\(.*studymate_flashcard_progress_/);
+});
