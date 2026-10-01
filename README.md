@@ -127,7 +127,7 @@ Styled with the clean editorial typography of [Food Science Daily](https://foods
 
 ## Production hardening
 
-StudyMate now enforces authenticated account access for personalized study data, administrator-only AI configuration, server-side session validation and revocation, production-origin CORS, security headers, bounded request bodies, rate limiting, AI provider timeouts, safe API error responses, and fail-closed MongoDB behavior when MONGODB_URI is configured.
+StudyMate enforces authenticated account access for personalized study data, administrator-only AI configuration, server-side session validation and revocation, production-origin CORS, security headers, bounded request bodies, rate limiting, AI provider timeouts, safe API error responses, and fail-closed MongoDB behavior when MONGODB_URI is configured.
 
 ### Study workspace
 
@@ -135,8 +135,13 @@ StudyMate now enforces authenticated account access for personalized study data,
 - Timed quiz and model-test engine with persisted assessment history
 - Account-scoped flashcard mastery and review scheduling
 - Notebook-style Studio with browser audio/voice, flowcharts and mind maps
-- Private text/Markdown study-source upload and source-grounded Q&A
+- Private PDF, text, and Markdown study-source ingestion with server-side PDF extraction and source-grounded Q&A
 - Authenticated profile and password rotation
+- Server-backed flashcard mastery and review scheduling
+
+### Operations
+
+See [docs/OPERATIONS.md](docs/OPERATIONS.md) for MongoDB backup, restore, migration, incident handling, and release verification procedures.
 
 ### Verification
 
