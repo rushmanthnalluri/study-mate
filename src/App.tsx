@@ -55,14 +55,7 @@ export const App: React.FC = () => {
   const defaultFoodTechSubj = fallbackSubjects[0];
   const [currentSubject, setCurrentSubject] = useState<Subject | null>(defaultFoodTechSubj);
   const [currentNote, setCurrentNote] = useState<ExamNote | null>(null);
-  const [savedNotes, setSavedNotes] = useState<ExamNote[]>(() => {
-    try {
-      const stored = localStorage.getItem('studymate_saved_notes');
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [savedNotes, setSavedNotes] = useState<ExamNote[]>([]);
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [appError, setAppError] = useState<string>('');
@@ -187,15 +180,7 @@ export const App: React.FC = () => {
       .catch(() => setFeedbacks([]));
   }, [currentUser?.id]);
 
-  // Persist saved notes to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem('studymate_saved_notes', JSON.stringify(savedNotes));
-    } catch (e) {
-      console.warn('Failed to save to localStorage:', e);
-    }
-  }, [savedNotes]);
-
+  // Saved notes are authoritative server data; do not cache them in a shared browser key.
   // Handlers
   const handleSelectSubject = (subj: Subject) => {
     setCurrentSubject(subj);
