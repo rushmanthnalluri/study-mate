@@ -40,17 +40,23 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
   const [reviewDueIds, setReviewDueIds] = useState<string[]>([]);
 
   useEffect(() => {
-    try {
-      const user = JSON.parse(localStorage.getItem('studymate_user') || 'null');
-      const key = user?.id ? `studymate_flashcard_progress_${user.id}` : '';
-      if (!key) return;
-      const stored = JSON.parse(localStorage.getItem(key) || '{}');
-      const mastered = Array.isArray(stored.masteredIds) ? stored.masteredIds : [];
-      const schedule = stored.schedule || {};
-      const due = mastered.filter((id:string) => !schedule[id] || new Date(schedule[id]).getTime() <= Date.now());
-      setMasteredIds(mastered);
-      setReviewDueIds(due);
-    } catch {}
+    const token = localStorage.getItem('studymate_token');
+    if (!token) return;
+    fetch('/api/flashcards/progress', { headers: { Authorization: `Bearer ${token}` } })
+      .then(async (r) => r.ok ? r.json() : [])
+      .then((rows) => {
+        if (!Array.isArray(rows)) return;
+        const mastered = rows.filter((p:any) => p.mastered).map((p:any) => String(p.flashcardId));
+        const schedule: Record<string,string> = {};
+        rows.forEach((p:any) => { if (p.nextReviewAt) schedule[String(p.flashcardId)] = p.nextReviewAt; });
+        setMasteredIds(mastered);
+        setReviewDueIds(mastered.filter((id:string) => !schedule[id] || new Date(schedule[id]).getTime() <= Date.now()));
+        try {
+          const user = JSON.parse(localStorage.getItem('studymate_user') || 'null');
+          if (user?.id) localStorage.removeItem(`studymate_flashcard_progress_${user.id}`);
+        } catch {}
+      })
+      .catch(() => {});
   }, []);
 
   const persistProgress = (nextMastered:string[], nextSchedule:Record<string,string>) => {
@@ -101,6 +107,17 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
     setMasteredIds(nextMastered);
     setReviewDueIds(nextMastered.filter(i => !nextSchedule[i] || new Date(nextSchedule[i]).getTime() <= Date.now()));
     persistProgress(nextMastered, nextSchedule);
+    const token = localStorage.getItem('studymate_token');
+    if (token) {
+      fetch(`/api/flashcards/progress/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          mastered: !wasMastered,
+          nextReviewAt: nextSchedule[id]
+        })
+      }).catch(() => {});
+    }
   };
 
   // Quiz Handlers
