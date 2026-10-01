@@ -23,7 +23,9 @@ import {
   getQuizAttempts,
   addStudySource,
   getStudySources,
-  deleteStudySource
+  deleteStudySource,
+  getFlashcardProgress,
+  saveFlashcardProgress
 } from './db.js';
 import { generateChatbotReply } from './chatbot.js';
 import { extractPdfText } from './pdf-extractor.js';
@@ -1159,6 +1161,28 @@ app.get('/api/quiz/attempts', requireAuth, async (req, res) => {
     res.json(await getQuizAttempts(req.user.id, limit));
   } catch {
     res.status(500).json({ error: 'Assessment history could not be loaded.' });
+  }
+});
+
+// Persist authenticated flashcard mastery/review state.
+app.get('/api/flashcards/progress', requireAuth, async (req, res) => {
+  try {
+    res.json(await getFlashcardProgress(req.user.id));
+  } catch {
+    res.status(500).json({ error: 'Flashcard progress could not be loaded.' });
+  }
+});
+
+app.put('/api/flashcards/progress/:flashcardId', requireAuth, rateLimit(60 * 60 * 1000, 120), async (req, res) => {
+  try {
+    const flashcardId = String(req.params.flashcardId || '').trim();
+    if (!/^[A-Za-z0-9._:-]{1,120}$/.test(flashcardId)) return res.status(400).json({ error: 'Invalid flashcard ID.' });
+    const mastered = req.body?.mastered === true;
+    const nextReviewAt = req.body?.nextReviewAt ? new Date(req.body.nextReviewAt).toISOString() : undefined;
+    const saved = await saveFlashcardProgress({ userId: req.user.id, flashcardId, mastered, nextReviewAt });
+    res.json(saved);
+  } catch {
+    res.status(500).json({ error: 'Flashcard progress could not be saved.' });
   }
 });
 
