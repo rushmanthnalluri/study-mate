@@ -11,6 +11,7 @@ import {
 } from './types';
 import { fallbackSubjects, fallbackGoldAnswers } from './data/mockData';
 import { Header } from './components/Header';
+import { AppErrorBoundary } from './components/AppErrorBoundary';
 import { BottomNav } from './components/BottomNav';
 import { HomeScreen } from './screens/HomeScreen';
 import { SelectSubjectScreen } from './screens/SelectSubjectScreen';
@@ -644,4 +645,6 @@ export const App: React.FC = () => {
   );
 };
 
-export default App;
+export default function AppWithErrorBoundary() {
+  return <AppErrorBoundary><App /></AppErrorBoundary>;
+}
