@@ -137,7 +137,8 @@ test('MongoDB cross-user isolation', { skip: !enabled }, async () => {
     const userBProgressAfterAUpdate = await db.getFlashcardProgress(userB);
     assert.equal(userBProgressAfterAUpdate[0].mastered, false, 'user A must not modify user B progress');
     assert.deepEqual((await db.getFlashcardProgress(userA)).map(p => p.userId), [userA]);
-    assert.equal((await db.getFlashcardProgress(userA))[0].mastered, true);
+    assert.equal((await db.getFlashcardProgress(userA))[0].mastered, false);
+    assert.notEqual((await db.getFlashcardProgress(userA))[0].nextReviewAt, (await db.getFlashcardProgress(userB))[0].nextReviewAt);
     assert.deepEqual((await db.getFlashcardProgress(userB)).map(p => p.userId), [userB]);
 
     await saveChatMessage({
