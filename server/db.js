@@ -11,6 +11,7 @@ const usersFile = path.join(dataDir, 'users.json');
 const savedNotesFile = path.join(dataDir, 'saved-notes.json');
 const feedbackFile = path.join(dataDir, 'feedback.json');
 const chatHistoryFile = path.join(dataDir, 'chat-history.json');
+const flashcardProgressFile = path.join(dataDir, 'flashcard-progress.json');
 
 // Mongoose Schemas for Render MongoDB
 const AiConfigSchema = new mongoose.Schema({
@@ -97,7 +98,8 @@ const FlashcardProgressSchema = new mongoose.Schema({
   updatedAt: { type: String, required: true }
 }, { timestamps: true });
 FlashcardProgressSchema.index({ userId: 1, flashcardId: 1 }, { unique: true });
-\nconst ChatMessageSchema = new mongoose.Schema({
+
+const ChatMessageSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   userId: { type: String },
   role: { type: String, enum: ['user', 'assistant'], required: true },
@@ -114,7 +116,8 @@ export let SavedNoteModel;
 export let FeedbackModel;
 export let ChatMessageModel;
 export let QuizAttemptModel;
-export let StudySourceModel;\nexport let FlashcardProgressModel;
+export let StudySourceModel;
+export let FlashcardProgressModel;
 
 let isMongoConnected = false;
 let mongoRequired = Boolean(process.env.MONGODB_URI);
@@ -161,7 +164,8 @@ export async function initDatabase() {
       FeedbackModel = mongoose.models.Feedback || mongoose.model('Feedback', FeedbackSchema);
       ChatMessageModel = mongoose.models.ChatMessage || mongoose.model('ChatMessage', ChatMessageSchema);
       QuizAttemptModel = mongoose.models.QuizAttempt || mongoose.model('QuizAttempt', QuizAttemptSchema);
-      StudySourceModel = mongoose.models.StudySource || mongoose.model('StudySource', StudySourceSchema);\n      FlashcardProgressModel = mongoose.models.FlashcardProgress || mongoose.model('FlashcardProgress', FlashcardProgressSchema);
+      StudySourceModel = mongoose.models.StudySource || mongoose.model('StudySource', StudySourceSchema);
+      FlashcardProgressModel = mongoose.models.FlashcardProgress || mongoose.model('FlashcardProgress', FlashcardProgressSchema);
       return true;
     } catch (err) {
       console.warn('⚠️ [MongoDB Warning] Could not connect to MONGODB_URI.', err.message);
@@ -371,6 +375,62 @@ export async function deleteStudySource(id, userId) {
   const list = fs.existsSync(file) ? await readJson(file) : [];
   atomicWriteJson(file, list.filter(s => !(s.id === id && s.userId === userId)));
   return true;
+}
+
+// -------------------------------------------------------------
+// FLASHCARD PROGRESS
+// -------------------------------------------------------------
+export async function getFlashcardProgress(userId) {
+  assertStorageReady();
+  if (!userId) throw new Error('Flashcard progress requires an authenticated user.');
+  if (isMongoConnected && FlashcardProgressModel) {
+    try {
+      return await FlashcardProgressModel.find({ userId: String(userId) }).sort({ updatedAt: -1 }).lean();
+    } catch (e) {
+      throw new Error('Database unavailable.');
+    }
+  }
+  if (!fs.existsSync(flashcardProgressFile)) return [];
+  try {
+    const list = JSON.parse(fs.readFileSync(flashcardProgressFile, 'utf8'));
+    return list.filter(p => p.userId === String(userId));
+  } catch (e) {
+    return [];
+  }
+}
+
+export async function saveFlashcardProgress(progress) {
+  assertStorageReady();
+  const userId = String(progress?.userId || '');
+  const flashcardId = String(progress?.flashcardId || '');
+  if (!userId || !flashcardId) throw new Error('Flashcard progress requires an authenticated user and flashcard ID.');
+  const payload = {
+    userId,
+    flashcardId,
+    mastered: progress?.mastered === true,
+    ...(progress?.nextReviewAt ? { nextReviewAt: String(progress.nextReviewAt) } : {}),
+    updatedAt: new Date().toISOString()
+  };
+  if (isMongoConnected && FlashcardProgressModel) {
+    try {
+      return await FlashcardProgressModel.findOneAndUpdate(
+        { userId, flashcardId },
+        payload,
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      ).lean();
+    } catch (e) {
+      throw new Error('Database unavailable.');
+    }
+  }
+  let list = [];
+  if (fs.existsSync(flashcardProgressFile)) {
+    try { list = JSON.parse(fs.readFileSync(flashcardProgressFile, 'utf8')); } catch (e) { list = []; }
+  }
+  const index = list.findIndex(p => p.userId === userId && p.flashcardId === flashcardId);
+  if (index >= 0) list[index] = { ...list[index], ...payload };
+  else list.unshift(payload);
+  atomicWriteJson(flashcardProgressFile, list.slice(0, 100000));
+  return payload;
 }
 
 // -------------------------------------------------------------
