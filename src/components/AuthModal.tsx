@@ -80,8 +80,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
   };
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[#2d241e]/60 backdrop-blur-md p-4">
-      <div className="w-full max-w-md overflow-hidden rounded-[28px] border border-[#e5d7c8] bg-[#fffaf4] shadow-2xl">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[#2d241e]/60 backdrop-blur-md p-4" role="presentation">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" tabIndex={-1} className="w-full max-w-md overflow-hidden rounded-[28px] border border-[#e5d7c8] bg-[#fffaf4] shadow-2xl">
         <div className="bg-[#3b2b23] px-6 py-6 text-[#fffaf4]">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
