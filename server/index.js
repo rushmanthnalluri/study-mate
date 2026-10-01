@@ -1282,7 +1282,19 @@ app.get('/api/health', (req, res) => {
 const distPath = path.resolve('dist');
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
-  app.get('*', (req, res) => {
+  // JSON API 404s and final error boundary: never expose stack traces in production.
+app.use('/api', (req, res) => {
+  res.status(404).json({ error: 'API endpoint not found.' });
+});
+
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  const status = Number.isInteger(err?.status) && err.status >= 400 && err.status < 500 ? err.status : 500;
+  if (status === 500) console.error('Unhandled request error:', err?.message || 'unknown error');
+  res.status(status).json({ error: status === 500 ? 'Internal server error.' : (err?.message || 'Request failed.') });
+});
+
+app.get('*', (req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
   });
 }
