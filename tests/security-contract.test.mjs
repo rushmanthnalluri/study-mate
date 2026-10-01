@@ -118,3 +118,26 @@ test('flashcard UI does not persist mastery as browser source of truth', () => {
   const flashcards = fs.readFileSync(path.join(root, 'src', 'screens', 'FlashcardsScreen.tsx'), 'utf8');
   assert.doesNotMatch(flashcards, /localStorage\.setItem\(.*studymate_flashcard_progress_/);
 });
+
+
+test('document analyzer has no fabricated sample-document corpus', () => {
+  const analyzer = fs.readFileSync(path.join(root, 'src', 'screens', 'PaperAnalyzerScreen.tsx'), 'utf8');
+  assert.doesNotMatch(analyzer, /SAMPLE_DOCS|Quick 1-Click Sample Handouts/);
+  assert.doesNotMatch(analyzer, /Primary Kinetic Index|Quality Retention Benchmark/);
+});
+
+test('Mermaid rendering uses strict security mode and accessible controls', () => {
+  const mermaid = fs.readFileSync(path.join(root, 'src', 'components', 'MermaidViewer.tsx'), 'utf8');
+  assert.match(mermaid, /securityLevel:\s*['"]strict['"]/);
+  assert.match(mermaid, /aria-label="Zoom out diagram"/);
+  assert.match(mermaid, /aria-label="Zoom in diagram"/);
+});
+
+test('account dialogs expose modal semantics', () => {
+  const auth = fs.readFileSync(path.join(root, 'src', 'components', 'AuthModal.tsx'), 'utf8');
+  const settings = fs.readFileSync(path.join(root, 'src', 'components', 'SettingsModal.tsx'), 'utf8');
+  assert.match(auth, /role="dialog"/);
+  assert.match(auth, /aria-modal="true"/);
+  assert.match(settings, /role="dialog"/);
+  assert.match(settings, /aria-modal="true"/);
+});
