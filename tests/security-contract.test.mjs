@@ -35,12 +35,15 @@ test('all personalized API routes require authentication', () => {
 });
 
 test('admin configuration and mutation routes require administrator authorization', () => {
-  assert.match(server, /app.get('\/api\/admin\/ai-config', requireAdmin/);
-  assert.match(server, /app.put('\/api\/admin\/ai-config', requireAdmin/);
-  assert.match(server, /app.get('\/api\/admin\/stats', requireAdmin/);
-  assert.match(server, /app.post('\/api\/admin\/subjects', requireAdmin/);
-  assert.match(server, /app.post('\/api\/admin\/resources', requireAdmin/);
-  assert.match(server, /app.delete('\/api\/admin\/subjects\/:name', requireAdmin/);
+  const routes = [
+    "app.get('/api/admin/ai-config', requireAdmin",
+    "app.put('/api/admin/ai-config', requireAdmin",
+    "app.get('/api/admin/stats', requireAdmin",
+    "app.post('/api/admin/subjects', requireAdmin",
+    "app.post('/api/admin/resources', requireAdmin",
+    "app.delete('/api/admin/subjects/:name', requireAdmin"
+  ];
+  for (const route of routes) assert.ok(server.includes(route), route);
 });
 
 test('production database mode fails closed instead of silently falling back to files', () => {
@@ -50,16 +53,19 @@ test('production database mode fails closed instead of silently falling back to 
 });
 
 test('session revocation endpoint exists and clears server token state', () => {
-  assert.match(server, /app.post('\/api\/auth\/logout', requireAuth/);
-  assert.match(server, /req.user.authTokenHash = ''/);
+  assert.ok(server.includes("app.post('/api/auth/logout', requireAuth"));
+  assert.ok(server.includes("req.user.authTokenHash = ''"));
 });
 
 test('expensive authenticated endpoints have rate limits', () => {
-  assert.match(server, /app.post('\/api\/generate', requireAuth, rateLimit/);
-  assert.match(server, /app.post('\/api\/chat', requireAuth, rateLimit/);
-  assert.match(server, /app.post('\/api\/quiz\/generate', requireAuth, rateLimit/);
-  assert.match(server, /app.post('\/api\/feedback', requireAuth, rateLimit/);
-  assert.match(server, /app.post('\/api\/saved-notes', requireAuth, rateLimit/);
+  const routes = [
+    "app.post('/api/generate', requireAuth, rateLimit",
+    "app.post('/api/chat', requireAuth, rateLimit",
+    "app.post('/api/quiz/generate', requireAuth, rateLimit",
+    "app.post('/api/feedback', requireAuth, rateLimit",
+    "app.post('/api/saved-notes', requireAuth, rateLimit"
+  ];
+  for (const route of routes) assert.ok(server.includes(route), route);
 });
 
 test('production responses do not expose caught exception messages from API handlers', () => {
