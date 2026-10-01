@@ -347,7 +347,7 @@ app.post('/api/generate', requireAuth, rateLimit(60 * 1000, 10), async (req, res
 // API: Saved Notes (Dual Mongo / File support)
 app.get('/api/saved-notes', requireAuth, async (req, res) => {
   try {
-    const notes = await getSavedNotes(req.user.id);
+    const notes = await getSavedNotes(req.user.id, Math.min(200, Math.max(1, Number(req.query.limit) || 100)));
     res.json(notes);
   } catch (err) {
     res.status(500).json({ error: 'Request could not be completed.' });
@@ -486,7 +486,7 @@ app.post('/api/chat', requireAuth, rateLimit(60 * 1000, 20), async (req, res) =>
 
 app.get('/api/chat/history', requireAuth, async (req, res) => {
   try {
-    const messages = await getChatMessages(req.user.id);
+    const messages = await getChatMessages(req.user.id, Math.min(200, Math.max(1, Number(req.query.limit) || 100)));
     res.json(messages);
   } catch (err) {
     res.status(500).json({ error: 'Request could not be completed.' });
