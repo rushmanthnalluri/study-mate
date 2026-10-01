@@ -48,8 +48,8 @@ test('admin configuration and mutation routes require administrator authorizatio
 
 test('production database mode fails closed instead of silently falling back to files', () => {
   assert.ok(db.includes('let mongoRequired = Boolean(process.env.MONGODB_URI);'));
-  assert.match(db, /function assertStorageReady()/);
-  assert.match(db, /throw new Error('Database unavailable.')/);
+  assert.ok(db.includes('function assertStorageReady()'));
+  assert.ok(db.includes("throw new Error('Database unavailable.')"));
 });
 
 test('session revocation endpoint exists and clears server token state', () => {
