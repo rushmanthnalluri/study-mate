@@ -19,7 +19,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
   const [newPassword,setNewPassword]=useState('');
   const [passwordMessage,setPasswordMessage]=useState('');
   const dialogRef = useRef<HTMLDivElement>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -28,15 +27,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
       setKlId(currentUser.klId);
     }
   }, [currentUser, isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const previous = document.activeElement as HTMLElement | null;
-    dialogRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', onKeyDown);
-    return () => { document.removeEventListener('keydown', onKeyDown); previous?.focus?.(); };
-  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
