@@ -51,7 +51,10 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
   }, [started, finished, seconds]);
 
   useEffect(() => {
-    if (started && seconds === 0) setFinished(true);
+    if (started && seconds === 0) {
+      setFinished(true);
+      void recordAttempt();
+    }
   }, [seconds, started]);
 
   const start = async () => {
@@ -93,9 +96,22 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
     if (choice === questions[index]?.answer) setScore(value => value + 1);
   };
 
+  const recordAttempt = async () => {
+    const token = localStorage.getItem('studymate_token');
+    if (!token || !subject) return;
+    try {
+      await fetch('/api/quiz/attempts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ subject: subject.name, mode, score, total: questions.length })
+      });
+    } catch {}
+  };
+
   const next = () => {
     if (index + 1 >= questions.length) {
       setFinished(true);
+      void recordAttempt();
     } else {
       setIndex(value => value + 1);
       setSelected(null);
@@ -136,7 +152,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
         <div className="rounded-[28px] border border-[#dfc8b1] bg-[#fffaf4] p-5 shadow-sm">
           <div className="mb-4 flex items-center gap-2 rounded-2xl border border-[#ead9c8] bg-[#fbf3eb] p-3 text-[11px] text-[#6f594a]">
             <Sparkles size={15} className="text-[#a56f42]" />
-            <span>Questions are generated from the subject question bank using the administrator-configured AI provider, with an offline fallback.</span>
+            <span>Questions are generated from the subject question bank using the administrator-configured AI provider. If the provider is unavailable, the assessment will not invent questions.</span>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
