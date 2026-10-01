@@ -24,6 +24,7 @@ test('all personalized API routes require authentication', () => {
     "app.post('/api/quiz/attempts', requireAuth",
     "app.get('/api/quiz/attempts', requireAuth",
     "app.post('/api/studio/sources', requireAuth",
+    "app.post('/api/studio/sources/pdf', requireAuth",
     "app.get('/api/studio/sources', requireAuth",
     "app.delete('/api/studio/sources/:id', requireAuth",
     "app.post('/api/studio/ask', requireAuth"
@@ -80,4 +81,12 @@ test('MongoDB connection failures do not silently fall back after startup', () =
 test('Mongo-backed writes do not duplicate into local JSON storage', () => {
   assert.match(db, /if \(isMongoConnected && ChatMessageModel\) \{\s*return ChatMessageModel\.create/);
   assert.match(db, /if \(isMongoConnected && FeedbackModel\) \{\s*return FeedbackModel\.create/);
+});
+
+
+test('PDF Studio ingestion is authenticated and size-limited', () => {
+  assert.match(server, /app\.post\('\/api\/studio\/sources\/pdf', requireAuth, rateLimit/);
+  assert.match(server, /express\.raw\(\{ type: \['application\/pdf', 'application\/octet-stream'\], limit: '12mb' \}\)/);
+  assert.match(server, /buffer\.length > 10 \* 1024 \* 1024/);
+  assert.match(server, /extractPdfText\(buffer\)/);
 });
