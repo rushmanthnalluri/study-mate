@@ -29,7 +29,7 @@ test('all personalized API routes require authentication', () => {
     "app.delete('/api/studio/sources/:id', requireAuth",
     "app.post('/api/studio/ask', requireAuth",
     "app.get('/api/flashcards/progress', requireAuth",
-    "app.put('/api/flashcards/progress/:flashcardId', requireAuth
+    "app.put('/api/flashcards/progress/:flashcardId', requireAuth"
   ];
   for (const route of required) assert.ok(server.includes(route), route);
 });
