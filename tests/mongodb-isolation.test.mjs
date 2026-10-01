@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 const mongoUri = process.env.MONGODB_URI;
 const enabled = Boolean(mongoUri);
 
-test('MongoDB cross-user isolation', { skip: !enabled }, async () => {
+test('MongoDB cross-user isolation', { skip: !enabled, timeout: 120000 }, async () => {
   const db = await import('../server/db.js');
   const {
     initDatabase,
@@ -28,7 +28,9 @@ test('MongoDB cross-user isolation', { skip: !enabled }, async () => {
     closeDatabase
   } = db;
 
+  console.log('integration: connecting');
   await initDatabase();
+  console.log('integration: connected');
   assert.equal(db.isDatabaseConnected(), true, 'MongoDB must be connected for this test');
 
   const suffix = `integration-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -36,6 +38,7 @@ test('MongoDB cross-user isolation', { skip: !enabled }, async () => {
   const userB = `mongo-b-${suffix}`;
 
   try {
+    console.log('integration: writes and isolation checks');
     await saveUser({
       id: userA,
       klId: `KLA-${suffix}`,
@@ -159,6 +162,7 @@ test('MongoDB cross-user isolation', { skip: !enabled }, async () => {
     assert.deepEqual((await getChatMessages(userA)).map(m => m.userId), [userA]);
     assert.deepEqual((await getChatMessages(userB)).map(m => m.userId), [userB]);
   } finally {
+    console.log('integration: cleanup');
     await Promise.all([
       UserModel.deleteMany({ id: { $in: [userA, userB] } }),
       SavedNoteModel.deleteMany({ id: { $in: [`note-a-${suffix}`, `note-b-${suffix}`] } }),
@@ -168,5 +172,6 @@ test('MongoDB cross-user isolation', { skip: !enabled }, async () => {
       FlashcardProgressModel.deleteMany({ userId: { $in: [userA, userB] }, flashcardId: 'fc-test' })
     ]);
     await closeDatabase();
+    console.log('integration: complete');
   }
 });
