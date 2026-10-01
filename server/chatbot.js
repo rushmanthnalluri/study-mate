@@ -39,6 +39,7 @@ export async function generateChatbotReply({ message, history = [], department =
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${apiKey}`
         },
+        signal: AbortSignal.timeout(15000),
         body: JSON.stringify({
           model: model || 'llama-3.3-70b-versatile',
           messages: [
@@ -75,6 +76,7 @@ Answer clearly and authoritatively with academic precision. Use equations, step-
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(15000),
         body: JSON.stringify({
           systemInstruction: {
             parts: [{ text: `You are StudyMate AI, an expert KL University engineering professor for ${department} (${subject}). Explain concepts, clarify doubts, solve numerical problems, and provide exam tips for 2M, 5M, and 10M questions. Use Markdown.` }]
