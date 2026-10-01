@@ -89,13 +89,6 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
     }, 500);
   };
 
-  const handleLoadSample = (sample: typeof SAMPLE_DOCS[0]) => {
-    setDocTitle(sample.title);
-    setTargetSubject(sample.subject);
-    setSelectedDept(sample.dept);
-    setCustomText(sample.content);
-  };
-
   return (
     <div className="space-y-4 pb-24 animate-fade-in">
       {/* Screen Header */}
