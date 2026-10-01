@@ -35,9 +35,11 @@ export const StudyStudioScreen:React.FC<Props>=({note,onNavigate})=>{
   const uploadSource=async(file:File)=>{
     setSourceBusy(true);setSourceError('');
     try{
-      const text=await file.text();
       const token=localStorage.getItem('studymate_token');
-      const r=await fetch('/api/studio/sources',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token||''}`},body:JSON.stringify({name:file.name,mimeType:file.type||'text/plain',content:text})});
+      const isPdf=file.type==='application/pdf'||file.name.toLowerCase().endsWith('.pdf');
+      const r=isPdf
+        ? await fetch('/api/studio/sources/pdf',{method:'POST',headers:{'Content-Type':'application/pdf','Authorization':`Bearer ${token||''}`,'X-Filename':file.name},body:file})
+        : await fetch('/api/studio/sources',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token||''}`},body:JSON.stringify({name:file.name,mimeType:file.type||'text/plain',content:await file.text()})});
       const d=await r.json().catch(()=>({})); if(!r.ok)throw new Error(d.error||'Upload failed');
       await loadSources();setSelectedSource(d.id);
     }catch(e){setSourceError(e instanceof Error?e.message:'Upload failed');}finally{setSourceBusy(false);}
@@ -91,11 +93,11 @@ export const StudyStudioScreen:React.FC<Props>=({note,onNavigate})=>{
           <div className="flex items-center justify-between gap-3">
             <div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#a0704b]">Private sources</p><h3 className="text-lg font-black">Ask your own material</h3></div>
             <label className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#7c4f2c] px-4 py-2.5 text-xs font-black text-white">
-              <Upload size={14}/> {sourceBusy?'Working…':'Upload .txt / .md'}
-              <input type="file" accept=".txt,.md,text/plain,text/markdown" className="hidden" disabled={sourceBusy} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadSource(f);e.currentTarget.value='';}}/>
+              <Upload size={14}/> {sourceBusy?'Working…':'Upload PDF / .txt / .md'}
+              <input type="file" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" className="hidden" disabled={sourceBusy} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadSource(f);e.currentTarget.value='';}}/>
             </label>
           </div>
-          <p className="mt-2 text-[11px] leading-5 text-[#806f61]">Sources are private to your account. Answers are grounded only in the selected source and will say when the source lacks the answer.</p>
+          <p className="mt-2 text-[11px] leading-5 text-[#806f61]">Sources are private to your account. PDFs are extracted on the server and stored as text only; scanned/image-only PDFs are rejected. Answers are grounded only in the selected source and will say when the source lacks the answer.</p>
           {sourceError&&<div className="mt-3 rounded-xl border border-[#efc4b8] bg-[#fff0ec] p-3 text-[11px] font-semibold text-[#8f3328]">{sourceError}</div>}
           {sources.length>0&&<div className="mt-3 space-y-2">{sources.map(s=><div key={s.id} className={`flex items-center gap-2 rounded-xl border p-2.5 ${selectedSource===s.id?'border-[#cba27d] bg-[#f5e6d7]':'border-[#eadfd4] bg-white'}`}><button onClick={()=>setSelectedSource(s.id)} className="min-w-0 flex-1 text-left"><span className="block truncate text-xs font-bold text-[#4b392e]">{s.name}</span><span className="text-[10px] text-[#907d6d]">{s.characters.toLocaleString()} characters</span></button><button onClick={()=>void removeSource(s.id)} aria-label={`Delete ${s.name}`} className="rounded-lg p-2 text-[#8f6f5a] hover:bg-[#f1e1d5]"><Trash2 size={14}/></button></div>)}</div>}
           <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]"><input value={question} onChange={e=>setQuestion(e.target.value)} disabled={!selectedSource||sourceBusy} placeholder={selectedSource?'Ask a question about this source…':'Select a source first'} className="auth-input"/><button onClick={()=>void askSource()} disabled={!selectedSource||!question.trim()||sourceBusy} className="rounded-2xl bg-[#3b2b23] px-4 py-3 text-xs font-black text-white disabled:opacity-40"><MessageCircle size={14} className="mr-1 inline"/>Ask</button></div>
