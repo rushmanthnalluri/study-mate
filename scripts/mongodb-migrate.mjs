@@ -19,6 +19,11 @@ try {
 
   const applied = await migrations.findOne({ version: CURRENT_SCHEMA_VERSION });
   if (!applied) {
+    try {
+      await db.createCollection('flashcardprogresses');
+    } catch (error) {
+      if (error?.code !== 48 && error?.codeName !== 'NamespaceExists') throw error;
+    }
     const indexes = await db.collection('flashcardprogresses').listIndexes().toArray();
     const equivalent = indexes.find(index =>
       index.unique === true &&
