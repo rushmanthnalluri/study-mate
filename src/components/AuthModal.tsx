@@ -70,7 +70,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
   };
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[#2d241e]/60 backdrop-blur-md p-4">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[#2d241e]/60 backdrop-blur-md p-4" role="presentation">
+      <div role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" className="contents">
       <div className="w-full max-w-md overflow-hidden rounded-[28px] border border-[#e5d7c8] bg-[#fffaf4] shadow-2xl">
         <div className="bg-[#3b2b23] px-6 py-6 text-[#fffaf4]">
           <div className="flex items-start justify-between">
@@ -79,7 +80,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 <GraduationCap size={22} />
               </div>
               <div>
-                <p className="text-lg font-extrabold tracking-tight">StudyMate</p>
+                <p id="auth-modal-title" className="text-lg font-extrabold tracking-tight">StudyMate</p>
                 <p className="text-xs text-[#eadbc9]">Your personal KL exam workspace</p>
               </div>
             </div>
@@ -167,6 +168,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
             </>
           )}
         </form>
+      </div>
       </div>
     </div>
   );
