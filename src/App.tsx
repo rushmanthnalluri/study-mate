@@ -619,6 +619,18 @@ export const App: React.FC = () => {
             console.error('Profile update failed:', error);
           }
         }}
+        onChangePassword={async (currentPassword, newPassword) => {
+          const res = await fetch('/api/auth/password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...authHeaders() },
+            body: JSON.stringify({ currentPassword, newPassword })
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error || 'Password change failed');
+          localStorage.setItem('studymate_token', data.token);
+          setCurrentUser(data.user);
+          localStorage.setItem('studymate_user', JSON.stringify(data.user));
+        }}
         onResetData={() => {
           localStorage.removeItem('studymate_saved_notes');
           localStorage.removeItem('studymate_user');
