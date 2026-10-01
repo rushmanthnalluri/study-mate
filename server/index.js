@@ -83,6 +83,12 @@ app.use((req, res, next) => {
 
 const rateBuckets = new Map();
 const RATE_BUCKET_MAX = 5000;
+setInterval(() => {
+  const cutoff = Date.now() - 30 * 60 * 1000;
+  for (const [key, bucket] of rateBuckets) {
+    if (bucket.start < cutoff) rateBuckets.delete(key);
+  }
+}, 10 * 60 * 1000).unref();
 const rateLimit = (windowMs, max) => (req, res, next) => {
   const key = (req.ip || 'unknown') + ':' + req.path;
   const now = Date.now();
@@ -190,7 +196,7 @@ app.get('/api/departments', (req, res) => {
       .map(d => d.name);
     res.json(depts);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -334,7 +340,7 @@ app.get('/api/saved-notes', requireAuth, async (req, res) => {
   }
 });
 
-app.post('/api/saved-notes', requireAuth, async (req, res) => {
+app.post('/api/saved-notes', requireAuth, rateLimit(60 * 1000, 30), async (req, res) => {
   try {
     const newNote = {
       ...req.body,
@@ -362,7 +368,7 @@ app.delete('/api/saved-notes/:id', requireAuth, async (req, res) => {
 });
 
 // API: Feedback (Dual Mongo / File support)
-app.post('/api/feedback', requireAuth, async (req, res) => {
+app.post('/api/feedback', requireAuth, rateLimit(60 * 60 * 1000, 20), async (req, res) => {
   try {
     const { topic, department, subject, source, rating, comment } = req.body;
     if (!topic || typeof topic !== 'string' || topic.trim().length > 300) {
@@ -565,6 +571,19 @@ app.get('/api/auth/me', requireAuth, (req, res) => {
   res.json({ user: sanitizeUser(req.user) });
 });
 
+
+// Revoke the current bearer session server-side.
+app.post('/api/auth/logout', requireAuth, async (req, res) => {
+  try {
+    req.user.authTokenHash = '';
+    req.user.authTokenIssuedAt = '';
+    await saveUser(req.user);
+    res.json({ success: true });
+  } catch {
+    res.status(500).json({ error: 'Logout service unavailable.' });
+  }
+});
+
 // POST login — existing accounts only; no automatic account creation.
 app.post('/api/auth/login', rateLimit(15 * 60 * 1000, 20), async (req, res) => {
   try {
@@ -579,12 +598,12 @@ app.post('/api/auth/login', rateLimit(15 * 60 * 1000, 20), async (req, res) => {
       String(u.klId || '').toLowerCase() === cleanLogin ||
       String(u.lmsUsername || '').toLowerCase() === cleanLogin
     );
-    if (!user) return res.status(401).json({ error: 'Account not found. Create an account before signing in.' });
+    if (!user) return res.status(401).json({ error: 'Invalid email/KL ID or password.' });
 
     const valid = user.passwordHash
       ? verifyPassword(String(password), user.passwordHash)
       : String(user.password || '') === String(password);
-    if (!valid) return res.status(401).json({ error: 'Invalid credentials.' });
+    if (!valid) return res.status(401).json({ error: 'Invalid email/KL ID or password.' });
 
     const token = issueAuthToken();
     user.authTokenHash = tokenHash(token);
@@ -607,11 +626,16 @@ app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => 
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email, and password are required.' });
     }
-    if (String(password).length < 8) {
+    const cleanName = String(name).trim();
+    const cleanEmail = String(email).trim().toLowerCase();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (cleanName.length < 2 || cleanName.length > 100 || !emailPattern.test(cleanEmail)) {
+      return res.status(400).json({ error: 'Enter a valid name and email address.' });
+    }
+    if (String(password).length < 8 || String(password).length > 128) {
       return res.status(400).json({ error: 'Password must contain at least 8 characters.' });
     }
     const users = await getAllUsers();
-    const cleanEmail = String(email).trim().toLowerCase();
     const cleanKlId = String(klId || cleanEmail.split('@')[0]).trim();
     const duplicate = users.find(u =>
       String(u.email || '').toLowerCase() === cleanEmail ||
@@ -622,7 +646,7 @@ app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => 
     const token = issueAuthToken();
     const newUser = {
       id: crypto.randomUUID(),
-      name: String(name).trim(),
+      name: cleanName,
       klId: cleanKlId,
       email: cleanEmail,
       passwordHash: hashPassword(String(password)),
@@ -852,7 +876,7 @@ const buildOfflineQuiz = (subjectMeta, count) => {
   });
 };
 
-app.post('/api/quiz/generate', requireAuth, async (req, res) => {
+app.post('/api/quiz/generate', requireAuth, rateLimit(60 * 1000, 8), async (req, res) => {
   try {
     const { subjectId, mode = 'quiz' } = req.body || {};
     const requestedCount = mode === 'model' ? 20 : 10;
