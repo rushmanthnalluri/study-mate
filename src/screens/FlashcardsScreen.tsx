@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Department, ScreenId, QuizQuestion } from '../types';
 import { initialFlashcards, Flashcard } from '../data/flashcardsData';
 import { initialQuizQuestions } from '../data/quizData';
