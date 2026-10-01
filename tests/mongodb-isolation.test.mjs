@@ -173,5 +173,6 @@ test('MongoDB cross-user isolation', { skip: !enabled, timeout: 120000 }, async 
     ]);
     await closeDatabase();
     console.log('integration: complete');
+    process.exit(0);
   }
 });
