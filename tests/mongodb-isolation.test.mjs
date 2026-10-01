@@ -133,6 +133,9 @@ test('MongoDB cross-user isolation', { skip: !enabled }, async () => {
 
     await db.saveFlashcardProgress({ userId: userA, flashcardId: 'fc-test', mastered: true, nextReviewAt: new Date(Date.now() + 86400000).toISOString() });
     await db.saveFlashcardProgress({ userId: userB, flashcardId: 'fc-test', mastered: false, nextReviewAt: new Date().toISOString() });
+    await db.saveFlashcardProgress({ userId: userA, flashcardId: 'fc-test', mastered: false, nextReviewAt: new Date(Date.now() + 172800000).toISOString() });
+    const userBProgressAfterAUpdate = await db.getFlashcardProgress(userB);
+    assert.equal(userBProgressAfterAUpdate[0].mastered, false, 'user A must not modify user B progress');
     assert.deepEqual((await db.getFlashcardProgress(userA)).map(p => p.userId), [userA]);
     assert.equal((await db.getFlashcardProgress(userA))[0].mastered, true);
     assert.deepEqual((await db.getFlashcardProgress(userB)).map(p => p.userId), [userB]);
@@ -160,7 +163,8 @@ test('MongoDB cross-user isolation', { skip: !enabled }, async () => {
       SavedNoteModel.deleteMany({ id: { $in: [`note-a-${suffix}`, `note-b-${suffix}`] } }),
       StudySourceModel.deleteMany({ id: { $in: [`source-a-${suffix}`, `source-b-${suffix}`] } }),
       QuizAttemptModel.deleteMany({ id: { $in: [`attempt-a-${suffix}`, `attempt-b-${suffix}`] } }),
-      ChatMessageModel.deleteMany({ id: { $in: [`chat-a-${suffix}`, `chat-b-${suffix}`] } })
+      ChatMessageModel.deleteMany({ id: { $in: [`chat-a-${suffix}`, `chat-b-${suffix}`] } }),
+      FlashcardProgressModel.deleteMany({ userId: { $in: [userA, userB] }, flashcardId: 'fc-test' })
     ]);
     await closeDatabase();
   }
