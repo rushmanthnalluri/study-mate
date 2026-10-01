@@ -227,11 +227,11 @@ export async function saveUser(user) {
 // -------------------------------------------------------------
 // SAVED NOTES OPERATIONS
 // -------------------------------------------------------------
-export async function getSavedNotes(userId = null) {
+export async function getSavedNotes(userId = null, limit = 100) {
   assertStorageReady();
   if (isMongoConnected && SavedNoteModel) {
     try {
-      return await SavedNoteModel.find(userId ? { userId } : {}).sort({ createdAt: -1 }).lean();
+      return await SavedNoteModel.find(userId ? { userId } : {}).sort({ createdAt: -1 }).limit(Math.min(200, Math.max(1, Number(limit) || 100))).lean();
     } catch (e) {
       throw new Error('Database unavailable.');
     }
@@ -239,7 +239,7 @@ export async function getSavedNotes(userId = null) {
   if (!fs.existsSync(savedNotesFile)) return [];
   try {
     const list = JSON.parse(fs.readFileSync(savedNotesFile, 'utf8'));
-    return userId ? list.filter(n => n.userId === userId) : list;
+    return (userId ? list.filter(n => n.userId === userId) : list).slice(0, Math.min(200, Math.max(1, Number(limit) || 100)));
   } catch (e) {
     return [];
   }
@@ -391,19 +391,19 @@ export async function getQuizAttempts(userId, limit = 20) {
 // -------------------------------------------------------------
 // CHATBOT MESSAGE PERSISTENCE
 // -------------------------------------------------------------
-export async function getChatMessages(userId) {
+export async function getChatMessages(userId, limit = 100) {
   assertStorageReady();
   if (!userId) throw new Error('Chat history requires an authenticated user.');
   if (isMongoConnected && ChatMessageModel) {
     try {
-      const docs = await ChatMessageModel.find({ userId }).sort({ createdAt: 1 }).lean();
-      return docs;
+      const docs = await ChatMessageModel.find({ userId }).sort({ createdAt: -1 }).limit(Math.min(200, Math.max(1, Number(limit) || 100))).lean();
+      return docs.reverse();
     } catch (e) {}
   }
   if (!fs.existsSync(chatHistoryFile)) return [];
   try {
     const list = JSON.parse(fs.readFileSync(chatHistoryFile, 'utf8'));
-    return list.filter(m => m.userId === userId);
+    return list.filter(m => m.userId === userId).slice(-Math.min(200, Math.max(1, Number(limit) || 100)));
   } catch (e) {
     return [];
   }
