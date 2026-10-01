@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Department, UserProfile } from '../types';
 import { X, UserRound, ShieldCheck, Save, Trash2, KeyRound } from 'lucide-react';
 
@@ -18,6 +18,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
   const [currentPassword,setCurrentPassword]=useState('');
   const [newPassword,setNewPassword]=useState('');
   const [passwordMessage,setPasswordMessage]=useState('');
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -26,6 +27,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
       setKlId(currentUser.klId);
     }
   }, [currentUser, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKeyDown);
+    return () => { document.removeEventListener('keydown', onKeyDown); previous?.focus?.(); };
+  }, [isOpen, onClose]);
 
   if (!isOpen || !currentUser) return null;
 
@@ -42,11 +52,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e2c2a3] text-[#6e4228]"><UserRound size={18} /></div>
             <div>
-              <h3 className="font-extrabold text-[#3b2b23]">Account settings</h3>
+              <h3 id="settings-modal-title" className="font-extrabold text-[#3b2b23]">Account settings</h3>
               <p className="text-[11px] text-[#8d7868]">Manage your StudyMate profile</p>
             </div>
           </div>
-          <button onClick={onClose} className="rounded-xl p-2 text-[#806f61] hover:bg-white"><X size={18} /></button>
+          <button type="button" onClick={onClose} aria-label="Close account settings" className="rounded-xl p-2 text-[#806f61] hover:bg-white"><X size={18} /></button>
         </div>
 
         <form onSubmit={save} className="space-y-5 p-6">
