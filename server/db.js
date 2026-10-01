@@ -523,8 +523,9 @@ export function isDatabaseConnected() {
 }
 
 export async function closeDatabase() {
-  if (isMongoConnected) {
-    await mongoose.disconnect();
+  try {
+    if (mongoose.connection.readyState !== 0) await mongoose.disconnect();
+  } finally {
     isMongoConnected = false;
   }
 }
