@@ -240,19 +240,33 @@ app.get('/api/subjects/:id', (req, res) => {
 // API: Generate KL Exam Notes with resource citations
 app.post('/api/generate', requireAuth, async (req, res) => {
   try {
-    const { department, subject, topic } = req.body;
+    const { department, subject, topic } = req.body || {};
     if (!topic || !subject) {
       return res.status(400).json({ error: 'Topic and subject are required.' });
     }
+    const cleanDepartment = String(department || 'Food Technology').trim();
+    const cleanSubject = String(subject).trim();
+    const cleanTopic = String(topic).trim();
+    if (cleanTopic.length < 2 || cleanTopic.length > 500) {
+      return res.status(400).json({ error: 'Topic must be between 2 and 500 characters.' });
+    }
+
+    // Resolve the subject from the knowledge base instead of trusting a client-supplied path.
+    const subjectMeta = getAllSubjects('All').find(
+      (item) =>
+        item.department.toLowerCase() === cleanDepartment.toLowerCase() &&
+        item.name.toLowerCase() === cleanSubject.toLowerCase()
+    );
+    if (!subjectMeta) return res.status(404).json({ error: 'Subject not found in the knowledge base.' });
 
     const note = await generateKLNotes({
-      department: department || 'Food Technology',
-      subject,
-      topic
+      department: subjectMeta.department,
+      subject: subjectMeta.name,
+      topic: cleanTopic
     });
 
     // Attach real knowledge base grounding citations for laptop view
-    const subjPath = path.join(kbRoot, department || 'Food Technology', subject);
+    const subjPath = path.join(kbRoot, subjectMeta.department, subjectMeta.name);
     const resourcesUsed = [];
 
     const resManifestPath = path.join(subjPath, 'resources.json');
