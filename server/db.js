@@ -142,7 +142,7 @@ export async function initDatabase() {
       StudySourceModel = mongoose.models.StudySource || mongoose.model('StudySource', StudySourceSchema);
       return true;
     } catch (err) {
-      console.warn('⚠️ [MongoDB Warning] Could not connect to MONGODB_URI. Falling back gracefully to JSON storage.', err.message);
+      console.warn('⚠️ [MongoDB Warning] Could not connect to MONGODB_URI.', err.message);
       isMongoConnected = false;
     }
   } else {
@@ -158,8 +158,12 @@ export async function getAiConfig() {
   assertStorageReady();
   if (isMongoConnected && AiConfigModel) {
     try {
-      return await AiConfigModel.findOne({ id: 'global' }).lean();
-    } catch (e) {}
+      try {
+        return await AiConfigModel.findOne({ id: 'global' }).lean();
+      } catch (e) {
+        throw new Error('Database unavailable.');
+      }
+    }
   }
   return null;
 }
@@ -180,10 +184,9 @@ export async function getAllUsers() {
   assertStorageReady();
   if (isMongoConnected && UserModel) {
     try {
-      const docs = await UserModel.find({}).lean();
-      return docs;
+      return await UserModel.find({}).lean();
     } catch (e) {
-      console.warn('Mongo read error, falling back to file:', e.message);
+      throw new Error('Database unavailable.');
     }
   }
   if (!fs.existsSync(usersFile)) return [];
@@ -217,9 +220,10 @@ export async function getSavedNotes(userId = null) {
   assertStorageReady();
   if (isMongoConnected && SavedNoteModel) {
     try {
-      const docs = await SavedNoteModel.find(userId ? { userId } : {}).sort({ createdAt: -1 }).lean();
-      return docs;
-    } catch (e) {}
+      return await SavedNoteModel.find(userId ? { userId } : {}).sort({ createdAt: -1 }).lean();
+    } catch (e) {
+      throw new Error('Database unavailable.');
+    }
   }
   if (!fs.existsSync(savedNotesFile)) return [];
   try {
@@ -232,6 +236,13 @@ export async function getSavedNotes(userId = null) {
 
 export async function addSavedNote(note) {
   assertStorageReady();
+  if (isMongoConnected && SavedNoteModel) {
+    return SavedNoteModel.findOneAndUpdate(
+      { userId: note.userId, topic: note.topic, subject: note.subject },
+      note,
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ).lean();
+  }
   // File fallback must preserve every user's records. Never replace the
   // complete file with a single user's filtered view.
   let notes = [];
@@ -256,6 +267,10 @@ export async function addSavedNote(note) {
 
 export async function deleteSavedNote(id, userId = null) {
   assertStorageReady();
+  if (isMongoConnected && SavedNoteModel) {
+    const result = await SavedNoteModel.deleteOne({ id, userId: String(userId || '') });
+    return result.deletedCount > 0;
+  }
   const ownerId = String(userId || '');
   if (!ownerId) throw new Error('Saved notes require an authenticated user.');
 
@@ -280,9 +295,10 @@ export async function getFeedbacks() {
   assertStorageReady();
   if (isMongoConnected && FeedbackModel) {
     try {
-      const docs = await FeedbackModel.find({}).sort({ createdAt: -1 }).lean();
-      return docs;
-    } catch (e) {}
+      return await FeedbackModel.find({}).sort({ createdAt: -1 }).lean();
+    } catch (e) {
+      throw new Error('Database unavailable.');
+    }
   }
   if (!fs.existsSync(feedbackFile)) return [];
   try {
@@ -294,6 +310,9 @@ export async function getFeedbacks() {
 
 export async function addFeedback(feedback) {
   assertStorageReady();
+  if (isMongoConnected && FeedbackModel) {
+    return FeedbackModel.create(feedback).then(doc => doc.toObject());
+  }
   const list = await getFeedbacks();
   list.unshift(feedback);
   atomicWriteJson(feedbackFile, list);
@@ -382,6 +401,9 @@ export async function getChatMessages(userId) {
 export async function saveChatMessage(msg) {
   assertStorageReady();
   if (!msg?.userId) throw new Error('Chat messages require an authenticated user.');
+  if (isMongoConnected && ChatMessageModel) {
+    return ChatMessageModel.create(msg).then(doc => doc.toObject());
+  }
   let list = [];
   if (fs.existsSync(chatHistoryFile)) {
     try {
@@ -392,25 +414,20 @@ export async function saveChatMessage(msg) {
   // Keep last 100 messages in local file
   if (list.length > 100) list = list.slice(-100);
   atomicWriteJson(chatHistoryFile, list);
-
-  if (isMongoConnected && ChatMessageModel) {
-    try {
-      await ChatMessageModel.create(msg);
-    } catch (e) {}
-  }
   return msg;
 }
 
 export async function clearStudyMateData() {
   assertStorageReady();
-  const files = [usersFile, savedNotesFile, feedbackFile, chatHistoryFile, path.join(dataDir, 'quiz-attempts.json'), path.join(dataDir, 'study-sources.json')];
-  for (const file of files) fs.writeFileSync(file, '[]', 'utf8');
   if (isMongoConnected) {
     await Promise.all([
       UserModel?.deleteMany({}), SavedNoteModel?.deleteMany({}),
       FeedbackModel?.deleteMany({}), ChatMessageModel?.deleteMany({}), QuizAttemptModel?.deleteMany({}), StudySourceModel?.deleteMany({})
     ]);
+    return;
   }
+  const files = [usersFile, savedNotesFile, feedbackFile, chatHistoryFile, path.join(dataDir, 'quiz-attempts.json'), path.join(dataDir, 'study-sources.json')];
+  for (const file of files) atomicWriteJson(file, []);
 }
 
 export function isDatabaseConnected() {
