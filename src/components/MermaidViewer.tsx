@@ -10,7 +10,7 @@ interface MermaidViewerProps {
 mermaid.initialize({
   startOnLoad: false,
   theme: 'neutral',
-  securityLevel: 'loose',
+  securityLevel: 'strict',
   fontFamily: 'Inter, system-ui, sans-serif',
   themeVariables: {
     primaryColor: '#fbebed',
@@ -80,6 +80,7 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
           <button
             onClick={zoomOut}
             title="Zoom Out"
+            aria-label="Zoom out diagram"
             className="p-1 rounded text-surface-muted hover:text-surface-dark hover:bg-white transition-colors"
           >
             <ZoomOut size={15} />
@@ -87,6 +88,7 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
           <button
             onClick={resetZoom}
             title="Reset Zoom"
+            aria-label="Reset diagram zoom"
             className="p-1 rounded text-surface-muted hover:text-surface-dark hover:bg-white transition-colors text-xs font-mono"
           >
             {Math.round(scale * 100)}%
@@ -94,6 +96,7 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
           <button
             onClick={zoomIn}
             title="Zoom In"
+            aria-label="Zoom in diagram"
             className="p-1 rounded text-surface-muted hover:text-surface-dark hover:bg-white transition-colors"
           >
             <ZoomIn size={15} />
