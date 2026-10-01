@@ -59,31 +59,32 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
 
     setIsAnalyzing(true);
     setTimeout(() => {
-      const lines = customText.split('\n').filter((l) => l.trim().length > 10);
-      const parsedQuestions = lines.map((line, idx) => {
-        let marks: 2 | 5 | 10 = 5;
-        if (/define|what is|state|list/i.test(line)) marks = 2;
-        else if (/explain in detail|derive|demonstrate|comprehensive/i.test(line)) marks = 10;
+      const lines = customText.split('\n').map((line) => line.trim()).filter((line) => line.length > 10);
+      const parsedQuestions = lines
+        .filter((line) => /\?|^(?:\d+[\.\)]|Q(?:uestion)?\s*\d*)/i.test(line))
+        .map((line, idx) => {
+          let marks: 2 | 5 | 10 = 5;
+          if (/define|what is|state|list/i.test(line)) marks = 2;
+          else if (/explain in detail|derive|demonstrate|discuss in detail|comprehensive/i.test(line)) marks = 10;
+          return { text: line.replace(/^(?:Q(?:uestion)?\s*)?\d*[\.\)]?\s*/i, ''), marks, unit: (idx % 5) + 1 };
+        });
 
-        return {
-          text: line.replace(/^\d+[\.\)]\s*/, ''),
-          marks,
-          unit: (idx % 5) + 1
-        };
-      });
+      const keyDefinitions = lines
+        .map((line) => {
+          const match = line.match(/^([^:—–-]{2,80})\s*(?::|—|–|- )\s*(.{10,240})$/);
+          return match ? { term: match[1].trim(), def: match[2].trim() } : null;
+        })
+        .filter((item): item is { term: string; def: string } => Boolean(item))
+        .slice(0, 6);
 
+      const summaryText = lines.slice(0, 3).join(' ');
+      const wordCount = customText.trim().split(/\s+/).filter(Boolean).length;
       setAnalysisResult({
-        summary: `Document analysis completed for "${docTitle}". The lecture material focuses on core processing mechanisms, kinetics, quality benchmarks, and examination parameters under the KL University curriculum.`,
-        keyDefinitions: [
-          { term: 'Primary Kinetic Index', def: 'Governed by first-order inactivation reaction kinetics with critical threshold validation.' },
-          { term: 'Critical Control Point (CCP)', def: 'Mandatory monitoring stage ensuring zero contamination and regulatory standard compliance.' },
-          { term: 'Quality Retention Benchmark', def: 'Optimization of process parameters to maximize retention of nutrients and organoleptic properties.' }
-        ],
-        questions: parsedQuestions.length > 0 ? parsedQuestions : [
-          { text: `Define the primary governing equation and principles described in ${docTitle}.`, marks: 2, unit: 1 },
-          { text: `Explain the working principle and operational parameters of ${docTitle}.`, marks: 5, unit: 2 },
-          { text: `Describe the detailed mechanism, process flowchart, and quality control tests for ${docTitle}.`, marks: 10, unit: 3 }
-        ]
+        summary: summaryText
+          ? 'Parsed ' + docTitle + ' from the text you supplied: ' + wordCount.toLocaleString() + ' words across ' + lines.length + ' non-empty lines. Opening material: ' + summaryText.slice(0, 700)
+          : 'No analyzable text was found in ' + docTitle + '.',
+        keyDefinitions,
+        questions: parsedQuestions
       });
       setIsAnalyzing(false);
     }, 500);
@@ -94,6 +95,8 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
       {/* Screen Header */}
       <div className="flex items-center space-x-3 pt-1">
         <button
+          type="button"
+          aria-label="Back to home"
           onClick={() => onNavigate('home')}
           className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] dark:bg-stone-900 text-[#806f61] hover:text-[#3b2b23] transition-colors"
         >
