@@ -58,6 +58,7 @@ const SavedNoteSchema = new mongoose.Schema({
 
 const FeedbackSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
+  userId: { type: String, required: true, index: true },
   topic: { type: String, required: true },
   department: { type: String, default: 'Food Technology' },
   subject: { type: String, default: 'General' },
@@ -200,15 +201,30 @@ export async function getSavedNotes(userId = null) {
 }
 
 export async function addSavedNote(note) {
-  const notes = await getSavedNotes(note.userId || null);
-  const filtered = notes.filter(n => !(n.topic === note.topic && n.subject === note.subject));
-  filtered.unshift(note);
-  fs.writeFileSync(savedNotesFile, JSON.stringify(filtered, null, 2), 'utf8');
+  // File fallback must preserve every user's records. Never replace the
+  // complete file with a single user's filtered view.
+  let notes = [];
+  if (fs.existsSync(savedNotesFile)) {
+    try {
+      notes = JSON.parse(fs.readFileSync(savedNotesFile, 'utf8'));
+    } catch (e) {
+      notes = [];
+    }
+  }
+
+  const ownerId = String(note.userId || '');
+  if (!ownerId) throw new Error('Saved notes require an authenticated user.');
+
+  // Keep the existing per-user uniqueness behavior without touching
+  // another user's records.
+  notes = notes.filter(n => !(n.userId === ownerId && n.topic === note.topic && n.subject === note.subject));
+  notes.unshift(note);
+  fs.writeFileSync(savedNotesFile, JSON.stringify(notes, null, 2), 'utf8');
 
   if (isMongoConnected && SavedNoteModel) {
     try {
       await SavedNoteModel.findOneAndUpdate(
-        { id: note.id },
+        { id: note.id, userId: ownerId },
         note,
         { upsert: true, new: true }
       );
@@ -218,13 +234,24 @@ export async function addSavedNote(note) {
 }
 
 export async function deleteSavedNote(id, userId = null) {
-  const notes = await getSavedNotes(userId);
-  const filtered = notes.filter(n => n.id !== id);
-  fs.writeFileSync(savedNotesFile, JSON.stringify(filtered, null, 2), 'utf8');
+  const ownerId = String(userId || '');
+  if (!ownerId) throw new Error('Saved notes require an authenticated user.');
+
+  let notes = [];
+  if (fs.existsSync(savedNotesFile)) {
+    try {
+      notes = JSON.parse(fs.readFileSync(savedNotesFile, 'utf8'));
+    } catch (e) {
+      notes = [];
+    }
+  }
+
+  notes = notes.filter(n => !(n.id === id && n.userId === ownerId));
+  fs.writeFileSync(savedNotesFile, JSON.stringify(notes, null, 2), 'utf8');
 
   if (isMongoConnected && SavedNoteModel) {
     try {
-      await SavedNoteModel.deleteOne(userId ? { id, userId } : { id });
+      await SavedNoteModel.deleteOne({ id, userId: ownerId });
     } catch (e) {}
   }
   return true;
