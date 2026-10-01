@@ -214,7 +214,7 @@ app.get('/api/subjects', (req, res) => {
     const list = getAllSubjects(targetDept);
     res.json(list);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -245,7 +245,7 @@ app.get('/api/subjects/:id', (req, res) => {
       questionBank: fs.existsSync(qbFile) ? JSON.parse(fs.readFileSync(qbFile, 'utf8')) : []
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -332,7 +332,7 @@ app.post('/api/generate', requireAuth, rateLimit(60 * 1000, 10), async (req, res
       resourcesUsed
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -342,7 +342,7 @@ app.get('/api/saved-notes', requireAuth, async (req, res) => {
     const notes = await getSavedNotes(req.user.id);
     res.json(notes);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -357,7 +357,7 @@ app.post('/api/saved-notes', requireAuth, rateLimit(60 * 1000, 30), async (req, 
     const saved = await addSavedNote(newNote);
     res.json(saved);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -369,7 +369,7 @@ app.delete('/api/saved-notes/:id', requireAuth, async (req, res) => {
     await deleteSavedNote(id, req.user.id);
     res.json({ success: true, id });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -395,7 +395,7 @@ app.post('/api/feedback', requireAuth, rateLimit(60 * 60 * 1000, 20), async (req
     const saved = await addFeedback(feedbackEntry);
     res.json({ success: true, feedback: saved });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -417,7 +417,7 @@ app.get('/api/feedback/summary', requireAuth, async (req, res) => {
       recent: feedbackList.slice(0, 10)
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -472,7 +472,7 @@ app.post('/api/chat', requireAuth, rateLimit(60 * 1000, 20), async (req, res) =>
     });
   } catch (err) {
     console.error('Chat endpoint error:', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -481,7 +481,7 @@ app.get('/api/chat/history', requireAuth, async (req, res) => {
     const messages = await getChatMessages(req.user.id);
     res.json(messages);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -735,7 +735,7 @@ app.post('/api/auth/kl-lms/connect', requireAuth, async (req, res) => {
       syncedCourses: user.enrolledCourses
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -761,7 +761,7 @@ app.post('/api/auth/kl-lms/sync', requireAuth, async (req, res) => {
       lastSynced: user.lmsLastSynced
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -881,27 +881,29 @@ const validateQuizQuestions = (value, count) => {
 };
 
 const buildOfflineQuiz = (subjectMeta, count) => {
-  const bank = Array.isArray(subjectMeta.questionBank) ? subjectMeta.questionBank.filter(q => q?.question) : [];
+  const bank = Array.isArray(subjectMeta.questionBank)
+    ? subjectMeta.questionBank.filter((q) =>
+        q?.question &&
+        Array.isArray(q.options) &&
+        q.options.length === 4 &&
+        q.options.every((option) => typeof option === 'string' && option.trim()) &&
+        Number.isInteger(q.answer) &&
+        q.answer >= 0 &&
+        q.answer < 4
+      )
+    : [];
+
   if (!bank.length) return [];
 
   const pool = [...bank].sort(() => Math.random() - 0.5);
-  const selected = pool.slice(0, Math.min(count, pool.length));
-  const units = [...new Set(bank.map(q => String(q.unit ?? '').trim()).filter(Boolean))];
-
-  return selected.map((item, index) => {
-    const unit = String(item.unit ?? '').trim();
-    const distractors = units.filter(u => u !== unit).slice(0, 3);
-    while (distractors.length < 3) distractors.push(`Unit ${distractors.length + 1}`);
-    const options = [`Unit ${unit || 'covered in the question bank'}`, ...distractors.map(u => `Unit ${u}`)];
-    return {
-      id: `quiz-${Date.now()}-${index}`,
-      question: `Which unit is this question mapped to?\n\n${item.question}`,
-      options,
-      answer: 0,
-      explanation: `This question is indexed under Unit ${unit || 'the subject question bank'} in the StudyMate knowledge base.`,
-      topic: item.topic || ''
-    };
-  });
+  return pool.slice(0, Math.min(count, pool.length)).map((item, index) => ({
+    id: String(item.id || `quiz-bank-${Date.now()}-${index}`),
+    question: String(item.question).trim(),
+    options: item.options.map((option) => String(option).trim()),
+    answer: item.answer,
+    explanation: String(item.explanation || 'Answer supplied by the administrator-managed question bank.').trim(),
+    topic: String(item.topic || '').trim()
+  }));
 };
 
 app.post('/api/quiz/generate', requireAuth, rateLimit(60 * 1000, 8), async (req, res) => {
@@ -947,7 +949,7 @@ app.post('/api/quiz/generate', requireAuth, rateLimit(60 * 1000, 8), async (req,
           questions = validateQuizQuestions(data?.choices?.[0]?.message?.content, requestedCount);
         }
       } catch (err) {
-        console.warn('Groq quiz generation failed; using deterministic bank fallback:', err.message);
+        console.warn('Groq quiz generation failed; using structured question-bank fallback:', err.message);
       }
     }
 
@@ -973,7 +975,7 @@ app.post('/api/quiz/generate', requireAuth, rateLimit(60 * 1000, 8), async (req,
           questions = validateQuizQuestions(data?.candidates?.[0]?.content?.parts?.[0]?.text, requestedCount);
         }
       } catch (err) {
-        console.warn('Gemini quiz generation failed; using deterministic bank fallback:', err.message);
+        console.warn('Gemini quiz generation failed; using structured question-bank fallback:', err.message);
       }
     }
 
@@ -1134,7 +1136,7 @@ app.get('/api/admin/stats', requireAdmin, (req, res) => {
       knowledgeBaseRoot: kbRoot
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -1291,7 +1293,7 @@ ${defaultUnits.map(u => `### ${u}\n- Comprehensive lecture notes, equations, and
 
     res.json({ success: true, subject: { ...syllabus, resources } });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -1385,7 +1387,7 @@ app.post('/api/admin/resources', requireAdmin, (req, res) => {
       updatedAt: new Date().toISOString()
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
@@ -1403,7 +1405,7 @@ app.delete('/api/admin/subjects/:name', requireAdmin, (req, res) => {
       res.status(404).json({ error: `Subject "${name}" not found.` });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
