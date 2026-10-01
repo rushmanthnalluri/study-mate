@@ -10,7 +10,10 @@
     "server": "node server.js",
     "start": "node server.js",
     "test": "node --test tests/*.test.mjs",
-    "test:integration": "node --test tests/mongodb-isolation.test.mjs"
+    "test:integration": "node --test tests/mongodb-isolation.test.mjs",
+    "db:backup": "node scripts/mongodb-backup.mjs",
+    "db:restore": "node scripts/mongodb-restore.mjs",
+    "db:migrate": "node scripts/mongodb-migrate.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
