@@ -144,6 +144,14 @@ function atomicWriteJson(file, value) {
   fs.renameSync(temp, file);
 }
 
+async function readJson(file) {
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch (e) {
+    return [];
+  }
+}
+
 export async function initDatabase() {
   const mongoUri = process.env.MONGODB_URI;
   attachMongoConnectionGuards();
