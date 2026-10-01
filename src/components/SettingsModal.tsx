@@ -19,6 +19,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
   const [newPassword,setNewPassword]=useState('');
   const [passwordMessage,setPasswordMessage]=useState('');
   const dialogRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -27,6 +28,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
       setKlId(currentUser.klId);
     }
   }, [currentUser, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKeyDown);
+    return () => { document.removeEventListener('keydown', onKeyDown); previous?.focus?.(); };
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -46,8 +56,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
   };
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#2d241e]/60 p-4 backdrop-blur-md">
-      <div className="w-full max-w-lg overflow-hidden rounded-[28px] border border-[#e5d7c8] bg-[#fffaf4] shadow-2xl">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#2d241e]/60 p-4 backdrop-blur-md" role="presentation">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="settings-modal-title" tabIndex={-1} className="w-full max-w-lg overflow-hidden rounded-[28px] border border-[#e5d7c8] bg-[#fffaf4] shadow-2xl">
         <div className="flex items-center justify-between border-b border-[#eadfd4] bg-[#f7efe6] px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e2c2a3] text-[#6e4228]"><UserRound size={18} /></div>
