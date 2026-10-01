@@ -238,7 +238,7 @@ app.get('/api/subjects/:id', (req, res) => {
 });
 
 // API: Generate KL Exam Notes with resource citations
-app.post('/api/generate', requireAuth, async (req, res) => {
+app.post('/api/generate', requireAuth, rateLimit(60 * 1000, 10), async (req, res) => {
   try {
     const { department, subject, topic } = req.body || {};
     if (!topic || !subject) {
@@ -412,27 +412,32 @@ app.get('/api/feedback/summary', requireAuth, async (req, res) => {
 // ==========================================
 // 🤖 AI CHATBOT & TUTOR ENDPOINTS
 // ==========================================
-app.post('/api/chat', requireAuth, async (req, res) => {
+app.post('/api/chat', requireAuth, rateLimit(60 * 1000, 20), async (req, res) => {
   try {
     const { message, department, subject, history } = req.body;
-    if (!message) {
+    const cleanMessage = typeof message === 'string' ? message.trim() : '';
+    if (!cleanMessage) {
       return res.status(400).json({ error: 'Message is required.' });
     }
+    if (cleanMessage.length > 6000) {
+      return res.status(400).json({ error: 'Message must be 6000 characters or fewer.' });
+    }
+    const cleanHistory = Array.isArray(history) ? history.slice(-30) : [];
 
     // Persist user prompt
     await saveChatMessage({
       id: `chat-${Date.now()}-user`,
       userId: req.user.id,
       role: 'user',
-      content: message,
+      content: cleanMessage,
       subject: subject || 'General',
       department: department || 'Food Technology',
       timestamp: new Date().toISOString()
     });
 
     const reply = await generateChatbotReply({
-      message,
-      history: history || [],
+      message: cleanMessage,
+      history: cleanHistory,
       department: department || 'Food Technology',
       subject: subject || 'Food Microbiology',
       
