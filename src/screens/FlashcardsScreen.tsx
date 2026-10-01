@@ -37,6 +37,29 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [masteredIds, setMasteredIds] = useState<string[]>([]);
+  const [reviewDueIds, setReviewDueIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const user = JSON.parse(localStorage.getItem('studymate_user') || 'null');
+      const key = user?.id ? `studymate_flashcard_progress_${user.id}` : '';
+      if (!key) return;
+      const stored = JSON.parse(localStorage.getItem(key) || '{}');
+      const mastered = Array.isArray(stored.masteredIds) ? stored.masteredIds : [];
+      const schedule = stored.schedule || {};
+      const due = mastered.filter((id:string) => !schedule[id] || new Date(schedule[id]).getTime() <= Date.now());
+      setMasteredIds(mastered);
+      setReviewDueIds(due);
+    } catch {}
+  }, []);
+
+  const persistProgress = (nextMastered:string[], nextSchedule:Record<string,string>) => {
+    try {
+      const user = JSON.parse(localStorage.getItem('studymate_user') || 'null');
+      if (!user?.id) return;
+      localStorage.setItem(`studymate_flashcard_progress_${user.id}`, JSON.stringify({ masteredIds: nextMastered, schedule: nextSchedule }));
+    } catch {}
+  };
 
   // Quiz state
   const [quizIndex, setQuizIndex] = useState(0);
@@ -66,9 +89,18 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
   };
 
   const handleToggleMastered = (id: string) => {
-    setMasteredIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    const wasMastered = masteredIds.includes(id);
+    const nextMastered = wasMastered ? masteredIds.filter(i => i !== id) : [...masteredIds, id];
+    const nextSchedule: Record<string,string> = {};
+    try {
+      const user = JSON.parse(localStorage.getItem('studymate_user') || 'null');
+      const stored = user?.id ? JSON.parse(localStorage.getItem(`studymate_flashcard_progress_${user.id}`) || '{}') : {};
+      Object.assign(nextSchedule, stored.schedule || {});
+    } catch {}
+    nextSchedule[id] = new Date(Date.now() + (wasMastered ? 24*60*60*1000 : 7*24*60*60*1000)).toISOString();
+    setMasteredIds(nextMastered);
+    setReviewDueIds(nextMastered.filter(i => !nextSchedule[i] || new Date(nextSchedule[i]).getTime() <= Date.now()));
+    persistProgress(nextMastered, nextSchedule);
   };
 
   // Quiz Handlers
@@ -192,7 +224,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
           <div className="space-y-1">
             <div className="flex justify-between text-xs text-[#806f61] font-medium">
               <span>Card {filteredCards.length > 0 ? currentIndex + 1 : 0} of {filteredCards.length}</span>
-              <span>{progressPercent}% Mastered</span>
+              <span>{progressPercent}% Mastered · {reviewDueIds.length} due</span>
             </div>
             <div className="w-full bg-surface-subtle dark:bg-stone-800 h-2 rounded-full overflow-hidden">
               <div
