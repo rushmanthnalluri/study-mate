@@ -88,7 +88,16 @@ const QuizAttemptSchema = new mongoose.Schema({
   completedAt: { type: String, required: true }
 }, { timestamps: true });
 
-const ChatMessageSchema = new mongoose.Schema({
+
+const FlashcardProgressSchema = new mongoose.Schema({
+  userId: { type: String, required: true, index: true },
+  flashcardId: { type: String, required: true },
+  mastered: { type: Boolean, default: false },
+  nextReviewAt: { type: String },
+  updatedAt: { type: String, required: true }
+}, { timestamps: true });
+FlashcardProgressSchema.index({ userId: 1, flashcardId: 1 }, { unique: true });
+\nconst ChatMessageSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   userId: { type: String },
   role: { type: String, enum: ['user', 'assistant'], required: true },
@@ -105,7 +114,7 @@ export let SavedNoteModel;
 export let FeedbackModel;
 export let ChatMessageModel;
 export let QuizAttemptModel;
-export let StudySourceModel;
+export let StudySourceModel;\nexport let FlashcardProgressModel;
 
 let isMongoConnected = false;
 let mongoRequired = Boolean(process.env.MONGODB_URI);
@@ -152,7 +161,7 @@ export async function initDatabase() {
       FeedbackModel = mongoose.models.Feedback || mongoose.model('Feedback', FeedbackSchema);
       ChatMessageModel = mongoose.models.ChatMessage || mongoose.model('ChatMessage', ChatMessageSchema);
       QuizAttemptModel = mongoose.models.QuizAttempt || mongoose.model('QuizAttempt', QuizAttemptSchema);
-      StudySourceModel = mongoose.models.StudySource || mongoose.model('StudySource', StudySourceSchema);
+      StudySourceModel = mongoose.models.StudySource || mongoose.model('StudySource', StudySourceSchema);\n      FlashcardProgressModel = mongoose.models.FlashcardProgress || mongoose.model('FlashcardProgress', FlashcardProgressSchema);
       return true;
     } catch (err) {
       console.warn('⚠️ [MongoDB Warning] Could not connect to MONGODB_URI.', err.message);
@@ -433,11 +442,11 @@ export async function clearStudyMateData() {
   if (isMongoConnected) {
     await Promise.all([
       UserModel?.deleteMany({}), SavedNoteModel?.deleteMany({}),
-      FeedbackModel?.deleteMany({}), ChatMessageModel?.deleteMany({}), QuizAttemptModel?.deleteMany({}), StudySourceModel?.deleteMany({})
+      FeedbackModel?.deleteMany({}), ChatMessageModel?.deleteMany({}), QuizAttemptModel?.deleteMany({}), StudySourceModel?.deleteMany({}), FlashcardProgressModel?.deleteMany({})
     ]);
     return;
   }
-  const files = [usersFile, savedNotesFile, feedbackFile, chatHistoryFile, path.join(dataDir, 'quiz-attempts.json'), path.join(dataDir, 'study-sources.json')];
+  const files = [usersFile, savedNotesFile, feedbackFile, chatHistoryFile, path.join(dataDir, 'quiz-attempts.json'), path.join(dataDir, 'study-sources.json'), path.join(dataDir, 'flashcard-progress.json')];
   for (const file of files) atomicWriteJson(file, []);
 }
 
