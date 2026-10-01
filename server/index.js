@@ -383,14 +383,19 @@ app.delete('/api/saved-notes/:id', requireAuth, async (req, res) => {
 app.post('/api/feedback', requireAuth, async (req, res) => {
   try {
     const { topic, department, subject, source, rating, comment } = req.body;
+    if (!topic || typeof topic !== 'string' || topic.trim().length > 300) {
+      return res.status(400).json({ error: 'A valid topic is required.' });
+    }
+
     const feedbackEntry = {
-      id: `fb-${Date.now()}`,
-      topic,
+      id: `fb-${crypto.randomUUID()}`,
+      userId: req.user.id,
+      topic: topic.trim(),
       department: department || 'Food Technology',
       subject: subject || 'General',
       source: source || 'Student',
       rating: rating || 'useful',
-      comment: comment || '',
+      comment: typeof comment === 'string' ? comment.trim().slice(0, 2000) : '',
       createdAt: new Date().toISOString()
     };
     const saved = await addFeedback(feedbackEntry);
@@ -402,7 +407,7 @@ app.post('/api/feedback', requireAuth, async (req, res) => {
 
 app.get('/api/feedback/summary', requireAuth, async (req, res) => {
   try {
-    const feedbackList = await getFeedbacks();
+    const feedbackList = (await getFeedbacks()).filter(f => f.userId === req.user.id);
     const total = feedbackList.length;
     const usefulCount = feedbackList.filter(f => f.rating === 'useful').length;
     const sources = {
