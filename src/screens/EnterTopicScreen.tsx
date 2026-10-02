@@ -23,6 +23,8 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
         <h3 className="text-base font-semibold text-[#3b2b23]">No subject selected</h3>
         <p className="text-xs text-[#806f61]">Please choose a subject first from the knowledge base.</p>
         <button
+          type="button"
+          aria-label="Back to subject selection"
           onClick={() => onNavigate('select-subject')}
           className="bg-[#7c4f2c] text-white px-4 py-2 rounded-xl text-xs font-semibold"
         >
