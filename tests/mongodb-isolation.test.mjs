@@ -183,6 +183,7 @@ const watchdog = setTimeout(() => { console.error('integration: timeout'); proce
       new Promise(resolve => setTimeout(resolve, 5000))
     ]);
     console.log('integration: complete');
+    clearTimeout(watchdog);
     process.exit(0);
   }
-});
+})().catch(error => { console.error(error); clearTimeout(watchdog); process.exit(1); });
