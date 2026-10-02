@@ -114,6 +114,10 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'camera=(), geolocation=(), payment=(), usb=()');
+  res.setHeader('Content-Security-Policy', "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data: blob:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' https://api.groq.com https://generativelanguage.googleapis.com");
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
   next();
 });
 
@@ -728,7 +732,7 @@ app.post('/api/auth/password', requireAuth, rateLimit(15 * 60 * 1000, 5), async 
 });
 
 // Update the authenticated user's profile. Role and AI settings are immutable here.
-app.put('/api/auth/profile', requireAuth, async (req, res) => {
+app.put('/api/auth/profile', requireAuth, rateLimit(60 * 60 * 1000, 20), async (req, res) => {
   try {
     const { name, klId, department } = req.body || {};
     const cleanName = String(name || '').trim();
@@ -759,7 +763,7 @@ app.put('/api/auth/profile', requireAuth, async (req, res) => {
 });
 
 // POST connect with KL LMS (lms.kluniversity.in)
-app.post('/api/auth/kl-lms/connect', requireAuth, async (req, res) => {
+app.post('/api/auth/kl-lms/connect', requireAuth, rateLimit(60 * 60 * 1000, 10), async (req, res) => {
   try {
     const { lmsUsername } = req.body || {};
     if (typeof lmsUsername !== 'string' || !lmsUsername.trim()) {
@@ -788,7 +792,7 @@ app.post('/api/auth/kl-lms/connect', requireAuth, async (req, res) => {
 });
 
 // POST sync KL LMS data
-app.post('/api/auth/kl-lms/sync', requireAuth, async (req, res) => {
+app.post('/api/auth/kl-lms/sync', requireAuth, rateLimit(60 * 60 * 1000, 10), async (req, res) => {
   try {
     const user = req.user;
 
@@ -1259,7 +1263,7 @@ app.get('/api/admin/stats', requireAdmin, (req, res) => {
 });
 
 // ADMIN: Create New Subject
-app.post('/api/admin/subjects', requireAdmin, (req, res) => {
+app.post('/api/admin/subjects', requireAdmin, rateLimit(60 * 60 * 1000, 20), (req, res) => {
   try {
     const { name, code, description = '', department = 'Food Technology', units = [], topics = [] } = req.body;
     if (!name || !code) {
@@ -1422,7 +1426,7 @@ ${defaultUnits.map(u => `### ${u}\n- Comprehensive lecture notes, equations, and
 });
 
 // ADMIN: Add or Update Resources for a Subject
-app.post('/api/admin/resources', requireAdmin, (req, res) => {
+app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), (req, res) => {
   try {
     const {
       subjectName,
@@ -1521,7 +1525,7 @@ app.post('/api/admin/resources', requireAdmin, (req, res) => {
 });
 
 // ADMIN: Delete a Subject
-app.delete('/api/admin/subjects/:name', requireAdmin, (req, res) => {
+app.delete('/api/admin/subjects/:name', requireAdmin, rateLimit(60 * 60 * 1000, 20), (req, res) => {
   try {
     const { name } = req.params;
     const { department = 'Food Technology' } = req.query;
