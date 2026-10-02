@@ -34,6 +34,13 @@ test('health endpoint is unauthenticated and reports storage readiness', () => {
   assert.match(server, /service:\s*'studymate'/);
 });
 
+test('production launcher runs MongoDB migrations before the server when MongoDB is configured', () => {
+  const launcher = read('server.js');
+  assert.match(launcher, /if \(process\.env\.MONGODB_URI\)/);
+  assert.match(launcher, /await import\('\.\/scripts\/mongodb-migrate\.mjs'\)/);
+  assert.match(launcher, /await import\('\.\/server\/index\.js'\)/);
+});
+
 test('Render production service has a deterministic Node start command', () => {
   const packageJson = JSON.parse(read('package.json'));
   assert.equal(packageJson.scripts.start, 'node server.js');
