@@ -28,6 +28,8 @@ test('all personalized API routes require authentication', () => {
     "app.get('/api/studio/sources', requireAuth",
     "app.delete('/api/studio/sources/:id', requireAuth",
     "app.post('/api/studio/ask', requireAuth",
+    "app.post('/api/auth/signup', rateLimit",
+    "app.post('/api/auth/password', requireAuth, rateLimit",
     "app.get('/api/flashcards/progress', requireAuth",
     "app.put('/api/flashcards/progress/:flashcardId', requireAuth"
   ];
@@ -140,4 +142,20 @@ test('account dialogs expose modal semantics', () => {
   assert.ok(auth.includes('aria-modal="true"'));
   assert.ok(settings.includes('role="dialog"'));
   assert.ok(settings.includes('aria-modal="true"'));
+});
+
+
+test('MongoDB enforces unique user email and KL ID identity fields', () => {
+  assert.match(db, /UserSchema\.index\(\{ email: 1 \}, \{ unique: true/);
+  assert.match(db, /UserSchema\.index\(\{ klId: 1 \}, \{ unique: true/);
+  assert.match(server, /err\?\.code === 11000/);
+});
+
+test('user uniqueness migration detects legacy duplicates before creating unique indexes', () => {
+  const migration = fs.readFileSync(path.join(root, 'scripts', 'mongodb-migrate.mjs'), 'utf8');
+  assert.match(migration, /hasMigration\(db, 1\)/);
+  assert.match(migration, /hasMigration\(db, 2\)/);
+  assert.match(migration, /duplicate email or KL ID records exist/);
+  assert.match(migration, /users_email_unique_ci/);
+  assert.match(migration, /users_klid_unique_ci/);
 });
