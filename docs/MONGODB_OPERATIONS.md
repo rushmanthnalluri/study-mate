@@ -37,11 +37,13 @@ After restore:
 
 Schema changes use an explicit integer migration version stored in MongoDB's `_schema_migrations` collection.
 
-Run migrations before promoting a release that requires them:
+Run migrations explicitly when validating a release or performing a controlled migration drill:
 
 ```bash
 MONGODB_URI="..." npm run db:migrate
 ```
+
+Production startup also runs the idempotent migration runner whenever `MONGODB_URI` is configured. A migration failure prevents the application from starting, so the service cannot run against an unverified schema.
 
 Migration rules:
 - Migrations are forward-only and idempotent.
