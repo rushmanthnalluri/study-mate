@@ -165,21 +165,7 @@ const watchdog = setTimeout(() => { console.error('integration: timeout'); proce
     assert.deepEqual((await getChatMessages(userB)).map(m => m.userId), [userB]);
   } finally {
     console.log('integration: cleanup');
-    const cleanup = Promise.all([
-      UserModel.deleteMany({ id: { $in: [userA, userB] } }),
-      SavedNoteModel.deleteMany({ id: { $in: [`note-a-${suffix}`, `note-b-${suffix}`] } }),
-      StudySourceModel.deleteMany({ id: { $in: [`source-a-${suffix}`, `source-b-${suffix}`] } }),
-      QuizAttemptModel.deleteMany({ id: { $in: [`attempt-a-${suffix}`, `attempt-b-${suffix}`] } }),
-      ChatMessageModel.deleteMany({ id: { $in: [`chat-a-${suffix}`, `chat-b-${suffix}`] } })
-    ]);
-    await Promise.race([
-      cleanup,
-      new Promise(resolve => setTimeout(resolve, 5000))
-    ]);
-    await Promise.race([
-      closeDatabase(),
-      new Promise(resolve => setTimeout(resolve, 5000))
-    ]);
+    // CI uses a disposable MongoDB container, so no application-level cleanup is required.
     console.log('integration: complete');
     clearTimeout(watchdog);
     process.exit(0);
