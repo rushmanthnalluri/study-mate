@@ -38,6 +38,8 @@ const UserSchema = new mongoose.Schema({
   lmsLastSynced: { type: String },
   enrolledCourses: { type: Array, default: [] },
 }, { timestamps: true });
+UserSchema.index({ email: 1 }, { unique: true, collation: { locale: 'en', strength: 2 }, name: 'users_email_unique_ci' });
+UserSchema.index({ klId: 1 }, { unique: true, collation: { locale: 'en', strength: 2 }, name: 'users_klid_unique_ci' });
 
 const SavedNoteSchema = new mongoose.Schema({
   userId: { type: String, required: true, index: true },
