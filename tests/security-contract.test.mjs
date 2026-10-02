@@ -219,3 +219,11 @@ test('admin knowledge-base mutations persist through MongoDB overrides', () => {
   assert.match(server, /await saveKnowledgeBaseOverride\(/);
   assert.match(server, /const persistedSubject =/);
 });
+
+
+test('AI configuration encryption requires a strong server-side secret', () => {
+  assert.match(server, /hasStrongConfigSecret/);
+  assert.match(server, /length >= 32/);
+  const chatbot = fs.readFileSync(path.join(root, 'server', 'chatbot.js'), 'utf8');
+  assert.match(chatbot, /secret\.length >= 32/);
+});
