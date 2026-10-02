@@ -163,6 +163,24 @@ const watchdog = setTimeout(() => { console.error('integration: timeout'); proce
 
     assert.deepEqual((await getChatMessages(userA)).map(m => m.userId), [userA]);
     assert.deepEqual((await getChatMessages(userB)).map(m => m.userId), [userB]);
+
+    const overrideId = `test-${suffix}`;
+    await db.saveKnowledgeBaseOverride({
+      subjectId: overrideId,
+      department: 'Test',
+      payload: { id: overrideId, name: 'Durable Test Subject', department: 'Test', code: 'TEST-001' }
+    });
+    const overrides = await db.getKnowledgeBaseOverrides();
+    const storedOverride = overrides.find(item => item.subjectId === overrideId);
+    assert.equal(storedOverride?.payload?.name, 'Durable Test Subject', 'knowledge-base overrides must persist in MongoDB');
+    await db.saveKnowledgeBaseOverride({
+      subjectId: overrideId,
+      department: 'Test',
+      deleted: true,
+      payload: { id: overrideId, name: 'Durable Test Subject', department: 'Test' }
+    });
+    const deletedOverride = (await db.getKnowledgeBaseOverrides()).find(item => item.subjectId === overrideId);
+    assert.equal(deletedOverride?.deleted, true, 'knowledge-base deletion tombstones must persist');
   } finally {
     console.log('integration: cleanup');
     // CI uses a disposable MongoDB container, so no application-level cleanup is required.
