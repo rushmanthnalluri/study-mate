@@ -678,7 +678,10 @@ app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => 
     };
     await saveUser(newUser);
     res.status(201).json({ success: true, message: 'Account created successfully.', user: sanitizeUser(newUser), token });
-  } catch {
+  } catch (err) {
+    if (err?.code === 11000) {
+      return res.status(409).json({ error: 'An account with this email or KL ID already exists.' });
+    }
     res.status(500).json({ error: 'Account creation failed.' });
   }
 });
