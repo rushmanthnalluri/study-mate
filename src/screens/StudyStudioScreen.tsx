@@ -74,7 +74,7 @@ export const StudyStudioScreen:React.FC<Props>=({note,onNavigate})=>{
 
   return <div className="space-y-5 pb-28">
     <div className="flex items-center justify-between">
-      <button onClick={()=>onNavigate('home')} className="rounded-xl border border-[#e2d4c8] bg-[#fffaf4] p-2"><ArrowLeft size={17}/></button>
+      <button type="button" aria-label="Back to home" onClick={()=>onNavigate('home')} className="rounded-xl border border-[#e2d4c8] bg-[#fffaf4] p-2"><ArrowLeft size={17}/></button>
       <div className="text-center"><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#a0704b]">Notebook Studio</p><h1 className="text-xl font-black text-[#3b2b23]">Study, listen & visualize</h1></div>
       <div className="w-9"/>
     </div>
