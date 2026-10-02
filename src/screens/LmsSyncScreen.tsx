@@ -101,7 +101,7 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
       if (data.user && onUpdateUser) {
         onUpdateUser(data.user);
       }
-      setSyncMessage(data.message || 'KL LMS courses, attendance, and assignment deadlines refreshed successfully!');
+      setSyncMessage(data.message || 'KL LMS connection refreshed. No live course or attendance data was fetched by this action.');
       setTimeout(() => setSyncMessage(null), 5000);
     } catch (err: any) {
       setErrorMessage(err.message || 'Error connecting to KL LMS server.');
@@ -137,7 +137,7 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
               KL LMS Academic Synchronization
             </h1>
             <p className="text-brand-100 text-sm max-w-xl">
-              Live bi-directional synchronization between <span className="font-semibold text-white">lms.kluniversity.in</span> and StudyMate AI for Food Technology course materials, attendance tracking, and exam preparation.
+              Connect your <span className="font-semibold text-white">lms.kluniversity.in</span> account to StudyMate AI. Verified LMS data can be surfaced after an actual LMS integration is available.
             </p>
           </div>
 
