@@ -88,8 +88,11 @@ export const LmsSyncScreen: React.FC<LmsSyncScreenProps> = ({
     try {
       const res = await fetch('/api/auth/kl-lms/sync', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUser?.id })
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('studymate_token') || ''}`
+        },
+        body: JSON.stringify({})
       });
 
       const data = await res.json();
