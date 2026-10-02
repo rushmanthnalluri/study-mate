@@ -825,6 +825,7 @@ app.post('/api/auth/kl-lms/sync', requireAuth, rateLimit(60 * 60 * 1000, 10), as
 // CENTRAL AI CONFIGURATION — ADMIN ONLY
 // API keys are encrypted before persistence and never returned to the browser.
 const getConfigSecret = () => process.env.STUDYMATE_CONFIG_SECRET || '';
+const hasStrongConfigSecret = () => getConfigSecret().length >= 32;
 const encryptionKey = () => crypto.createHash('sha256').update(getConfigSecret()).digest();
 
 const encryptApiKey = (plain) => {
@@ -865,7 +866,7 @@ app.get('/api/admin/ai-config', requireAdmin, async (req, res) => {
     model: runtime.model,
     configured: Boolean(runtime.apiKey),
     updatedAt: stored?.updatedAt || null,
-    secretConfigured: Boolean(getConfigSecret())
+    secretConfigured: hasStrongConfigSecret()
   });
 });
 
@@ -878,8 +879,8 @@ app.put('/api/admin/ai-config', requireAdmin, async (req, res) => {
     if (provider !== 'offline' && !apiKey.trim()) {
       return res.status(400).json({ error: 'An API key is required for the selected provider.' });
     }
-    if (!getConfigSecret()) {
-      return res.status(503).json({ error: 'STUDYMATE_CONFIG_SECRET is not configured on the server yet.' });
+    if (!hasStrongConfigSecret()) {
+      return res.status(503).json({ error: 'STUDYMATE_CONFIG_SECRET must be configured with at least 32 characters.' });
     }
     await saveAiConfig({
       provider,
