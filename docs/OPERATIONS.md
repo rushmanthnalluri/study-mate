@@ -62,3 +62,10 @@ The production service should also report a connected database through `GET /api
 On a database outage, production is fail-closed when `MONGODB_URI` is configured. The application must not silently switch to local JSON files.
 
 For an authentication incident, revoke affected sessions and rotate secrets as appropriate. Never paste credentials, bearer tokens, MongoDB URIs, or AI API keys into issues or logs.
+
+
+## Knowledge-base administration
+
+The repository's seeded knowledge base is shipped with the application, but administrator-created/edited/deleted subjects are persisted as MongoDB overrides. Do not treat Render's application filesystem as durable application state; Render services use an ephemeral filesystem by default. citeturn0search0
+
+A MongoDB backup therefore covers administrator knowledge-base changes along with accounts, notes, Study Studio sources, quiz attempts, and flashcard progress.
