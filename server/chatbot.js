@@ -9,7 +9,7 @@ import { getAiConfig } from './db.js';
 const centralConfig = async () => {
   const stored = await getAiConfig();
   const secret = process.env.STUDYMATE_CONFIG_SECRET || '';
-  if (stored?.encryptedApiKey && secret) {
+  if (stored?.encryptedApiKey && secret.length >= 32) {
     try {
       const key = crypto.createHash('sha256').update(secret).digest();
       const [ivHex, tagHex, dataHex] = stored.encryptedApiKey.split(':');
