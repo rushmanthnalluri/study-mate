@@ -247,7 +247,7 @@ app.get('/api/departments', (req, res) => {
 });
 
 // API: List subjects (default: Food Technology)
-app.get('/api/subjects', (req, res) => {
+app.get('/api/subjects', async (req, res) => {
   try {
     const { department } = req.query;
     const targetDept = department || 'Food Technology';
@@ -259,7 +259,7 @@ app.get('/api/subjects', (req, res) => {
 });
 
 // API: Get subject details and resource contents
-app.get('/api/subjects/:id', (req, res) => {
+app.get('/api/subjects/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const all = await getAllSubjects('All');
