@@ -112,6 +112,14 @@ const ChatMessageSchema = new mongoose.Schema({
   timestamp: { type: String, default: () => new Date().toISOString() }
 }, { timestamps: true });
 
+const KnowledgeBaseOverrideSchema = new mongoose.Schema({
+  subjectId: { type: String, required: true, unique: true },
+  department: { type: String, required: true, index: true },
+  deleted: { type: Boolean, default: false },
+  payload: { type: Object, default: {} },
+  updatedAt: { type: String, required: true }
+}, { timestamps: true });
+
 export let AiConfigModel;
 export let UserModel;
 export let SavedNoteModel;
@@ -120,6 +128,7 @@ export let ChatMessageModel;
 export let QuizAttemptModel;
 export let StudySourceModel;
 export let FlashcardProgressModel;
+export let KnowledgeBaseOverrideModel;
 
 let isMongoConnected = false;
 let mongoRequired = Boolean(process.env.MONGODB_URI);
@@ -176,6 +185,7 @@ export async function initDatabase() {
       QuizAttemptModel = mongoose.models.QuizAttempt || mongoose.model('QuizAttempt', QuizAttemptSchema);
       StudySourceModel = mongoose.models.StudySource || mongoose.model('StudySource', StudySourceSchema);
       FlashcardProgressModel = mongoose.models.FlashcardProgress || mongoose.model('FlashcardProgress', FlashcardProgressSchema);
+      KnowledgeBaseOverrideModel = mongoose.models.KnowledgeBaseOverride || mongoose.model('KnowledgeBaseOverride', KnowledgeBaseOverrideSchema);
       return true;
     } catch (err) {
       console.warn('⚠️ [MongoDB Warning] Could not connect to MONGODB_URI.', err.message);
@@ -190,6 +200,37 @@ export async function initDatabase() {
 }
 
 // -------------------------------------------------------------
+export async function getKnowledgeBaseOverrides() {
+  assertStorageReady();
+  if (isMongoConnected && KnowledgeBaseOverrideModel) {
+    try {
+      return await KnowledgeBaseOverrideModel.find({}).lean();
+    } catch {
+      throw new Error('Database unavailable.');
+    }
+  }
+  return [];
+}
+
+export async function saveKnowledgeBaseOverride({ subjectId, department, payload = {}, deleted = false }) {
+  assertStorageReady();
+  if (!subjectId || !department) throw new Error('Knowledge base overrides require a subject ID and department.');
+  if (isMongoConnected && KnowledgeBaseOverrideModel) {
+    return KnowledgeBaseOverrideModel.findOneAndUpdate(
+      { subjectId: String(subjectId) },
+      {
+        subjectId: String(subjectId),
+        department: String(department),
+        deleted: Boolean(deleted),
+        payload,
+        updatedAt: new Date().toISOString()
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ).lean();
+  }
+  return { subjectId, department, deleted, payload };
+}
+
 export async function getAiConfig() {
   assertStorageReady();
   if (isMongoConnected && AiConfigModel) {
