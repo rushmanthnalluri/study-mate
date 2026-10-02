@@ -181,3 +181,12 @@ test('Mermaid output is rendered as an isolated image resource, not injected HTM
   assert.match(mermaid, /type: 'image\/svg\+xml'/);
   assert.match(mermaid, /<img/);
 });
+
+
+test('admin knowledge-base filesystem writes are path-confined and resource types are allowlisted', () => {
+  assert.match(server, /const resolveKnowledgeBasePath = \(\.\.\.segments\)/);
+  assert.match(server, /path\.relative\(kbRoot, candidate\)/);
+  assert.match(server, /if \(!targetFile\) return res\.status\(400\)/);
+  assert.match(server, /path\.dirname\(filePath\) !== subjDir/);
+  assert.match(server, /resolveKnowledgeBasePath\(String\(department\)\.trim\(\), String\(name\)\.trim\(\)\)/);
+});
