@@ -35,6 +35,15 @@ const PORT = process.env.PORT || 3001;
 const kbRoot = path.resolve('knowledge-base');
 const dataDir = path.resolve('data');
 
+const resolveKnowledgeBasePath = (...segments) => {
+  const candidate = path.resolve(kbRoot, ...segments.map(value => String(value)));
+  const relative = path.relative(kbRoot, candidate);
+  if (relative.startsWith('..' + path.sep) || relative === '..' || path.isAbsolute(relative)) {
+    return null;
+  }
+  return candidate;
+};
+
 // Initialize Render MongoDB or fallback to file storage
 initDatabase().then(() => ensureBootstrapAdmin()).catch((e) => console.warn('Database initialization warning:', e));
 
@@ -1250,12 +1259,18 @@ app.post('/api/admin/subjects', requireAdmin, (req, res) => {
       return res.status(400).json({ error: 'Subject name and course code are required.' });
     }
 
-    const deptPath = path.join(kbRoot, department);
+    const cleanDepartment = String(department).trim();
+    const cleanName = String(name).trim();
+    const cleanCode = String(code).trim();
+    const deptPath = resolveKnowledgeBasePath(cleanDepartment);
+    const subjDir = resolveKnowledgeBasePath(cleanDepartment, cleanName);
+    if (!deptPath || !subjDir || !cleanDepartment || !cleanName || !cleanCode) {
+      return res.status(400).json({ error: 'Invalid department or subject path.' });
+    }
     if (!fs.existsSync(deptPath)) {
       fs.mkdirSync(deptPath, { recursive: true });
     }
 
-    const subjDir = path.join(deptPath, name.trim());
     if (fs.existsSync(subjDir)) {
       return res.status(400).json({ error: 'A subject with this name already exists in the Knowledge Base.' });
     }
@@ -1271,9 +1286,9 @@ app.post('/api/admin/subjects', requireAdmin, (req, res) => {
       'Unit V: Industrial Applications & Standards'
     ];
 
-    const subjDescription = description && description.trim().length > 0
-      ? description.trim()
-      : `Core curriculum for ${name.trim()} under Department of ${department}, KL University.`;
+    const subjDescription = description && String(description).trim().length > 0
+      ? String(description).trim().slice(0, 5000)
+      : `Core curriculum for ${cleanName} under Department of ${cleanDepartment}, KL University.`;
 
     const courseMaterials = `# ${name} (${code})
 **Department:** ${department} | **KL University**
@@ -1317,8 +1332,8 @@ ${defaultUnits.map(u => `### ${u}\n- Comprehensive lecture notes, equations, and
 
     const syllabus = {
       id: `${department.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
-      name: name.trim(),
-      code: code.trim(),
+      name: cleanName,
+      code: cleanCode,
       description: subjDescription,
       department,
       units: defaultUnits,
@@ -1417,7 +1432,10 @@ app.post('/api/admin/resources', requireAdmin, (req, res) => {
       return res.status(400).json({ error: 'subjectName, resourceType, and content are required.' });
     }
 
-    const subjDir = path.join(kbRoot, department, subjectName);
+    const cleanDepartment = String(department).trim();
+    const cleanSubjectName = String(subjectName).trim();
+    const subjDir = resolveKnowledgeBasePath(cleanDepartment, cleanSubjectName);
+    if (!subjDir) return res.status(400).json({ error: 'Invalid department or subject path.' });
     if (!fs.existsSync(subjDir)) {
       return res.status(404).json({ error: `Subject folder "${subjectName}" not found.` });
     }
@@ -1431,8 +1449,10 @@ app.post('/api/admin/resources', requireAdmin, (req, res) => {
       'syllabus': 'syllabus.json'
     };
 
-    const targetFile = fileMap[resourceType] || `${resourceType}.md`;
-    const filePath = path.join(subjDir, targetFile);
+    const targetFile = fileMap[resourceType];
+    if (!targetFile) return res.status(400).json({ error: 'Unsupported resource type.' });
+    const filePath = resolveKnowledgeBasePath(cleanDepartment, cleanSubjectName, targetFile);
+    if (!filePath || path.dirname(filePath) !== subjDir) return res.status(400).json({ error: 'Invalid resource path.' });
 
     // If writing json, validate format
     if (targetFile.endsWith('.json')) {
@@ -1498,7 +1518,8 @@ app.delete('/api/admin/subjects/:name', requireAdmin, (req, res) => {
   try {
     const { name } = req.params;
     const { department = 'Food Technology' } = req.query;
-    const subjDir = path.join(kbRoot, String(department), name);
+    const subjDir = resolveKnowledgeBasePath(String(department).trim(), String(name).trim());
+    if (!subjDir) return res.status(400).json({ error: 'Invalid subject path.' });
 
     if (fs.existsSync(subjDir)) {
       fs.rmSync(subjDir, { recursive: true, force: true });
