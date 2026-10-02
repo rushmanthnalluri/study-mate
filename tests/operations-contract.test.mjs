@@ -21,8 +21,10 @@ test('MongoDB operations are explicitly environment-driven and fail closed', () 
   assert.match(restore, /spawn\('mongorestore'/);
   assert.match(restore, /shell:\s*false/);
 
-  assert.match(migrate, /CURRENT_SCHEMA_VERSION\s*=\s*1/);
+  assert.match(migrate, /hasMigration\(db, 1\)/);
+  assert.match(migrate, /hasMigration\(db, 2\)/);
   assert.match(migrate, /_schema_migrations/);
+  assert.match(migrate, /Enforce case-insensitive unique user email and KL ID constraints/);
   assert.match(migrate, /unique:\s*true/);
   assert.match(migrate, /NamespaceExists/);
 });
