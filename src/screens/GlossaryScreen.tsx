@@ -127,6 +127,8 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
       {/* Screen Header */}
       <div className="flex items-center space-x-3 pt-1">
         <button
+          type="button"
+          aria-label="Back to home"
           onClick={() => onNavigate('home')}
           className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#806f61] hover:text-[#3b2b23] transition-colors"
         >
