@@ -198,3 +198,14 @@ test('production HTTP security baseline includes proxy trust and CSP', () => {
   assert.match(server, /object-src 'none'/);
   assert.match(server, /frame-ancestors 'none'/);
 });
+
+
+test('production browser security headers and mutation rate limits are enforced', () => {
+  assert.match(server, /Content-Security-Policy/);
+  assert.match(server, /Strict-Transport-Security/);
+  assert.match(server, /app\.put\('\/api\/auth\/profile', requireAuth, rateLimit/);
+  assert.match(server, /app\.post\('\/api\/auth\/kl-lms\/sync', requireAuth, rateLimit/);
+  assert.match(server, /app\.post\('\/api\/admin\/subjects', requireAdmin, rateLimit/);
+  assert.match(server, /app\.post\('\/api\/admin\/resources', requireAdmin, rateLimit/);
+  assert.match(server, /app\.delete\('\/api\/admin\/subjects\/:name', requireAdmin, rateLimit/);
+});
