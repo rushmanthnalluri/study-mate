@@ -1458,7 +1458,7 @@ ${defaultUnits.map(u => `### ${u}\n- Comprehensive lecture notes, equations, and
 });
 
 // ADMIN: Add or Update Resources for a Subject
-app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), (req, res) => {
+app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), async (req, res) => {
   try {
     const {
       subjectName,
@@ -1542,6 +1542,36 @@ app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), (r
     }
 
     fs.writeFileSync(resManifestPath, JSON.stringify(manifest, null, 2), 'utf8');
+
+    const existingSubject = (await getAllSubjects('All')).find(s =>
+      s.id === `${cleanDepartment.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${cleanSubjectName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`
+    );
+    const persistedPayload = {
+      ...(existingSubject || {}),
+      id: existingSubject?.id || `${cleanDepartment.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${cleanSubjectName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+      name: cleanSubjectName,
+      department: cleanDepartment,
+      resources: manifest,
+      resourcesAvailable: {
+        courseMaterials: true,
+        previousPapers: true,
+        questionBank: true,
+        marksPattern: true,
+        answerStyle: true,
+        syllabus: true
+      }
+    };
+    if (targetFile === 'course-materials.md') persistedPayload.courseMaterials = String(content);
+    if (targetFile === 'previous-papers.md') persistedPayload.previousPapers = String(content);
+    if (targetFile === 'marks-pattern.md') persistedPayload.marksPattern = String(content);
+    if (targetFile === 'answer-style.md') persistedPayload.answerStyle = String(content);
+    if (targetFile === 'question-bank.json') persistedPayload.questionBank = typeof content === 'string' ? JSON.parse(content) : content;
+    if (targetFile === 'syllabus.json') Object.assign(persistedPayload, typeof content === 'string' ? JSON.parse(content) : content);
+    await saveKnowledgeBaseOverride({
+      subjectId: persistedPayload.id,
+      department: cleanDepartment,
+      payload: persistedPayload
+    });
 
     res.json({
       success: true,
