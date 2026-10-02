@@ -127,7 +127,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 <label className="mb-1.5 block text-xs font-bold text-[#4b392e]">KL ID or university email</label>
                 <div className="relative">
                   <UserRound className="absolute left-3.5 top-3.5 text-[#9a8676]" size={16} />
-                  <input value={loginIdentifier} onChange={e => setLoginIdentifier(e.target.value)} required autoComplete="username" placeholder="e.g. 2500030215 or you@kluniversity.in" className="auth-input pl-10" />
+                  <input value={loginIdentifier} onChange={e => setLoginIdentifier(e.target.value)} required autoComplete="username" placeholder="e.g. your KL ID or you@kluniversity.in" className="auth-input pl-10" />
                 </div>
               </div>
               <div>
@@ -152,7 +152,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-[#4b392e]">KL ID</label>
-                  <input value={signupKlId} onChange={e => setSignupKlId(e.target.value)} required placeholder="2500030215" className="auth-input font-mono" />
+                  <input value={signupKlId} onChange={e => setSignupKlId(e.target.value)} required placeholder="Your KL ID" className="auth-input font-mono" />
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-[#4b392e]">Department</label>
