@@ -1243,7 +1243,7 @@ app.put('/api/flashcards/progress/:flashcardId', requireAuth, rateLimit(60 * 60 
 // ==========================================
 
 // ADMIN: Get stats
-app.get('/api/admin/stats', requireAdmin, (req, res) => {
+app.get('/api/admin/stats', requireAdmin, async (req, res) => {
   try {
     const subjects = await getAllSubjects('Food Technology');
     let totalQuestions = 0;
