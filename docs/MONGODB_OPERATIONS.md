@@ -54,4 +54,8 @@ Migration rules:
 - Keep application code backward-compatible with the previous schema during rollout when possible.
 - A migration that cannot complete must fail rather than partially pretending the target schema is ready.
 
-Current migration: **v1** establishes the production schema/index contract for flashcard progress and records the migration in `_schema_migrations`.
+Current migrations:
+- **v1** establishes the production schema/index contract for flashcard progress.
+- **v2** enforces case-insensitive unique user email and KL ID indexes after detecting legacy duplicates.
+
+Both migrations are recorded in MongoDB's `_schema_migrations` collection and run idempotently at production startup.
