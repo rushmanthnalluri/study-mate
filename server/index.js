@@ -1269,7 +1269,7 @@ app.get('/api/admin/stats', requireAdmin, (req, res) => {
 });
 
 // ADMIN: Create New Subject
-app.post('/api/admin/subjects', requireAdmin, rateLimit(60 * 60 * 1000, 20), (req, res) => {
+app.post('/api/admin/subjects', requireAdmin, rateLimit(60 * 60 * 1000, 20), async (req, res) => {
   try {
     const { name, code, description = '', department = 'Food Technology', units = [], topics = [] } = req.body;
     if (!name || !code) {
@@ -1425,7 +1425,33 @@ ${defaultUnits.map(u => `### ${u}\n- Comprehensive lecture notes, equations, and
     ];
     fs.writeFileSync(path.join(subjDir, 'resources.json'), JSON.stringify(resources, null, 2), 'utf8');
 
-    res.json({ success: true, subject: { ...syllabus, resources } });
+    const persistedSubject = {
+      ...syllabus,
+      department: cleanDepartment,
+      name: cleanName,
+      code: cleanCode,
+      questionBank: [],
+      resourcesAvailable: {
+        courseMaterials: true,
+        previousPapers: true,
+        questionBank: true,
+        marksPattern: true,
+        answerStyle: true,
+        syllabus: true
+      },
+      resources,
+      courseMaterials,
+      previousPapers: prevPapers,
+      marksPattern,
+      answerStyle
+    };
+    await saveKnowledgeBaseOverride({
+      subjectId: syllabus.id,
+      department: cleanDepartment,
+      payload: persistedSubject
+    });
+
+    res.json({ success: true, subject: persistedSubject });
   } catch (err) {
     res.status(500).json({ error: 'Request could not be completed.' });
   }
