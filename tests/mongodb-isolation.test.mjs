@@ -1,10 +1,13 @@
-import test from 'node:test';
 import assert from 'node:assert/strict';
 
 const mongoUri = process.env.MONGODB_URI;
 const enabled = Boolean(mongoUri);
 
-test('MongoDB cross-user isolation', { skip: !enabled, timeout: 120000 }, async () => {
+if (!enabled) process.exit(0);
+
+const watchdog = setTimeout(() => { console.error('integration: timeout'); process.exit(1); }, 90000);
+
+(async () => {
   const db = await import('../server/db.js');
   const {
     initDatabase,
