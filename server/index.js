@@ -31,6 +31,7 @@ import { generateChatbotReply } from './chatbot.js';
 import { extractPdfText } from './pdf-extractor.js';
 
 const app = express();
+if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3001;
 const kbRoot = path.resolve('knowledge-base');
 const dataDir = path.resolve('data');
@@ -91,6 +92,15 @@ app.use(express.json({ limit: '2mb' }));
 
 // Production security middleware.
 app.disable('x-powered-by');
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader(
+      'Content-Security-Policy',
+      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+    );
+  }
+  next();
+});
 app.use((req, res, next) => {
   const supplied = typeof req.headers['x-request-id'] === 'string' ? req.headers['x-request-id'].trim() : '';
   const requestId = /^[A-Za-z0-9._:-]{8,100}$/.test(supplied) ? supplied : crypto.randomUUID();
