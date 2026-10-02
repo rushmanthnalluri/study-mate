@@ -173,6 +173,6 @@ test('MongoDB cross-user isolation', { skip: !enabled, timeout: 120000 }, async 
     ]);
     await closeDatabase();
     console.log('integration: complete');
-    // Node's test runner owns process termination; returning keeps CI lifecycle clean.
+    process.exit(0);
   }
 });
