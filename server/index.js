@@ -712,13 +712,29 @@ app.post('/api/auth/password', requireAuth, rateLimit(15 * 60 * 1000, 5), async 
 app.put('/api/auth/profile', requireAuth, async (req, res) => {
   try {
     const { name, klId, department } = req.body || {};
-    if (!name || !klId || !department) return res.status(400).json({ error: 'Name, KL ID and department are required.' });
-    req.user.name = String(name).trim();
-    req.user.klId = String(klId).trim();
-    req.user.department = String(department).trim();
+    const cleanName = String(name || '').trim();
+    const cleanKlId = String(klId || '').trim();
+    const cleanDepartment = String(department || '').trim();
+    if (!cleanName || !cleanKlId || !cleanDepartment) {
+      return res.status(400).json({ error: 'Name, KL ID and department are required.' });
+    }
+    if (cleanName.length < 2 || cleanName.length > 100 || cleanKlId.length < 2 || cleanKlId.length > 100 || cleanDepartment.length < 2 || cleanDepartment.length > 100) {
+      return res.status(400).json({ error: 'Profile fields must be between 2 and 100 characters.' });
+    }
+    const users = await getAllUsers();
+    const duplicate = users.find(u =>
+      u.id !== req.user.id &&
+      (String(u.email || '').toLowerCase() === String(req.user.email || '').toLowerCase() ||
+       String(u.klId || '').toLowerCase() === cleanKlId.toLowerCase())
+    );
+    if (duplicate) return res.status(409).json({ error: 'An account with this KL ID already exists.' });
+    req.user.name = cleanName;
+    req.user.klId = cleanKlId;
+    req.user.department = cleanDepartment;
     await saveUser(req.user);
     res.json({ success: true, user: sanitizeUser(req.user) });
-  } catch {
+  } catch (err) {
+    if (err?.code === 11000) return res.status(409).json({ error: 'An account with this KL ID already exists.' });
     res.status(500).json({ error: 'Profile could not be updated.' });
   }
 });
