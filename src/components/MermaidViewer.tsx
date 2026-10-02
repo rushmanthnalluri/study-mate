@@ -24,7 +24,7 @@ mermaid.initialize({
 
 export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Process Architecture & Flowchart" }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [svgContent, setSvgContent] = useState<string>('');
+  const [svgUrl, setSvgUrl] = useState<string>('');
   const [copied, setCopied] = useState<boolean>(false);
   const [scale, setScale] = useState<number>(1);
   const [renderError, setRenderError] = useState<boolean>(false);
@@ -37,7 +37,12 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
         const uniqueId = `mermaid-${Math.random().toString(36).substring(2, 9)}`;
         const { svg } = await mermaid.render(uniqueId, code);
         if (isMounted) {
-          setSvgContent(svg);
+          const blob = new Blob([svg], { type: 'image/svg+xml' });
+          const nextUrl = URL.createObjectURL(blob);
+          setSvgUrl(previous => {
+            if (previous) URL.revokeObjectURL(previous);
+            return nextUrl;
+          });
         }
       } catch (err) {
         console.warn('Mermaid rendering issue, using styled fallback:', err);
@@ -53,6 +58,10 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
 
     return () => {
       isMounted = false;
+      setSvgUrl(previous => {
+        if (previous) URL.revokeObjectURL(previous);
+        return '';
+      });
     };
   }, [code]);
 
@@ -115,13 +124,19 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
 
       {/* Render Area */}
       <div className="p-4 overflow-x-auto min-h-[160px] flex items-center justify-center bg-surface">
-        {!renderError && svgContent ? (
+        {!renderError && svgUrl ? (
           <div
             ref={containerRef}
             className="transition-transform duration-150 origin-center max-w-full"
             style={{ transform: `scale(${scale})` }}
-            dangerouslySetInnerHTML={{ __html: svgContent }}
-          />
+          >
+            <img
+              src={svgUrl}
+              alt={title}
+              className="max-w-full h-auto"
+              draggable={false}
+            />
+          </div>
         ) : (
           <div className="w-full text-left font-mono text-xs p-3 bg-stone-900 text-stone-100 rounded-lg overflow-x-auto">
             <div className="text-amber-400 font-sans font-semibold mb-2">Process / Architecture Flow:</div>
