@@ -163,7 +163,7 @@ test('MongoDB cross-user isolation', { skip: !enabled, timeout: 120000 }, async 
     assert.deepEqual((await getChatMessages(userB)).map(m => m.userId), [userB]);
   } finally {
     console.log('integration: cleanup');
-    await Promise.all([
+    const cleanup = Promise.all([
       UserModel.deleteMany({ id: { $in: [userA, userB] } }),
       SavedNoteModel.deleteMany({ id: { $in: [`note-a-${suffix}`, `note-b-${suffix}`] } }),
       StudySourceModel.deleteMany({ id: { $in: [`source-a-${suffix}`, `source-b-${suffix}`] } }),
@@ -171,7 +171,14 @@ test('MongoDB cross-user isolation', { skip: !enabled, timeout: 120000 }, async 
       ChatMessageModel.deleteMany({ id: { $in: [`chat-a-${suffix}`, `chat-b-${suffix}`] } }),
       FlashcardProgressModel.deleteMany({ userId: { $in: [userA, userB] }, flashcardId: 'fc-test' })
     ]);
-    await closeDatabase();
+    await Promise.race([
+      cleanup,
+      new Promise(resolve => setTimeout(resolve, 5000))
+    ]);
+    await Promise.race([
+      closeDatabase(),
+      new Promise(resolve => setTimeout(resolve, 5000))
+    ]);
     console.log('integration: complete');
     process.exit(0);
   }
