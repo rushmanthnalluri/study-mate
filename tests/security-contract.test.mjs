@@ -209,3 +209,13 @@ test('production browser security headers and mutation rate limits are enforced'
   assert.match(server, /app\.post\('\/api\/admin\/resources', requireAdmin, rateLimit/);
   assert.match(server, /app\.delete\('\/api\/admin\/subjects\/:name', requireAdmin, rateLimit/);
 });
+
+
+test('admin knowledge-base mutations persist through MongoDB overrides', () => {
+  assert.match(db, /KnowledgeBaseOverrideSchema/);
+  assert.match(db, /export let KnowledgeBaseOverrideModel/);
+  assert.match(db, /saveKnowledgeBaseOverride/);
+  assert.match(server, /getKnowledgeBaseOverrides/);
+  assert.match(server, /await saveKnowledgeBaseOverride\(/);
+  assert.match(server, /const persistedSubject =/);
+});
