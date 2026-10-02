@@ -159,3 +159,25 @@ test('user uniqueness migration detects legacy duplicates before creating unique
   assert.match(migration, /users_email_unique_ci/);
   assert.match(migration, /users_klid_unique_ci/);
 });
+
+
+test('profile updates validate identity fields and handle uniqueness conflicts', () => {
+  assert.match(server, /Profile fields must be between 2 and 100 characters/);
+  assert.match(server, /An account with this KL ID already exists/);
+  assert.match(server, /err\?\.code === 11000/);
+});
+
+test('LMS sync uses the authenticated session instead of a client-supplied identity', () => {
+  const lms = fs.readFileSync(path.join(root, 'src', 'screens', 'LmsSyncScreen.tsx'), 'utf8');
+  assert.match(lms, /Authorization:/);
+  assert.match(lms, /body: JSON\.stringify\(\{\}\)/);
+  assert.doesNotMatch(lms, /body: JSON\.stringify\(\{ userId:/);
+});
+
+test('Mermaid output is rendered as an isolated image resource, not injected HTML', () => {
+  const mermaid = fs.readFileSync(path.join(root, 'src', 'components', 'MermaidViewer.tsx'), 'utf8');
+  assert.doesNotMatch(mermaid, /dangerouslySetInnerHTML/);
+  assert.match(mermaid, /URL\.createObjectURL/);
+  assert.match(mermaid, /type: 'image\/svg\+xml'/);
+  assert.match(mermaid, /<img/);
+});
