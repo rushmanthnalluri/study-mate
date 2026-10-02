@@ -966,7 +966,7 @@ app.post('/api/quiz/generate', requireAuth, rateLimit(60 * 1000, 8), async (req,
   try {
     const { subjectId, mode = 'quiz' } = req.body || {};
     const requestedCount = mode === 'model' ? 20 : 10;
-    const all = getAllSubjects('All');
+    const all = await getAllSubjects('All');
     const subjectMeta = all.find(s => s.id === subjectId);
     if (!subjectMeta) return res.status(404).json({ error: 'Subject not found.' });
 
