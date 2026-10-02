@@ -27,7 +27,6 @@ const watchdog = setTimeout(() => { console.error('integration: timeout'); proce
     StudySourceModel,
     QuizAttemptModel,
     ChatMessageModel,
-    FlashcardProgressModel,
     closeDatabase
   } = db;
 
@@ -171,8 +170,7 @@ const watchdog = setTimeout(() => { console.error('integration: timeout'); proce
       SavedNoteModel.deleteMany({ id: { $in: [`note-a-${suffix}`, `note-b-${suffix}`] } }),
       StudySourceModel.deleteMany({ id: { $in: [`source-a-${suffix}`, `source-b-${suffix}`] } }),
       QuizAttemptModel.deleteMany({ id: { $in: [`attempt-a-${suffix}`, `attempt-b-${suffix}`] } }),
-      ChatMessageModel.deleteMany({ id: { $in: [`chat-a-${suffix}`, `chat-b-${suffix}`] } }),
-      FlashcardProgressModel.deleteMany({ userId: { $in: [userA, userB] }, flashcardId: 'fc-test' })
+      ChatMessageModel.deleteMany({ id: { $in: [`chat-a-${suffix}`, `chat-b-${suffix}`] } })
     ]);
     await Promise.race([
       cleanup,
