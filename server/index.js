@@ -1587,7 +1587,7 @@ app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), as
 });
 
 // ADMIN: Delete a Subject
-app.delete('/api/admin/subjects/:name', requireAdmin, rateLimit(60 * 60 * 1000, 20), (req, res) => {
+app.delete('/api/admin/subjects/:name', requireAdmin, rateLimit(60 * 60 * 1000, 20), async (req, res) => {
   try {
     const { name } = req.params;
     const { department = 'Food Technology' } = req.query;
@@ -1596,6 +1596,13 @@ app.delete('/api/admin/subjects/:name', requireAdmin, rateLimit(60 * 60 * 1000, 
 
     if (fs.existsSync(subjDir)) {
       fs.rmSync(subjDir, { recursive: true, force: true });
+      const subjectId = `${String(department).trim().toLowerCase().replace(/[^a-z0-9]/g, '-')}-${String(name).trim().toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+      await saveKnowledgeBaseOverride({
+        subjectId,
+        department: String(department).trim(),
+        deleted: true,
+        payload: { id: subjectId, name: String(name).trim(), department: String(department).trim() }
+      });
       res.json({ success: true, deletedSubject: name });
     } else {
       res.status(404).json({ error: `Subject "${name}" not found.` });
