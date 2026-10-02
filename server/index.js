@@ -761,11 +761,10 @@ app.put('/api/auth/profile', requireAuth, async (req, res) => {
 // POST connect with KL LMS (lms.kluniversity.in)
 app.post('/api/auth/kl-lms/connect', requireAuth, async (req, res) => {
   try {
-    const { userId, lmsUsername } = req.body;
-    if (!lmsUsername) {
+    const { lmsUsername } = req.body || {};
+    if (typeof lmsUsername !== 'string' || !lmsUsername.trim()) {
       return res.status(400).json({ error: 'KL LMS Username or Email is required.' });
     }
-    if (userId && userId !== req.user.id) return res.status(403).json({ error: 'You can only update your own LMS account.' });
 
     const user = req.user;
 
@@ -791,8 +790,6 @@ app.post('/api/auth/kl-lms/connect', requireAuth, async (req, res) => {
 // POST sync KL LMS data
 app.post('/api/auth/kl-lms/sync', requireAuth, async (req, res) => {
   try {
-    const { userId } = req.body;
-    if (userId && userId !== req.user.id) return res.status(403).json({ error: 'You can only sync your own LMS account.' });
     const user = req.user;
 
     user.isLmsConnected = true;
