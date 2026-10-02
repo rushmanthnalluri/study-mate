@@ -88,6 +88,7 @@ try {
   }
 
 
+  console.log('MongoDB schema migrations verified through v3.');
 } finally {
   await mongoose.disconnect();
 }
