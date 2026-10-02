@@ -25,7 +25,9 @@ import {
   getStudySources,
   deleteStudySource,
   getFlashcardProgress,
-  saveFlashcardProgress
+  saveFlashcardProgress,
+  getKnowledgeBaseOverrides,
+  saveKnowledgeBaseOverride
 } from './db.js';
 import { generateChatbotReply } from './chatbot.js';
 import { extractPdfText } from './pdf-extractor.js';
@@ -149,7 +151,7 @@ const rateLimit = (windowMs, max) => (req, res, next) => {
 
 
 // Helper: Get subjects across departments (defaults to Food Technology)
-function getAllSubjects(deptFilter = 'Food Technology') {
+async function getAllSubjects(deptFilter = 'Food Technology') {
   if (!fs.existsSync(kbRoot)) return [];
   const depts = fs.readdirSync(kbRoot, { withFileTypes: true })
     .filter(d => d.isDirectory())
@@ -158,9 +160,7 @@ function getAllSubjects(deptFilter = 'Food Technology') {
   const subjects = [];
 
   for (const dept of depts) {
-    if (deptFilter && deptFilter !== 'All' && deptFilter.toLowerCase() !== dept.toLowerCase()) {
-      continue;
-    }
+    if (deptFilter && deptFilter !== 'All' && deptFilter.toLowerCase() !== dept.toLowerCase()) continue;
 
     const deptPath = path.join(kbRoot, dept);
     const subjDirs = fs.readdirSync(deptPath, { withFileTypes: true })
@@ -181,9 +181,7 @@ function getAllSubjects(deptFilter = 'Food Technology') {
 
       const syllabusFile = path.join(subjPath, 'syllabus.json');
       if (fs.existsSync(syllabusFile)) {
-        try {
-          syllabus = JSON.parse(fs.readFileSync(syllabusFile, 'utf8'));
-        } catch (e) {}
+        try { syllabus = JSON.parse(fs.readFileSync(syllabusFile, 'utf8')); } catch {}
       }
 
       const qbFile = path.join(subjPath, 'question-bank.json');
@@ -192,10 +190,9 @@ function getAllSubjects(deptFilter = 'Food Technology') {
         try {
           questions = JSON.parse(fs.readFileSync(qbFile, 'utf8'));
           syllabus.questionCount = questions.length;
-        } catch (e) {}
+        } catch {}
       }
 
-      // Check existence of all 6 standard items
       const resourcesAvailable = {
         courseMaterials: fs.existsSync(path.join(subjPath, 'course-materials.md')),
         previousPapers: fs.existsSync(path.join(subjPath, 'previous-papers.md')),
@@ -205,13 +202,10 @@ function getAllSubjects(deptFilter = 'Food Technology') {
         syllabus: fs.existsSync(path.join(subjPath, 'syllabus.json'))
       };
 
-      // Load resources.json if available
       const resFile = path.join(subjPath, 'resources.json');
       let resources = [];
       if (fs.existsSync(resFile)) {
-        try {
-          resources = JSON.parse(fs.readFileSync(resFile, 'utf8'));
-        } catch (e) {}
+        try { resources = JSON.parse(fs.readFileSync(resFile, 'utf8')); } catch {}
       }
 
       subjects.push({
@@ -224,7 +218,19 @@ function getAllSubjects(deptFilter = 'Food Technology') {
     }
   }
 
-  return subjects;
+  const overrides = await getKnowledgeBaseOverrides();
+  const byId = new Map(overrides.map(item => [item.subjectId, item]));
+  const filtered = subjects.filter(subject => !byId.get(subject.id)?.deleted);
+  for (const override of overrides) {
+    if (override.deleted || !override.payload?.id) continue;
+    const existing = filtered.findIndex(subject => subject.id === override.subjectId);
+    if (existing >= 0) filtered[existing] = { ...filtered[existing], ...override.payload };
+    else filtered.push(override.payload);
+  }
+
+  return filtered.filter(subject =>
+    !deptFilter || deptFilter === 'All' || String(subject.department || '').toLowerCase() === String(deptFilter).toLowerCase()
+  );
 }
 
 // API: List all departments
@@ -245,7 +251,7 @@ app.get('/api/subjects', (req, res) => {
   try {
     const { department } = req.query;
     const targetDept = department || 'Food Technology';
-    const list = getAllSubjects(targetDept);
+    const list = await getAllSubjects(targetDept);
     res.json(list);
   } catch (err) {
     res.status(500).json({ error: 'Request could not be completed.' });
@@ -256,7 +262,7 @@ app.get('/api/subjects', (req, res) => {
 app.get('/api/subjects/:id', (req, res) => {
   try {
     const { id } = req.params;
-    const all = getAllSubjects('All');
+    const all = await getAllSubjects('All');
     const subjMeta = all.find(s => s.id === id);
 
     if (!subjMeta) {
@@ -298,7 +304,7 @@ app.post('/api/generate', requireAuth, rateLimit(60 * 1000, 10), async (req, res
     }
 
     // Resolve the subject from the knowledge base instead of trusting a client-supplied path.
-    const subjectMeta = getAllSubjects('All').find(
+    const subjectMeta = (await getAllSubjects('All')).find(
       (item) =>
         item.department.toLowerCase() === cleanDepartment.toLowerCase() &&
         item.name.toLowerCase() === cleanSubject.toLowerCase()
@@ -1238,7 +1244,7 @@ app.put('/api/flashcards/progress/:flashcardId', requireAuth, rateLimit(60 * 60 
 // ADMIN: Get stats
 app.get('/api/admin/stats', requireAdmin, (req, res) => {
   try {
-    const subjects = getAllSubjects('Food Technology');
+    const subjects = await getAllSubjects('Food Technology');
     let totalQuestions = 0;
     let totalFiles = 0;
 
