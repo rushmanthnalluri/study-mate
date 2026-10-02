@@ -78,6 +78,16 @@ try {
     await recordMigration(db, 2, 'Enforce case-insensitive unique user email and KL ID constraints.');
     console.log('Applied MongoDB schema migration v2.');
   }
+  if (!(await hasMigration(db, 3))) {
+    await db.collection('knowledgebaseoverrides').createIndex(
+      { subjectId: 1 },
+      { unique: true, name: 'knowledge_base_subject_unique' }
+    );
+    await recordMigration(db, 3, 'Persist administrator knowledge-base subject overrides durably in MongoDB.');
+    console.log('Applied MongoDB schema migration v3.');
+  }
+
+
 } finally {
   await mongoose.disconnect();
 }
