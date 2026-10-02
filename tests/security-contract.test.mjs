@@ -190,3 +190,11 @@ test('admin knowledge-base filesystem writes are path-confined and resource type
   assert.match(server, /path\.dirname\(filePath\) !== subjDir/);
   assert.match(server, /resolveKnowledgeBasePath\(String\(department\)\.trim\(\), String\(name\)\.trim\(\)\)/);
 });
+
+
+test('production HTTP security baseline includes proxy trust and CSP', () => {
+  assert.match(server, /process\.env\.NODE_ENV === 'production'\) app\.set\('trust proxy', 1\)/);
+  assert.match(server, /Content-Security-Policy/);
+  assert.match(server, /object-src 'none'/);
+  assert.match(server, /frame-ancestors 'none'/);
+});
