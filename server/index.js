@@ -278,11 +278,11 @@ app.get('/api/subjects/:id', (req, res) => {
 
     res.json({
       ...subjMeta,
-      courseMaterials: fs.existsSync(courseMatFile) ? fs.readFileSync(courseMatFile, 'utf8') : '',
-      previousPapers: fs.existsSync(prevPapersFile) ? fs.readFileSync(prevPapersFile, 'utf8') : '',
-      marksPattern: fs.existsSync(marksPatternFile) ? fs.readFileSync(marksPatternFile, 'utf8') : '',
-      answerStyle: fs.existsSync(answerStyleFile) ? fs.readFileSync(answerStyleFile, 'utf8') : '',
-      questionBank: fs.existsSync(qbFile) ? JSON.parse(fs.readFileSync(qbFile, 'utf8')) : []
+      courseMaterials: subjMeta.courseMaterials || (fs.existsSync(courseMatFile) ? fs.readFileSync(courseMatFile, 'utf8') : ''),
+      previousPapers: subjMeta.previousPapers || (fs.existsSync(prevPapersFile) ? fs.readFileSync(prevPapersFile, 'utf8') : ''),
+      marksPattern: subjMeta.marksPattern || (fs.existsSync(marksPatternFile) ? fs.readFileSync(marksPatternFile, 'utf8') : ''),
+      answerStyle: subjMeta.answerStyle || (fs.existsSync(answerStyleFile) ? fs.readFileSync(answerStyleFile, 'utf8') : ''),
+      questionBank: subjMeta.questionBank || (fs.existsSync(qbFile) ? JSON.parse(fs.readFileSync(qbFile, 'utf8')) : [])
     });
   } catch (err) {
     res.status(500).json({ error: 'Request could not be completed.' });
