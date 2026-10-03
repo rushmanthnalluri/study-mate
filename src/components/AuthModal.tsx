@@ -54,8 +54,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
             klId: signupKlId.trim(),
             email: signupEmail.trim(),
             password: signupPassword,
-            department: signupDepartment,
-            linkLms: false
+            department: signupDepartment
           }
         : {
             usernameOrEmail: loginIdentifier.trim(),
