@@ -167,13 +167,6 @@ test('profile updates validate identity fields and handle uniqueness conflicts',
   assert.match(server, /err\?\.code === 11000/);
 });
 
-test('LMS sync uses the authenticated session instead of a client-supplied identity', () => {
-  const lms = fs.readFileSync(path.join(root, 'src', 'screens', 'LmsSyncScreen.tsx'), 'utf8');
-  assert.match(lms, /Authorization:/);
-  assert.match(lms, /body: JSON\.stringify\(\{\}\)/);
-  assert.doesNotMatch(lms, /body: JSON\.stringify\(\{ userId:/);
-});
-
 test('Mermaid output is rendered as an isolated image resource, not injected HTML', () => {
   const mermaid = fs.readFileSync(path.join(root, 'src', 'components', 'MermaidViewer.tsx'), 'utf8');
   assert.doesNotMatch(mermaid, /dangerouslySetInnerHTML/);
@@ -226,4 +219,17 @@ test('AI configuration encryption requires a strong server-side secret', () => {
   assert.match(server, /length >= 32/);
   const chatbot = fs.readFileSync(path.join(root, 'server', 'chatbot.js'), 'utf8');
   assert.match(chatbot, /secret\.length >= 32/);
+});
+
+test('LMS is completely removed from the application surface', () => {
+  const app = fs.readFileSync(path.join(root, 'src', 'App.tsx'), 'utf8');
+  const types = fs.readFileSync(path.join(root, 'src', 'types.ts'), 'utf8');
+  const header = fs.readFileSync(path.join(root, 'src', 'components', 'Header.tsx'), 'utf8');
+  const home = fs.readFileSync(path.join(root, 'src', 'screens', 'HomeScreen.tsx'), 'utf8');
+  assert.doesNotMatch(app, /LmsSyncScreen|lms-sync|onNavigateToLmsSync/);
+  assert.doesNotMatch(types, /isLmsConnected|lmsUsername|lmsLastSynced|lms-sync/);
+  assert.doesNotMatch(header, /LMS|lms-sync|RefreshCw/);
+  assert.doesNotMatch(home, /KL LMS|lms-sync/);
+  assert.doesNotMatch(server, /\/api\/auth\/kl-lms|lmsUsername/);
+  assert.doesNotMatch(db, /isLmsConnected|lmsUsername|lmsLastSynced|enrolledCourses/);
 });
