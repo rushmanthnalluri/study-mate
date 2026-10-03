@@ -20,13 +20,13 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
   if (!subject) {
     return (
       <div className="text-center py-12 space-y-4">
-        <h3 className="text-base font-semibold text-[#3b2b23]">No subject selected</h3>
-        <p className="text-xs text-[#806f61]">Please choose a subject first from the knowledge base.</p>
+        <h3 className="text-base font-semibold text-[#172554]">No subject selected</h3>
+        <p className="text-xs text-[#64748b]">Please choose a subject first from the knowledge base.</p>
         <button
           type="button"
           aria-label="Back to subject selection"
           onClick={() => onNavigate('select-subject')}
-          className="bg-[#7c4f2c] text-white px-4 py-2 rounded-xl text-xs font-semibold"
+          className="bg-[#2563eb] text-white px-4 py-2 rounded-xl text-xs font-semibold"
         >
           Select a Subject
         </button>
@@ -53,38 +53,38 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
       <div className="flex items-center space-x-3 pt-1">
         <button
           onClick={() => onNavigate('select-subject')}
-          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#806f61] hover:text-[#3b2b23] transition-colors"
+          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#64748b] hover:text-[#172554] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
         <div>
-          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#7c4f2c]">
+          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
             Step 03 of 06
           </span>
-          <h1 className="text-xl font-sans font-bold text-[#3b2b23] leading-tight">
+          <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
             Enter Topic
           </h1>
         </div>
       </div>
 
       {/* Selected Subject Context Card */}
-      <div className="bg-[#fffaf4] border border-[#d7b99d] rounded-xl p-3.5 shadow-sm flex items-center justify-between">
+      <div className="bg-[#ffffff] border border-[#d7b99d] rounded-xl p-3.5 shadow-sm flex items-center justify-between">
         <div className="space-y-0.5">
           <div className="flex items-center space-x-2">
-            <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-surface-subtle text-[#806f61]">
+            <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-surface-subtle text-[#64748b]">
               {subject.code}
             </span>
-            <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#7c4f2c]">
+            <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#2563eb]">
               {subject.department}
             </span>
           </div>
-          <h3 className="text-xs font-bold text-[#3b2b23]">
+          <h3 className="text-xs font-bold text-[#172554]">
             {subject.name}
           </h3>
         </div>
         <button
           onClick={() => onNavigate('select-subject')}
-          className="text-xs text-[#7c4f2c] hover:underline font-medium"
+          className="text-xs text-[#2563eb] hover:underline font-medium"
         >
           Change
         </button>
@@ -93,7 +93,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
       {/* Input Form */}
       <form onSubmit={handleSubmit} className="space-y-3">
         <div>
-          <label className="block text-xs font-semibold text-[#3b2b23] mb-1">
+          <label className="block text-xs font-semibold text-[#172554] mb-1">
             Topic or Past Exam Question
           </label>
           <div className="relative">
@@ -102,38 +102,38 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
               value={topicInput}
               onChange={(e) => setTopicInput(e.target.value)}
               placeholder="e.g. Banker's Algorithm safety steps, AVL tree rotations, Nyquist criterion, or paste an exact question..."
-              className="w-full bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-3 text-xs text-[#3b2b23] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm leading-relaxed"
+              className="w-full bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 text-xs text-[#172554] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm leading-relaxed"
             />
           </div>
-          <p className="text-[11px] text-[#806f61] mt-1 italic">
+          <p className="text-[11px] text-[#64748b] mt-1 italic">
             Tip: Type any topic or tap any previous KL exam question below.
           </p>
         </div>
 
         {/* Blueprint Scope Checklist */}
         <div className="bg-surface-subtle border border-[#e3d6cb] rounded-xl p-3 space-y-2">
-          <span className="text-[10px] font-sans uppercase tracking-wider font-bold text-[#806f61]">
+          <span className="text-[10px] font-sans uppercase tracking-wider font-bold text-[#64748b]">
             Outputs Generated in KL Exam Format
           </span>
-          <div className="grid grid-cols-2 gap-1.5 text-xs text-[#3b2b23]">
+          <div className="grid grid-cols-2 gap-1.5 text-xs text-[#172554]">
             <div className="flex items-center space-x-1.5">
-              <Check size={14} className="text-[#7c4f2c] stroke-[3]" />
+              <Check size={14} className="text-[#2563eb] stroke-[3]" />
               <span>2 Marks Answer (Direct)</span>
             </div>
             <div className="flex items-center space-x-1.5">
-              <Check size={14} className="text-[#7c4f2c] stroke-[3]" />
+              <Check size={14} className="text-[#2563eb] stroke-[3]" />
               <span>5 Marks Answer (Structured)</span>
             </div>
             <div className="flex items-center space-x-1.5">
-              <Check size={14} className="text-[#7c4f2c] stroke-[3]" />
+              <Check size={14} className="text-[#2563eb] stroke-[3]" />
               <span>10 Marks Answer (Essay)</span>
             </div>
             <div className="flex items-center space-x-1.5">
-              <Check size={14} className="text-[#7c4f2c] stroke-[3]" />
+              <Check size={14} className="text-[#2563eb] stroke-[3]" />
               <span>Key Scoring Words</span>
             </div>
             <div className="flex items-center space-x-1.5 col-span-2">
-              <Check size={14} className="text-[#7c4f2c] stroke-[3]" />
+              <Check size={14} className="text-[#2563eb] stroke-[3]" />
               <span>Process Flowchart / Diagram</span>
             </div>
           </div>
@@ -145,8 +145,8 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
           disabled={!topicInput.trim() || isLoading}
           className={`w-full py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 shadow-md transition-all active:scale-[0.98] ${
             !topicInput.trim() || isLoading
-              ? 'bg-surface-border text-[#806f61] cursor-not-allowed'
-              : 'bg-[#7c4f2c] text-white hover:bg-[#7c4f2c] ring-2 ring-brand-800/20'
+              ? 'bg-surface-border text-[#64748b] cursor-not-allowed'
+              : 'bg-[#2563eb] text-white hover:bg-[#2563eb] ring-2 ring-brand-800/20'
           }`}
         >
           {isLoading ? (
@@ -168,11 +168,11 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
       {sampleQuestions.length > 0 && (
         <div className="space-y-2 pt-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-sans uppercase tracking-wider font-bold text-[#806f61] flex items-center space-x-1.5">
-              <FileCheck size={14} className="text-[#7c4f2c]" />
+            <h3 className="text-xs font-sans uppercase tracking-wider font-bold text-[#64748b] flex items-center space-x-1.5">
+              <FileCheck size={14} className="text-[#2563eb]" />
               <span>From KL University Previous Papers</span>
             </h3>
-            <span className="text-[10px] text-[#806f61] font-mono">
+            <span className="text-[10px] text-[#64748b] font-mono">
               {sampleQuestions.length} Questions
             </span>
           </div>
@@ -182,14 +182,14 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
               <div
                 key={q.id}
                 onClick={() => handleSelectQuestion(q)}
-                className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-3 shadow-sm hover:border-brand-300 transition-all cursor-pointer group text-left"
+                className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm hover:border-brand-300 transition-all cursor-pointer group text-left"
               >
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center space-x-1.5">
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#f0e0cf] text-[#7c4f2c] font-mono">
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#f0e0cf] text-[#2563eb] font-mono">
                       {q.marks} Marks
                     </span>
-                    <span className="text-[9px] text-[#806f61] font-sans">
+                    <span className="text-[9px] text-[#64748b] font-sans">
                       Unit {q.unit}
                     </span>
                   </div>
@@ -197,7 +197,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
                     {q.paperYear}
                   </span>
                 </div>
-                <p className="text-xs font-medium text-[#3b2b23] group-hover:text-[#7c4f2c] transition-colors line-clamp-2">
+                <p className="text-xs font-medium text-[#172554] group-hover:text-[#2563eb] transition-colors line-clamp-2">
                   {q.question}
                 </p>
               </div>
