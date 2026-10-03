@@ -1148,223 +1148,80 @@ app.put('/api/flashcards/progress/:flashcardId', requireAuth, rateLimit(60 * 60 
 // 🛠️ ADMIN PORTAL API ENDPOINTS
 // ==========================================
 
-// ADMIN: Get stats
+// ADMIN: Get stats — MongoDB is the source of truth.
 app.get('/api/admin/stats', requireAdmin, async (req, res) => {
   try {
-    const subjects = await getAllSubjects('Food Technology');
-    let totalQuestions = 0;
-    let totalFiles = 0;
-
-    for (const subj of subjects) {
-      totalQuestions += (subj.questionBank || []).length;
-      const subjPath = path.join(kbRoot, subj.department, subj.name);
-      if (fs.existsSync(subjPath)) {
-        totalFiles += fs.readdirSync(subjPath).length;
-      }
-    }
-
+    const subjects = await getAllSubjects('All');
+    const totalFiles = subjects.reduce((sum, subject) => sum + (Array.isArray(subject.resources) ? subject.resources.length : 0), 0);
+    const totalQuestions = subjects.reduce((sum, subject) => sum + (Array.isArray(subject.questionBank) ? subject.questionBank.length : 0), 0);
     res.json({
       totalSubjects: subjects.length,
       totalFiles,
       totalQuestions,
-      department: 'Food Technology',
-      knowledgeBaseRoot: kbRoot
+      departments: [...new Set(subjects.map(s => s.department).filter(Boolean))].sort(),
+      dataSource: 'administrator-managed-mongodb'
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
-// ADMIN: Create New Subject
+// ADMIN: Create a subject directly in MongoDB.
+// No repository files or generated placeholder resources are exposed to students.
 app.post('/api/admin/subjects', requireAdmin, rateLimit(60 * 60 * 1000, 20), async (req, res) => {
   try {
-    const { name, code, description = '', department = 'Food Technology', units = [], topics = [] } = req.body;
-    if (!name || !code) {
-      return res.status(400).json({ error: 'Subject name and course code are required.' });
+    const { name, code, description = '', department = 'Food Technology', units = [], topics = [] } = req.body || {};
+    const cleanName = String(name || '').trim();
+    const cleanCode = String(code || '').trim();
+    const cleanDepartment = String(department || '').trim();
+    if (!cleanName || !cleanCode || !cleanDepartment) {
+      return res.status(400).json({ error: 'Subject name, course code, and department are required.' });
+    }
+    if (cleanName.length > 200 || cleanCode.length > 100 || cleanDepartment.length > 100) {
+      return res.status(400).json({ error: 'Subject fields are too long.' });
     }
 
-    const cleanDepartment = String(department).trim();
-    const cleanName = String(name).trim();
-    const cleanCode = String(code).trim();
-    const deptPath = resolveKnowledgeBasePath(cleanDepartment);
-    const subjDir = resolveKnowledgeBasePath(cleanDepartment, cleanName);
-    if (!deptPath || !subjDir || !cleanDepartment || !cleanName || !cleanCode) {
-      return res.status(400).json({ error: 'Invalid department or subject path.' });
-    }
-    if (!fs.existsSync(deptPath)) {
-      fs.mkdirSync(deptPath, { recursive: true });
-    }
+    const subjectId = `${cleanDepartment.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+    const existing = (await getAllSubjects('All')).find(subject => subject.id === subjectId);
+    if (existing) return res.status(409).json({ error: 'A subject with this name already exists.' });
 
-    if (fs.existsSync(subjDir)) {
-      return res.status(400).json({ error: 'A subject with this name already exists in the Knowledge Base.' });
-    }
+    const cleanUnits = Array.isArray(units)
+      ? units.map(unit => String(unit).trim()).filter(Boolean).slice(0, 20)
+      : [];
+    const cleanTopics = Array.isArray(topics)
+      ? topics.map(topic => String(topic).trim()).filter(Boolean).slice(0, 100)
+      : [];
 
-    fs.mkdirSync(subjDir, { recursive: true });
-
-    // Initialize the 6 standard items
-    const defaultUnits = units.length > 0 ? units : [
-      'Unit I: Fundamental Principles & Nomenclature',
-      'Unit II: Governing Mechanisms & Unit Operations',
-      'Unit III: Kinetics, Formulations & Process Design',
-      'Unit IV: Quality Parameters & Thermal Operations',
-      'Unit V: Industrial Applications & Standards'
-    ];
-
-    const subjDescription = description && String(description).trim().length > 0
-      ? String(description).trim().slice(0, 5000)
-      : `Core curriculum for ${cleanName} under Department of ${cleanDepartment}, KL University.`;
-
-    const courseMaterials = `# ${name} (${code})
-**Department:** ${department} | **KL University**
-
-> **Course Description:**
-> ${subjDescription}
-
-## Course Units
-${defaultUnits.map(u => `### ${u}\n- Comprehensive lecture notes, equations, and textbooks.\n`).join('\n')}`;
-    fs.writeFileSync(path.join(subjDir, 'course-materials.md'), courseMaterials, 'utf8');
-
-    const prevPapers = `# Previous Examination Papers — ${name}
-**Department of ${department}, KL University**
-
-## Papers Catalog
-- KL End-Semester May 2024
-- KL End-Semester Dec 2023
-- KL In-Sem Examination 1 & 2
-`;
-    fs.writeFileSync(path.join(subjDir, 'previous-papers.md'), prevPapers, 'utf8');
-
-    fs.writeFileSync(path.join(subjDir, 'question-bank.json'), JSON.stringify([], null, 2), 'utf8');
-
-    const marksPattern = `# KL University Marks Pattern & Grading Rubric
-**Subject:** ${name} (${code}) | **Department:** ${department}
-
-## 2 Marks Questions: 20-40 words, exact definition.
-## 5 Marks Questions: 120-180 words, 4-5 bullet points, mini-flowchart.
-## 10 Marks Questions: 350-500 words, comprehensive essay.
-`;
-    fs.writeFileSync(path.join(subjDir, 'marks-pattern.md'), marksPattern, 'utf8');
-
-    const answerStyle = `# KL University Examiner Answer Style Guide
-**Subject:** ${name}
-
-1. Highlight Keywords First.
-2. Labeled Diagrams Are Mandatory.
-3. Equations Must Define SI Units.
-`;
-    fs.writeFileSync(path.join(subjDir, 'answer-style.md'), answerStyle, 'utf8');
-
-    const syllabus = {
-      id: `${department.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+    const subject = {
+      id: subjectId,
       name: cleanName,
       code: cleanCode,
-      description: subjDescription,
-      department,
-      units: defaultUnits,
-      topics: topics.length > 0 ? topics : [name],
+      description: String(description || '').trim().slice(0, 5000),
+      department: cleanDepartment,
+      units: cleanUnits,
+      topics: cleanTopics,
       questionCount: 0,
-      createdAt: new Date().toISOString()
-    };
-    fs.writeFileSync(path.join(subjDir, 'syllabus.json'), JSON.stringify(syllabus, null, 2), 'utf8');
-
-    // Initialize 6 grounded resources manifest entries with descriptive text
-    const resources = [
-      {
-        id: `res-${Date.now()}-cm`,
-        title: `${name} Official Lecture Handouts & Course Material`,
-        resourceType: 'course-materials',
-        fileName: 'course-materials.md',
-        unit: 'Units I - V',
-        description: `Comprehensive reading materials, fundamental scientific equations, unit operations, and textbook citations for ${name}.`,
-        author: 'KL Department Faculty',
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: `res-${Date.now()}-pp`,
-        title: `KL University Previous Semester Exam Papers`,
-        resourceType: 'previous-papers',
-        fileName: 'previous-papers.md',
-        unit: 'All Units',
-        description: `Archived End-Sem and In-Sem university examination papers mapped to Bloom's Taxonomy.`,
-        author: 'KL Exam Cell',
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: `res-${Date.now()}-qb`,
-        title: `Graded Question Bank (2M, 5M, 10M)`,
-        resourceType: 'question-bank',
-        fileName: 'question-bank.json',
-        unit: 'Units I - V',
-        description: `Curated repository of exam questions categorized strictly by mark weightage.`,
-        author: 'Board of Studies',
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: `res-${Date.now()}-mp`,
-        title: `KL University Marks Pattern & Evaluation Scheme`,
-        resourceType: 'marks-pattern',
-        fileName: 'marks-pattern.md',
-        unit: 'All Units',
-        description: `Word-count criteria, essential keywords weighting, and marks breakdown for 2, 5, and 10 mark questions.`,
-        author: 'Controller of Examinations',
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: `res-${Date.now()}-as`,
-        title: `Examiner Evaluation Style & Answer Presentation Guide`,
-        resourceType: 'answer-style',
-        fileName: 'answer-style.md',
-        unit: 'All Units',
-        description: `Guidelines on answer structure, underlining technical nomenclature, mandatory process flowcharts, and scoring 10/10.`,
-        author: 'Senior Evaluators Panel',
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: `res-${Date.now()}-syl`,
-        title: `Official Syllabus & Unit Learning Outcomes`,
-        resourceType: 'syllabus',
-        fileName: 'syllabus.json',
-        unit: 'Units I - V',
-        description: `Official KL academic course structure, course outcomes (COs), program outcomes (POs), and unit breakdown.`,
-        author: 'KL Academic Council',
-        updatedAt: new Date().toISOString()
-      }
-    ];
-    fs.writeFileSync(path.join(subjDir, 'resources.json'), JSON.stringify(resources, null, 2), 'utf8');
-
-    const persistedSubject = {
-      ...syllabus,
-      department: cleanDepartment,
-      name: cleanName,
-      code: cleanCode,
       questionBank: [],
-      resourcesAvailable: {
-        courseMaterials: true,
-        previousPapers: true,
-        questionBank: true,
-        marksPattern: true,
-        answerStyle: true,
-        syllabus: true
-      },
-      resources,
-      courseMaterials,
-      previousPapers: prevPapers,
-      marksPattern,
-      answerStyle
+      resources: [],
+      resourcesAvailable: {},
+      contentSource: 'administrator-created'
     };
+
     await saveKnowledgeBaseOverride({
-      subjectId: syllabus.id,
+      subjectId,
       department: cleanDepartment,
-      payload: persistedSubject
+      payload: subject,
+      deleted: false
     });
 
-    res.json({ success: true, subject: persistedSubject });
+    res.status(201).json({ success: true, subject });
   } catch (err) {
-    res.status(500).json({ error: 'Request could not be completed.' });
+    if (err?.code === 11000) return res.status(409).json({ error: 'A subject with this name already exists.' });
+    res.status(500).json({ error: 'Subject could not be created.' });
   }
 });
 
-// ADMIN: Add or Update Resources for a Subject
+// ADMIN: Add or update a resource directly in the MongoDB subject payload.
 app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), async (req, res) => {
   try {
     const {
@@ -1374,148 +1231,127 @@ app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), as
       title,
       description,
       unit = 'All Units',
-      author = 'KL Department Faculty',
+      author = 'Administrator',
       content
-    } = req.body;
+    } = req.body || {};
 
-    if (!subjectName || !resourceType || content === undefined) {
+    const cleanDepartment = String(department || '').trim();
+    const cleanSubjectName = String(subjectName || '').trim();
+    const cleanResourceType = String(resourceType || '').trim();
+    if (!cleanSubjectName || !cleanResourceType || content === undefined) {
       return res.status(400).json({ error: 'subjectName, resourceType, and content are required.' });
     }
 
-    const cleanDepartment = String(department).trim();
-    const cleanSubjectName = String(subjectName).trim();
-    const subjDir = resolveKnowledgeBasePath(cleanDepartment, cleanSubjectName);
-    if (!subjDir) return res.status(400).json({ error: 'Invalid department or subject path.' });
-    if (!fs.existsSync(subjDir)) {
-      return res.status(404).json({ error: `Subject folder "${subjectName}" not found.` });
-    }
-
-    const fileMap = {
-      'course-materials': 'course-materials.md',
-      'previous-papers': 'previous-papers.md',
-      'question-bank': 'question-bank.json',
-      'marks-pattern': 'marks-pattern.md',
-      'answer-style': 'answer-style.md',
-      'syllabus': 'syllabus.json'
+    const allowedTypes = {
+      'course-materials': 'courseMaterials',
+      'previous-papers': 'previousPapers',
+      'question-bank': 'questionBank',
+      'marks-pattern': 'marksPattern',
+      'answer-style': 'answerStyle',
+      'syllabus': 'syllabus'
     };
+    const payloadField = allowedTypes[cleanResourceType];
+    if (!payloadField) return res.status(400).json({ error: 'Unsupported resource type.' });
 
-    const targetFile = fileMap[resourceType];
-    if (!targetFile) return res.status(400).json({ error: 'Unsupported resource type.' });
-    const filePath = resolveKnowledgeBasePath(cleanDepartment, cleanSubjectName, targetFile);
-    if (!filePath || path.dirname(filePath) !== subjDir) return res.status(400).json({ error: 'Invalid resource path.' });
+    const subjects = await getAllSubjects('All');
+    const existingSubject = subjects.find(subject =>
+      subject.department.toLowerCase() === cleanDepartment.toLowerCase() &&
+      subject.name.toLowerCase() === cleanSubjectName.toLowerCase()
+    );
+    if (!existingSubject) return res.status(404).json({ error: 'Subject not found in administrator-managed data.' });
 
-    // If writing json, validate format
-    if (targetFile.endsWith('.json')) {
+    let parsedContent = content;
+    if (cleanResourceType === 'question-bank' || cleanResourceType === 'syllabus') {
       try {
-        const parsed = typeof content === 'string' ? JSON.parse(content) : content;
-        fs.writeFileSync(filePath, JSON.stringify(parsed, null, 2), 'utf8');
-      } catch (e) {
-        return res.status(400).json({ error: `Invalid JSON content: ${e.message}` });
+        parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
+      } catch {
+        return res.status(400).json({ error: 'Invalid JSON resource content.' });
       }
-    } else {
-      fs.writeFileSync(filePath, String(content), 'utf8');
     }
 
-    // Now update or insert into resources.json
-    const resManifestPath = path.join(subjDir, 'resources.json');
-    let manifest = [];
-    if (fs.existsSync(resManifestPath)) {
-      try {
-        manifest = JSON.parse(fs.readFileSync(resManifestPath, 'utf8'));
-      } catch (e) {}
-    }
-
-    const resTitle = title && title.trim().length > 0 ? title.trim() : `${subjectName} ${targetFile}`;
-    const resDesc = description && description.trim().length > 0
-      ? description.trim()
-      : `Reference resource material for ${subjectName} covering ${unit}.`;
-
-    const existingIdx = manifest.findIndex(m => m.resourceType === resourceType || m.fileName === targetFile);
-    const updatedItem = {
-      id: existingIdx >= 0 ? manifest[existingIdx].id : `res-${Date.now()}`,
-      title: resTitle,
-      description: resDesc,
-      resourceType,
-      fileName: targetFile,
-      unit,
-      author,
+    const resources = Array.isArray(existingSubject.resources) ? [...existingSubject.resources] : [];
+    const resource = {
+      id: `res-${crypto.randomUUID()}`,
+      title: String(title || `${cleanSubjectName} resource`).trim().slice(0, 300),
+      description: String(description || '').trim().slice(0, 2000),
+      resourceType: cleanResourceType,
+      fileName: `${cleanResourceType}.managed`,
+      unit: String(unit || 'All Units').trim().slice(0, 200),
+      author: String(author || 'Administrator').trim().slice(0, 200),
       updatedAt: new Date().toISOString()
     };
 
-    if (existingIdx >= 0) {
-      manifest[existingIdx] = updatedItem;
+    const existingIndex = resources.findIndex(item => item.resourceType === cleanResourceType);
+    if (existingIndex >= 0) {
+      resource.id = resources[existingIndex].id || resource.id;
+      resources[existingIndex] = resource;
     } else {
-      manifest.push(updatedItem);
+      resources.push(resource);
     }
 
-    fs.writeFileSync(resManifestPath, JSON.stringify(manifest, null, 2), 'utf8');
-
-    const existingSubject = (await getAllSubjects('All')).find(s =>
-      s.id === `${cleanDepartment.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${cleanSubjectName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`
-    );
     const persistedPayload = {
-      ...(existingSubject || {}),
-      id: existingSubject?.id || `${cleanDepartment.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${cleanSubjectName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
-      name: cleanSubjectName,
-      department: cleanDepartment,
-      resources: manifest,
+      ...existingSubject,
+      resources,
       resourcesAvailable: {
-        courseMaterials: true,
-        previousPapers: true,
-        questionBank: true,
-        marksPattern: true,
-        answerStyle: true,
-        syllabus: true
-      }
+        ...(existingSubject.resourcesAvailable || {}),
+        [payloadField]: true
+      },
+      contentSource: existingSubject.contentSource || 'administrator-managed'
     };
-    if (targetFile === 'course-materials.md') persistedPayload.courseMaterials = String(content);
-    if (targetFile === 'previous-papers.md') persistedPayload.previousPapers = String(content);
-    if (targetFile === 'marks-pattern.md') persistedPayload.marksPattern = String(content);
-    if (targetFile === 'answer-style.md') persistedPayload.answerStyle = String(content);
-    if (targetFile === 'question-bank.json') persistedPayload.questionBank = typeof content === 'string' ? JSON.parse(content) : content;
-    if (targetFile === 'syllabus.json') Object.assign(persistedPayload, typeof content === 'string' ? JSON.parse(content) : content);
+
+    if (cleanResourceType === 'question-bank') {
+      if (!Array.isArray(parsedContent)) return res.status(400).json({ error: 'Question bank must be an array.' });
+      persistedPayload.questionBank = parsedContent.slice(0, 500);
+      persistedPayload.questionCount = persistedPayload.questionBank.length;
+    } else if (cleanResourceType === 'syllabus') {
+      if (!parsedContent || typeof parsedContent !== 'object' || Array.isArray(parsedContent)) {
+        return res.status(400).json({ error: 'Syllabus must be a JSON object.' });
+      }
+      Object.assign(persistedPayload, parsedContent);
+      persistedPayload.id = existingSubject.id;
+      persistedPayload.name = existingSubject.name;
+      persistedPayload.code = existingSubject.code;
+      persistedPayload.department = existingSubject.department;
+    } else {
+      persistedPayload[payloadField] = String(parsedContent);
+    }
+
     await saveKnowledgeBaseOverride({
-      subjectId: persistedPayload.id,
-      department: cleanDepartment,
-      payload: persistedPayload
+      subjectId: existingSubject.id,
+      department: existingSubject.department,
+      payload: persistedPayload,
+      deleted: false
     });
 
     res.json({
       success: true,
-      message: `Resource "${resTitle}" successfully saved for ${subjectName}.`,
-      file: targetFile,
-      resource: updatedItem,
-      resources: manifest,
-      updatedAt: new Date().toISOString()
+      message: `Resource "${resource.title}" saved to administrator-managed data.`,
+      resource,
+      resources
     });
-  } catch (err) {
-    res.status(500).json({ error: 'Request could not be completed.' });
+  } catch {
+    res.status(500).json({ error: 'Resource could not be saved.' });
   }
 });
 
-// ADMIN: Delete a Subject
+// ADMIN: Delete a subject by writing a durable MongoDB tombstone.
 app.delete('/api/admin/subjects/:name', requireAdmin, rateLimit(60 * 60 * 1000, 20), async (req, res) => {
   try {
-    const { name } = req.params;
-    const { department = 'Food Technology' } = req.query;
-    const subjDir = resolveKnowledgeBasePath(String(department).trim(), String(name).trim());
-    if (!subjDir) return res.status(400).json({ error: 'Invalid subject path.' });
+    const name = String(req.params.name || '').trim();
+    const department = String(req.query.department || 'Food Technology').trim();
+    const subjectId = `${department.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+    const existing = (await getAllSubjects('All')).find(subject => subject.id === subjectId);
+    if (!existing) return res.status(404).json({ error: `Subject "${name}" not found.` });
 
-    if (fs.existsSync(subjDir)) {
-      fs.rmSync(subjDir, { recursive: true, force: true });
-      const subjectId = `${String(department).trim().toLowerCase().replace(/[^a-z0-9]/g, '-')}-${String(name).trim().toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
-      await saveKnowledgeBaseOverride({
-        subjectId,
-        department: String(department).trim(),
-        deleted: true,
-        payload: { id: subjectId, name: String(name).trim(), department: String(department).trim() }
-      });
-      res.json({ success: true, deletedSubject: name });
-    } else {
-      res.status(404).json({ error: `Subject "${name}" not found.` });
-    }
-  } catch (err) {
-    res.status(500).json({ error: 'Request could not be completed.' });
+    await saveKnowledgeBaseOverride({
+      subjectId,
+      department,
+      deleted: true,
+      payload: { id: subjectId, name, department }
+    });
+    res.json({ success: true, deletedSubject: name });
+  } catch {
+    res.status(500).json({ error: 'Subject could not be deleted.' });
   }
 });
 
