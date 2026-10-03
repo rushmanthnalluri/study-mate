@@ -68,7 +68,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           Analytics & Readiness
         </span>
         <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
-          KL Exam Readiness Dashboard
+          Student Dashboard
         </h1>
         <p className="text-xs text-[#64748b]">
           Track syllabus coverage, revision streaks, and exam preparation metrics.
@@ -81,7 +81,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           <div className="space-y-2">
             <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#f2d0a5] flex items-center space-x-1.5">
               <Zap size={13} />
-              <span>Overall KL Exam Preparedness</span>
+              <span>Your study progress</span>
             </span>
             <div className="flex items-baseline space-x-2">
               <span className="text-3xl font-mono font-bold text-white">
@@ -129,7 +129,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             {totalSubjects}
           </span>
           <span className="text-[10px] text-emerald-600 font-medium block">
-            5 Depts Active
+            From administrator data
           </span>
         </div>
 
@@ -179,7 +179,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             <span>Readiness by Department</span>
           </h3>
           <span className="text-[10px] text-[#64748b]">
-            KL Engineering
+            Administrator-managed curriculum
           </span>
         </div>
 
@@ -210,20 +210,20 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       <div className="bg-surface-subtle border border-[#e3d6cb] rounded-xl p-3.5 space-y-2">
         <h4 className="text-xs font-semibold text-[#172554] flex items-center space-x-1.5">
           <Award size={14} className="text-[#2563eb]" />
-          <span>KL Exam Scheme Distribution (100 Marks Target)</span>
+          <span>Assessment activity</span>
         </h4>
         <div className="grid grid-cols-3 gap-2 pt-1 text-center">
           <div className="bg-[#ffffff] p-2 rounded-lg border border-[#e3d6cb]/60">
             <span className="text-[9px] font-mono font-bold text-blue-700 block">Part A (10M)</span>
-            <span className="text-[10px] text-[#172554] font-medium">5 × 2M Direct</span>
+            <span className="text-[10px] text-[#172554] font-medium">Direct questions</span>
           </div>
           <div className="bg-[#ffffff] p-2 rounded-lg border border-[#e3d6cb]/60">
             <span className="text-[9px] font-mono font-bold text-purple-700 block">Part B (25M)</span>
-            <span className="text-[10px] text-[#172554] font-medium">5 × 5M Flowcharts</span>
+            <span className="text-[10px] text-[#172554] font-medium">Structured questions</span>
           </div>
           <div className="bg-[#ffffff] p-2 rounded-lg border border-[#e3d6cb]/60">
             <span className="text-[9px] font-mono font-bold text-emerald-700 block">Part C (40M)</span>
-            <span className="text-[10px] text-[#172554] font-medium">4 × 10M Essays</span>
+            <span className="text-[10px] text-[#172554] font-medium">Long-answer questions</span>
           </div>
         </div>
       </div>
