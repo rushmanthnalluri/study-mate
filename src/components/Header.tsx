@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Department, ScreenId, UserProfile } from '../types';
-import { GraduationCap, LayoutDashboard, Award, Sparkles, Calendar, Layers, FileSearch, BookMarked, FolderTree, FileSpreadsheet, Moon, Sun, Menu, X, ShieldCheck, Bot, Settings, RefreshCw } from 'lucide-react';
+import { GraduationCap, LayoutDashboard, Award, Sparkles, Calendar, Layers, FileSearch, BookMarked, FolderTree, FileSpreadsheetMenu, X, ShieldCheck, Bot, Settings, RefreshCw } from 'lucide-react';
 
 interface HeaderProps {
   currentScreen: ScreenId;
@@ -8,16 +8,14 @@ interface HeaderProps {
   onSelectDepartment: (dept: Department) => void;
   onNavigate: (screen: ScreenId) => void;
   departments: Department[];
-  isNightMode?: boolean;
-  onToggleNightMode?: () => void;
-  currentUser?: UserProfile | null;
+   currentUser?: UserProfile | null;
   onOpenAuthModal?: () => void;
   onOpenSettings?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   currentScreen, selectedDepartment, onSelectDepartment, onNavigate, departments,
-  isNightMode = false, onToggleNightMode, currentUser, onOpenSettings
+  currentUser, onOpenSettings
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -83,11 +81,6 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {onToggleNightMode && (
-            <button type="button" onClick={onToggleNightMode} title="Toggle night mode" aria-label="Toggle night mode" className="rounded-xl border border-[#cbd5e1] bg-white p-2 text-[#475569] hover:bg-[#f1f5f9] dark:border-[#4a382d] dark:bg-[#2c211b]">
-              {isNightMode ? <Sun size={16} /> : <Moon size={16} />}
-            </button>
-          )}
           {onOpenSettings && (
             <button type="button" onClick={onOpenSettings} title="Account settings" aria-label="Open account settings" className="rounded-xl border border-[#cbd5e1] bg-white p-2 text-[#475569] hover:bg-[#f1f5f9] dark:border-[#4a382d] dark:bg-[#2c211b]">
               <Settings size={16} />
