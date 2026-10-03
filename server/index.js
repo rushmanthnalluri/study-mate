@@ -593,8 +593,21 @@ const ensureBootstrapAdmin = async () => {
   const password = process.env.STUDYMATE_ADMIN_PASSWORD || '';
   if (!email || !password) return;
   const users = await getAllUsers();
-  if (users.some(u => u.role === 'admin')) return;
+  const existing = users.find(u => String(u.email || '').toLowerCase() === email);
   const token = issueAuthToken();
+  if (existing) {
+    existing.name = existing.name || 'StudyMate Administrator';
+    existing.klId = existing.klId || 'ADMIN';
+    existing.passwordHash = hashPassword(password);
+    delete existing.password;
+    existing.role = 'admin';
+    existing.department = 'All';
+    existing.authTokenHash = tokenHash(token);
+    existing.authTokenIssuedAt = new Date().toISOString();
+    await saveUser(existing);
+    console.log('StudyMate configured administrator credentials refreshed.');
+    return;
+  }
   const admin = {
     id: crypto.randomUUID(),
     name: 'StudyMate Administrator',
