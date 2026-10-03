@@ -15,7 +15,7 @@ interface HomeScreenProps {
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   subjects, selectedDepartment, onSelectDepartment, onSelectSubject, onNavigate, recentNotes, onOpenNote
 }) => {
-  const departments: Department[] = ['All', 'CSE', 'AIDS', 'ECE', 'EEE', 'Food Technology'];
+  const departments: Department[] = ['All', ...Array.from(new Set(subjects.map((subject) => subject.department))).filter(Boolean)] as Department[];
   const filteredSubjects = subjects.filter(s => selectedDepartment === 'All' || s.department === selectedDepartment);
 
   const features = [
