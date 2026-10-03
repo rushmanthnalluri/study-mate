@@ -16,23 +16,23 @@ button { -webkit-tap-highlight-color:transparent; }
 
 .auth-input {
   width: 100%;
-  border: 1px solid #dfd1c4;
+  border: 1px solid #cbd5e1;
   border-radius: 14px;
   background: #fffdf9;
-  color: #3b2b23;
+  color: #172554;
   padding: 11px 13px;
   font-size: 12px;
   outline: none;
   transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
 }
 .auth-input::placeholder { color: #a08d7d; }
-.auth-input:focus { border-color: #b97745; box-shadow: 0 0 0 3px rgba(185,119,69,.14); background: #fff; }
+.auth-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(185,119,69,.14); background: #fff; }
 .auth-primary {
   width: 100%;
   min-height: 46px;
   border-radius: 15px;
-  background: #7c4f2c;
-  color: #fffaf4;
+  background: #2563eb;
+  color: #ffffff;
   font-size: 12px;
   font-weight: 800;
   display: inline-flex;
@@ -47,7 +47,7 @@ button { -webkit-tap-highlight-color:transparent; }
 .auth-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
 
 
-:focus-visible { outline: 3px solid #b97745; outline-offset: 3px; }
+:focus-visible { outline: 3px solid #3b82f6; outline-offset: 3px; }
 .sr-only-focusable:not(:focus):not(:focus-visible) { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior:auto; }
