@@ -56,12 +56,11 @@ The web application is designed mobile-first and installable as a PWA:
   - 📊 **Process / Diagram**: Rendered Mermaid.js flowcharts and system diagrams
 - **Screen 07 — AI Academic Tutor Chatbot**: 24/7 interactive tutor answering kinetics doubts, formula derivations, and 2M/5M/10M tips.
 - **Screen 08 — Interactive Quiz & Flashcards**: Rapid 2-mark recall cards and live multiple-choice quiz with immediate evaluator explanations and scoring.
-- **Screen 09 — KL LMS Connection**: Authenticated account connection to `https://lms.kluniversity.in`, with explicit separation between locally stored connection state and verified LMS data.
 - **Screen 10 — Admin Portal & Resource Scaffold**: Department-wide curriculum management, subject provisioning, and grounded study material uploads.
 
 ---
 
-## 🍃 MongoDB & Render Deployment
+## MongoDB & Render Deployment
 
 StudyMate AI natively supports **Render** deployment with **MongoDB** (Atlas or Render Managed MongoDB):
 
@@ -78,7 +77,7 @@ StudyMate AI natively supports **Render** deployment with **MongoDB** (Atlas or 
    - Start Command: `node server.js`
 
 3. **Resilient Dual Storage Architecture**:
-   If `MONGODB_URI` is present, StudyMate automatically stores users, notes, feedback, and chat messages in MongoDB via Mongoose. If running offline or without MongoDB, it gracefully falls back to local file-based storage.
+   If `MONGODB_URI` is present, StudyMate automatically stores users, notes, feedback, and chat messages in MongoDB via Mongoose. Local file storage is development-only; production MongoDB is authoritative and fails closed when unavailable.
 
 ---
 
@@ -118,12 +117,6 @@ npm run build
 ```
 
 ---
-
-## 🎨 Visual Identity & Food Science Daily Alignment
-Styled with the clean editorial typography of [Food Science Daily](https://foodsciencedaily.com/login?next=%2Fdashboard):
-- **Typography**: Inter (UI), Barlow Condensed (eyebrows/badges), Source Serif 4 (scholarly headers), IBM Plex Mono (technical terms).
-- **Colors**: Food Science Daily Maroon (`#831d32`), warm off-white surface (`#fbfaf8`), subtle borders, emerald and amber accents.
-
 
 ## Production hardening
 
