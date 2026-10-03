@@ -439,7 +439,7 @@ const issueAuthToken = () => crypto.randomBytes(32).toString('hex');
 const tokenHash = (token) => crypto.createHash('sha256').update(token).digest('hex');
 const sanitizeUser = (user) => {
   if (!user) return null;
-  const { password, passwordHash, authTokenHash, enrolledCourses, ...safeUser } = user;
+  const { password, passwordHash, authTokenHash, ...safeUser } = user;
   return safeUser;
 };
 const getBearerToken = (req) => {
@@ -510,8 +510,7 @@ const ensureBootstrapAdmin = async () => {
     authTokenIssuedAt: new Date().toISOString(),
     department: 'All',
     role: 'admin',
-    isLmsConnected: false,
-    enrolledCourses: []
+    
   };
   await saveUser(admin);
   console.log('StudyMate bootstrap administrator created.');
@@ -605,8 +604,7 @@ app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => 
       authTokenIssuedAt: new Date().toISOString(),
       department,
       role: 'student',
-      isLmsConnected: false,
-      enrolledCourses: []
+      
     };
     await saveUser(newUser);
     res.status(201).json({ success: true, message: 'Account created successfully.', user: sanitizeUser(newUser), token });
@@ -668,59 +666,6 @@ app.put('/api/auth/profile', requireAuth, rateLimit(60 * 60 * 1000, 20), async (
   } catch (err) {
     if (err?.code === 11000) return res.status(409).json({ error: 'An account with this KL ID already exists.' });
     res.status(500).json({ error: 'Profile could not be updated.' });
-  }
-});
-
-// POST connect with KL LMS (lms.kluniversity.in)
-app.post('/api/auth/kl-lms/connect', requireAuth, rateLimit(60 * 60 * 1000, 10), async (req, res) => {
-  try {
-    const { lmsUsername } = req.body || {};
-    if (typeof lmsUsername !== 'string' || !lmsUsername.trim()) {
-      return res.status(400).json({ error: 'KL LMS Username or Email is required.' });
-    }
-
-    const user = req.user;
-
-    user.isLmsConnected = true;
-    user.lmsUsername = lmsUsername.trim();
-    user.lmsLastSynced = new Date().toISOString();
-    user.enrolledCourses = user.enrolledCourses || [];
-
-    await saveUser(user);
-
-    const safeUser = sanitizeUser(user);
-    res.json({
-      success: true,
-      message: 'KL LMS account connection recorded. Verified LMS information will appear after a successful integration sync.',
-      user: safeUser,
-      syncedCourses: user.enrolledCourses
-    });
-  } catch (err) {
-    res.status(500).json({ error: 'Request could not be completed.' });
-  }
-});
-
-// POST sync KL LMS data
-app.post('/api/auth/kl-lms/sync', requireAuth, rateLimit(60 * 60 * 1000, 10), async (req, res) => {
-  try {
-    const user = req.user;
-
-    user.isLmsConnected = true;
-    user.lmsLastSynced = new Date().toISOString();
-    if (!user.enrolledCourses) user.enrolledCourses = [];
-
-    await saveUser(user);
-
-    const safeUser = sanitizeUser(user);
-    res.json({
-      success: true,
-      message: 'KL LMS connection refreshed. No academic records are fabricated; verified LMS information will appear when available.',
-      user: safeUser,
-      syncedCourses: user.enrolledCourses,
-      lastSynced: user.lmsLastSynced
-    });
-  } catch (err) {
-    res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
