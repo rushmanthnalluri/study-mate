@@ -68,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           ))}
           {currentUser?.role === 'admin' && (
-            <button type="button" onClick={() => navigate('admin')} aria-current={currentScreen === 'admin' ? 'page' : undefined} className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-[11px] font-extrabold ${currentScreen === 'admin' ? 'bg-[#172554] text-white' : 'bg-[#f0e5da] text-[#334155] hover:bg-[#e6d7c7]'}`}>
+            <button type="button" onClick={() => navigate('admin')} aria-current={currentScreen === 'admin' ? 'page' : undefined} className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-[11px] font-extrabold ${currentScreen === 'admin' ? 'bg-[#172554] text-white' : 'bg-[#eff6ff] text-[#334155] hover:bg-[#dbeafe]'}`}>
               <ShieldCheck size={14} /> Admin
             </button>
           )}
