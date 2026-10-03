@@ -7,7 +7,6 @@ interface AuthModalProps {
   onClose: () => void;
   currentUser: UserProfile | null;
   onAuthSuccess: (user: UserProfile, token: string) => void;
-  onNavigateToLmsSync?: () => void;
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess }) => {
