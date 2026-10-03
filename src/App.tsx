@@ -28,7 +28,6 @@ import { MockExamScreen } from './screens/MockExamScreen';
 import { QuizScreen } from './screens/QuizScreen';
 import { StudyStudioScreen } from './screens/StudyStudioScreen';
 import { AdminPortalScreen } from './screens/AdminPortalScreen';
-import { LmsSyncScreen } from './screens/LmsSyncScreen';
 import { AiChatbotScreen } from './screens/AiChatbotScreen';
 import { AuthModal } from './components/AuthModal';
 import { FloatingChatbot } from './components/FloatingChatbot';
@@ -342,7 +341,7 @@ export const App: React.FC = () => {
         id="main-content"
         tabIndex={-1}
         className={`flex-1 mx-auto w-full px-4 pt-3 ${
-          ['generate-notes', 'admin', 'mock-exam', 'quiz', 'studio', 'dashboard', 'lms-sync', 'chatbot'].includes(currentScreen)
+          ['generate-notes', 'admin', 'mock-exam', 'quiz', 'studio', 'dashboard', 'chatbot'].includes(currentScreen)
             ? 'max-w-6xl'
             : 'max-w-xl'
         }`}
@@ -475,20 +474,6 @@ export const App: React.FC = () => {
             onNavigate={setCurrentScreen}
             subjects={subjects}
             onRefreshSubjects={fetchSubjects}
-          />
-        )}
-
-        {currentScreen === 'lms-sync' && (
-          <LmsSyncScreen
-            currentUser={currentUser}
-            onOpenAuthModal={() => setIsAuthModalOpen(true)}
-            onNavigate={setCurrentScreen}
-            onUpdateUser={(updated) => {
-              setCurrentUser(updated);
-              try {
-                localStorage.setItem('studymate_user', JSON.stringify(updated));
-              } catch (e) {}
-            }}
           />
         )}
 
