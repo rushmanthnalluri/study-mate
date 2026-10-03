@@ -150,101 +150,35 @@ const rateLimit = (windowMs, max) => (req, res, next) => {
 
 
 
-// Helper: Get subjects across departments (defaults to Food Technology)
-async function getAllSubjects(deptFilter = 'Food Technology') {
-  if (!fs.existsSync(kbRoot)) return [];
-  const depts = fs.readdirSync(kbRoot, { withFileTypes: true })
-    .filter(d => d.isDirectory())
-    .map(d => d.name);
-
-  const subjects = [];
-
-  for (const dept of depts) {
-    if (deptFilter && deptFilter !== 'All' && deptFilter.toLowerCase() !== dept.toLowerCase()) continue;
-
-    const deptPath = path.join(kbRoot, dept);
-    const subjDirs = fs.readdirSync(deptPath, { withFileTypes: true })
-      .filter(d => d.isDirectory())
-      .map(d => d.name);
-
-    for (const subjName of subjDirs) {
-      const subjPath = path.join(deptPath, subjName);
-      let syllabus = {
-        id: `${dept.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${subjName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
-        name: subjName,
-        department: dept,
-        code: '21BT2001',
-        units: [],
-        topics: [],
-        questionCount: 0
-      };
-
-      const syllabusFile = path.join(subjPath, 'syllabus.json');
-      if (fs.existsSync(syllabusFile)) {
-        try { syllabus = JSON.parse(fs.readFileSync(syllabusFile, 'utf8')); } catch {}
-      }
-
-      const qbFile = path.join(subjPath, 'question-bank.json');
-      let questions = [];
-      if (fs.existsSync(qbFile)) {
-        try {
-          questions = JSON.parse(fs.readFileSync(qbFile, 'utf8'));
-          syllabus.questionCount = questions.length;
-        } catch {}
-      }
-
-      const resourcesAvailable = {
-        courseMaterials: fs.existsSync(path.join(subjPath, 'course-materials.md')),
-        previousPapers: fs.existsSync(path.join(subjPath, 'previous-papers.md')),
-        questionBank: fs.existsSync(path.join(subjPath, 'question-bank.json')),
-        marksPattern: fs.existsSync(path.join(subjPath, 'marks-pattern.md')),
-        answerStyle: fs.existsSync(path.join(subjPath, 'answer-style.md')),
-        syllabus: fs.existsSync(path.join(subjPath, 'syllabus.json'))
-      };
-
-      const resFile = path.join(subjPath, 'resources.json');
-      let resources = [];
-      if (fs.existsSync(resFile)) {
-        try { resources = JSON.parse(fs.readFileSync(resFile, 'utf8')); } catch {}
-      }
-
-      subjects.push({
-        ...syllabus,
-        description: syllabus.description || `Core academic subject for ${subjName} under Department of ${dept}, KL University.`,
-        questionBank: questions,
-        resourcesAvailable,
-        resources
-      });
-    }
-  }
-
+// Helper: Get subjects from administrator-persisted MongoDB data only.
+// The repository knowledge-base directory is intentionally NOT a student-facing source.
+// This prevents packaged/demo/seeded subjects from appearing in production.
+async function getAllSubjects(deptFilter = 'All') {
   const overrides = await getKnowledgeBaseOverrides();
-  const byId = new Map(overrides.map(item => [item.subjectId, item]));
-  const filtered = subjects.filter(subject => !byId.get(subject.id)?.deleted);
-  for (const override of overrides) {
-    if (override.deleted || !override.payload?.id) continue;
-    const existing = filtered.findIndex(subject => subject.id === override.subjectId);
-    if (existing >= 0) filtered[existing] = { ...filtered[existing], ...override.payload };
-    else filtered.push(override.payload);
-  }
-
-  return filtered.filter(subject =>
-    !deptFilter || deptFilter === 'All' || String(subject.department || '').toLowerCase() === String(deptFilter).toLowerCase()
-  );
+  return overrides
+    .filter(override => !override.deleted && override.payload?.id)
+    .map(override => ({
+      ...override.payload,
+      contentSource: override.payload.contentSource || 'admin-managed',
+      resources: Array.isArray(override.payload.resources) ? override.payload.resources : [],
+      questionBank: Array.isArray(override.payload.questionBank) ? override.payload.questionBank : [],
+      resourcesAvailable: override.payload.resourcesAvailable || {}
+    }))
+    .filter(subject =>
+      !deptFilter || deptFilter === 'All' || String(subject.department || '').toLowerCase() === String(deptFilter).toLowerCase()
+    );
 }
 
 // API: List all departments
-app.get('/api/departments', (req, res) => {
+app.get('/api/departments', async (req, res) => {
   try {
-    if (!fs.existsSync(kbRoot)) return res.json([]);
-    const depts = fs.readdirSync(kbRoot, { withFileTypes: true })
-      .filter(d => d.isDirectory())
-      .map(d => d.name);
-    res.json(depts);
+    const subjects = await getAllSubjects('All');
+    const departments = [...new Set(subjects.map(subject => String(subject.department || '').trim()).filter(Boolean))].sort();
+    res.json(departments);
   } catch (err) {
     res.status(500).json({ error: 'Request could not be completed.' });
   }
-});
+}
 
 // API: List subjects (default: Food Technology)
 app.get('/api/subjects', async (req, res) => {
