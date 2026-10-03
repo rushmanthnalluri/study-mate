@@ -136,27 +136,27 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
       <div className="flex items-center justify-between">
         <button
           onClick={() => onNavigate('home')}
-          className="rounded-xl border border-[#e2d4c8] bg-[#fffaf4] p-2 text-[#6f594a] hover:bg-[#f7eee6]"
+          className="rounded-xl border border-[#e2d4c8] bg-[#ffffff] p-2 text-[#6f594a] hover:bg-[#f1f5f9]"
           aria-label="Back to home"
         >
           <ArrowLeft size={17} />
         </button>
         <div className="text-center">
-          <p className="text-[10px] font-black uppercase tracking-[.18em] text-[#a0704b]">Assessment Lab</p>
-          <h1 className="text-xl font-black text-[#3b2b23]">Quiz & Model Test</h1>
+          <p className="text-[10px] font-black uppercase tracking-[.18em] text-[#2563eb]">Assessment Lab</p>
+          <h1 className="text-xl font-black text-[#172554]">Quiz & Model Test</h1>
         </div>
         <div className="w-9" />
       </div>
 
       {!started && (
-        <div className="rounded-[28px] border border-[#dfc8b1] bg-[#fffaf4] p-5 shadow-sm">
+        <div className="rounded-[28px] border border-[#dbe3ee] bg-[#ffffff] p-5 shadow-sm">
           <div className="mb-4 flex items-center gap-2 rounded-2xl border border-[#ead9c8] bg-[#fbf3eb] p-3 text-[11px] text-[#6f594a]">
             <Sparkles size={15} className="text-[#a56f42]" />
             <span>Questions are generated from the subject question bank using the administrator-configured AI provider. If the provider is unavailable, the assessment will not invent questions.</span>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <label className="text-xs font-bold text-[#4b392e]">
+            <label className="text-xs font-bold text-[#334155]">
               Course
               <select
                 value={subject?.id || ''}
@@ -167,7 +167,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
               </select>
             </label>
 
-            <label className="text-xs font-bold text-[#4b392e]">
+            <label className="text-xs font-bold text-[#334155]">
               Mode
               <select
                 value={mode}
@@ -186,9 +186,9 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
               [mode === 'model' ? '30' : '10', 'Minutes'],
               ['4', 'Options']
             ].map(([value, label]) => (
-              <div key={label} className="rounded-2xl bg-[#f7eee6] p-3 text-center">
-                <b className="block text-lg text-[#7c4f2c]">{value}</b>
-                <span className="text-[9px] font-bold text-[#8d7868]">{label}</span>
+              <div key={label} className="rounded-2xl bg-[#f1f5f9] p-3 text-center">
+                <b className="block text-lg text-[#2563eb]">{value}</b>
+                <span className="text-[9px] font-bold text-[#64748b]">{label}</span>
               </div>
             ))}
           </div>
@@ -203,7 +203,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
           <button
             onClick={start}
             disabled={!subject || loading}
-            className="mt-5 w-full rounded-2xl bg-[#7c4f2c] py-3.5 text-xs font-black text-white hover:bg-[#643c20] disabled:opacity-50"
+            className="mt-5 w-full rounded-2xl bg-[#2563eb] py-3.5 text-xs font-black text-white hover:bg-[#643c20] disabled:opacity-50"
           >
             {loading ? 'Building assessment…' : `Start ${mode === 'model' ? 'Model Test' : 'Quiz'}`}
             {!loading && <ChevronRight className="ml-1 inline" size={16} />}
@@ -212,9 +212,9 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
       )}
 
       {started && !finished && current && (
-        <div className="rounded-[28px] border border-[#dfc8b1] bg-[#fffaf4] p-5 shadow-sm">
+        <div className="rounded-[28px] border border-[#dbe3ee] bg-[#ffffff] p-5 shadow-sm">
           <div className="mb-5 flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase text-[#a0704b]">
+            <span className="text-[10px] font-black uppercase text-[#2563eb]">
               Question {index + 1}/{questions.length}
             </span>
             <span className="inline-flex items-center gap-1 rounded-full bg-[#f3e4d5] px-3 py-1 text-[10px] font-black text-[#76513a]">
@@ -223,7 +223,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
             </span>
           </div>
 
-          <h2 className="whitespace-pre-line text-base font-extrabold leading-7 text-[#3b2b23]">{current.question}</h2>
+          <h2 className="whitespace-pre-line text-base font-extrabold leading-7 text-[#172554]">{current.question}</h2>
 
           <div className="mt-5 space-y-2">
             {current.options.map((option, choice) => {
@@ -236,7 +236,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
                   key={choice}
                   disabled={revealed}
                   onClick={() => answer(choice)}
-                  className={`flex w-full items-center gap-3 rounded-2xl border p-3 text-left text-xs font-semibold transition ${revealed && correct ? 'border-[#86a276] bg-[#eaf3e5]' : revealed && chosen ? 'border-[#c98b7b] bg-[#fff0ec]' : 'border-[#e4d7cc] bg-white hover:bg-[#f8f0e8]'}`}
+                  className={`flex w-full items-center gap-3 rounded-2xl border p-3 text-left text-xs font-semibold transition ${revealed && correct ? 'border-[#86a276] bg-[#eaf3e5]' : revealed && chosen ? 'border-[#c98b7b] bg-[#fff0ec]' : 'border-[#e4d7cc] bg-white hover:bg-[#f8fafc]'}`}
                 >
                   {revealed && correct
                     ? <CheckCircle2 size={18} className="shrink-0 text-[#55734a]" />
@@ -250,7 +250,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
           </div>
 
           {selected !== null && (
-            <div className="mt-4 rounded-2xl bg-[#f7eee6] p-3 text-[11px] leading-5 text-[#705b4c]">
+            <div className="mt-4 rounded-2xl bg-[#f1f5f9] p-3 text-[11px] leading-5 text-[#705b4c]">
               <b>Explanation:</b> {current.explanation}
             </div>
           )}
@@ -258,7 +258,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
           <button
             disabled={selected === null}
             onClick={next}
-            className="mt-5 w-full rounded-2xl bg-[#3b2b23] py-3 text-xs font-black text-white disabled:opacity-40"
+            className="mt-5 w-full rounded-2xl bg-[#172554] py-3 text-xs font-black text-white disabled:opacity-40"
           >
             {index + 1 === questions.length ? 'Finish test' : 'Next question'}
             <ChevronRight className="ml-1 inline" size={15} />
@@ -267,16 +267,16 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
       )}
 
       {finished && (
-        <div className="rounded-[28px] border border-[#dfc8b1] bg-[#fffaf4] p-7 text-center shadow-sm">
+        <div className="rounded-[28px] border border-[#dbe3ee] bg-[#ffffff] p-7 text-center shadow-sm">
           <Trophy className="mx-auto text-[#b77943]" size={42} />
-          <p className="mt-3 text-[10px] font-black uppercase tracking-[.2em] text-[#a0704b]">Test complete</p>
-          <h2 className="mt-1 text-3xl font-black text-[#3b2b23]">{score}/{questions.length}</h2>
-          <p className="mt-2 text-xs text-[#806f61]">{percentage}% • {mode === 'model' ? 'Model Test' : 'Quick Quiz'} • {subject?.name}</p>
+          <p className="mt-3 text-[10px] font-black uppercase tracking-[.2em] text-[#2563eb]">Test complete</p>
+          <h2 className="mt-1 text-3xl font-black text-[#172554]">{score}/{questions.length}</h2>
+          <p className="mt-2 text-xs text-[#64748b]">{percentage}% • {mode === 'model' ? 'Model Test' : 'Quick Quiz'} • {subject?.name}</p>
           <div className="mt-5 flex gap-2">
             <button onClick={reset} className="flex-1 rounded-2xl border border-[#ddcdbd] bg-white py-3 text-xs font-black text-[#5e4a3d]">
               <RotateCcw className="mr-1 inline" size={14} />Retake
             </button>
-            <button onClick={() => onNavigate('flashcards')} className="flex-1 rounded-2xl bg-[#7c4f2c] py-3 text-xs font-black text-white">
+            <button onClick={() => onNavigate('flashcards')} className="flex-1 rounded-2xl bg-[#2563eb] py-3 text-xs font-black text-white">
               <BookOpen className="mr-1 inline" size={14} />Revise
             </button>
           </div>
