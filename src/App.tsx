@@ -483,18 +483,6 @@ export const App: React.FC = () => {
             currentUser={currentUser}
             onOpenAuthModal={() => setIsAuthModalOpen(true)}
             onNavigate={setCurrentScreen}
-            onSelectSubjectByName={(subjName) => {
-              const found = subjects.find(
-                (s) =>
-                  s.name.toLowerCase().includes(subjName.toLowerCase()) ||
-                  subjName.toLowerCase().includes(s.name.toLowerCase())
-              );
-              if (found) {
-                handleSelectSubject(found);
-              } else {
-                setCurrentScreen('select-subject');
-              }
-            }}
             onUpdateUser={(updated) => {
               setCurrentUser(updated);
               try {
