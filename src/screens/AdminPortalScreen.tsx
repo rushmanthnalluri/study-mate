@@ -51,7 +51,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
   const [subjectSuccessMsg, setSubjectSuccessMsg] = useState('');
 
   // Add Resource Form State
-  const [selectedSubjName, setSelectedSubjName] = useState(subjects[0]?.name || 'Food Microbiology');
+  const [selectedSubjName, setSelectedSubjName] = useState(subjects[0]?.name || '');
   const [resourceType, setResourceType] = useState<'course-materials' | 'previous-papers' | 'question-bank' | 'marks-pattern' | 'answer-style' | 'syllabus'>('course-materials');
   const [resourceTitle, setResourceTitle] = useState('');
   const [resourceDescription, setResourceDescription] = useState('');
@@ -67,13 +67,11 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     fetch('/api/admin/stats', { headers: { Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '') } })
       .then((res) => res.json())
       .then((data) => {
-        if (data.totalSubjects) {
-          setStats({
-            totalSubjects: data.totalSubjects,
-            totalFiles: data.totalFiles,
-            totalQuestions: data.totalQuestions
-          });
-        }
+        setStats({
+          totalSubjects: Number(data.totalSubjects) || 0,
+          totalFiles: Number(data.totalFiles) || 0,
+          totalQuestions: Number(data.totalQuestions) || 0
+        });
       })
       .catch(() => {});
   }, [subjects]);
@@ -244,7 +242,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
   };
 
   const handleDeleteSubject = async (subjName: string) => {
-    if (!confirm(`Are you sure you want to delete "${subjName}" and all its knowledge base files?`)) {
+    if (!confirm(`Are you sure you want to delete "${subjName}" and its administrator-managed resources?`)) {
       return;
     }
 
@@ -345,7 +343,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
           <span className="text-xl font-mono font-bold text-[#2563eb]">
             {stats.totalSubjects}
           </span>
-          <span className="text-[10px] text-emerald-700 block">Food Technology</span>
+          <span className="text-[10px] text-emerald-700 block">administrator-managed data</span>
         </div>
 
         <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
@@ -355,7 +353,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
           <span className="text-xl font-mono font-bold text-[#2563eb]">
             {stats.totalFiles}
           </span>
-          <span className="text-[10px] text-[#64748b] block">6 items/subject</span>
+          <span className="text-[10px] text-[#64748b] block">resources stored in MongoDB</span>
         </div>
 
         <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
@@ -458,7 +456,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
               Active Food Technology Subjects
             </span>
             <span className="text-[10px] text-[#64748b]">
-              Live in `knowledge-base/Food Technology/`
+              Source: administrator-managed MongoDB
             </span>
           </div>
 
@@ -475,7 +473,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
                         {subj.code}
                       </span>
                       <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-brand-50 text-[#2563eb]">
-                        Food Technology
+                        {subj.department}
                       </span>
                     </div>
                     <h3 className="text-base font-bold text-[#172554] font-serif">
@@ -509,7 +507,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
                   <span className="font-semibold text-[#172554] block text-[10px] mb-0.5 uppercase tracking-wider font-sans">
                     Subject Description & Academic Scope:
                   </span>
-                  <p>{subj.description || 'Core engineering subject under Department of Food Technology, KL University.'}</p>
+                  <p>{subj.description || 'No description has been added yet.'}</p>
                 </div>
 
                 {/* Expandable Resources Inventory */}
@@ -517,7 +515,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-sans uppercase tracking-wider font-bold text-[#172554] flex items-center space-x-1">
                       <Layers size={13} className="text-[#2563eb]" />
-                      <span>Subject Resources ({subj.resources?.length || 6} files)</span>
+                      <span>Subject Resources ({subj.resources?.length || 0})</span>
                     </span>
                     <button
                       type="button"
