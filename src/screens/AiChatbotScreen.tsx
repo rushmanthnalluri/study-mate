@@ -184,30 +184,16 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
               </h2>
               <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span>KL Exam Grounded</span>
+                <span>Study grounded</span>
               </span>
             </div>
             <p className="text-xs text-surface-muted">
-              Ask doubts, solve kinetics, or generate KL exam solutions
+              Ask questions, explore concepts, or work through your study material
             </p>
           </div>
         </div>
 
         <div className="flex items-center space-x-2">
-          {/* Subject Context Selector */}
-          <select
-            value={selectedSubject}
-            onChange={(e) => setSelectedSubject(e.target.value)}
-            className="text-xs bg-surface-subtle dark:bg-stone-800 border border-surface-border dark:border-stone-700 rounded-lg px-2.5 py-1.5 font-semibold text-surface-dark dark:text-stone-200 focus:outline-none focus:ring-1 focus:ring-brand-800"
-          >
-            <option value="Food Microbiology">Food Microbiology</option>
-            <option value="Dairy Technology">Dairy Technology</option>
-            <option value="Food Processing and Engineering">Food Process Eng.</option>
-            <option value="Food Chemistry and Nutrition">Food Chemistry</option>
-            <option value="Operating Systems">Operating Systems</option>
-            <option value="Digital Signal Processing">DSP</option>
-          </select>
-
           <button
             onClick={handleClearChat}
             title="Clear Chat History"
@@ -317,7 +303,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
-          placeholder={`Ask about ${selectedSubject}, D-values, pasteurization, or exam questions...`}
+          placeholder="Ask a study question…"
           className="flex-1 bg-transparent px-3 py-2 text-sm text-surface-dark dark:text-white placeholder:text-surface-muted focus:outline-none"
           disabled={isSending}
         />
