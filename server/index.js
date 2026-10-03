@@ -171,6 +171,7 @@ async function getAllSubjects(deptFilter = 'All') {
 
 // API: List all departments
 app.get('/api/departments', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
   try {
     const subjects = await getAllSubjects('All');
     const departments = [...new Set(subjects.map(subject => String(subject.department || '').trim()).filter(Boolean))].sort();
@@ -182,6 +183,7 @@ app.get('/api/departments', async (req, res) => {
 
 // API: List subjects (default: Food Technology)
 app.get('/api/subjects', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
   try {
     const { department } = req.query;
     const targetDept = department || 'Food Technology';
@@ -194,6 +196,7 @@ app.get('/api/subjects', async (req, res) => {
 
 // API: Get subject details and resource contents
 app.get('/api/subjects/:id', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
   try {
     const { id } = req.params;
     const all = await getAllSubjects('All');
