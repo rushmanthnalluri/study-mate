@@ -419,8 +419,7 @@ app.get('/api/chat/history', requireAuth, async (req, res) => {
 
 
 // ==========================================
-// 🔐 AUTHENTICATION & KL LMS INTEGRATION ENDPOINTS
-// Official KL LMS Portal: https://lms.kluniversity.in/login/index.php
+// 🔐 AUTHENTICATION & ACCOUNT ENDPOINTS
 // ==========================================
 
 // Production authentication: real accounts, hashed passwords, opaque sessions.
@@ -545,8 +544,7 @@ app.post('/api/auth/login', rateLimit(15 * 60 * 1000, 20), async (req, res) => {
     const cleanLogin = String(usernameOrEmail).trim().toLowerCase();
     const user = users.find(u =>
       String(u.email || '').toLowerCase() === cleanLogin ||
-      String(u.klId || '').toLowerCase() === cleanLogin ||
-      String(u.lmsUsername || '').toLowerCase() === cleanLogin
+      String(u.klId || '').toLowerCase() === cleanLogin
     );
     if (!user) return res.status(401).json({ error: 'Invalid email/KL ID or password.' });
 
