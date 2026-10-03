@@ -99,16 +99,6 @@ export interface FeedbackSummary {
   recent: FeedbackItem[];
 }
 
-export interface LmsCourse {
-  code: string;
-  name: string;
-  faculty: string;
-  attendance?: string;
-  inSemGrade?: string;
-  upcomingDeadline?: string;
-  lmsCourseUrl: string;
-}
-
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
@@ -146,7 +136,6 @@ export interface UserProfile {
   isLmsConnected: boolean;
   lmsUsername?: string;
   lmsLastSynced?: string;
-  enrolledCourses?: LmsCourse[];
 }
 
 export type ScreenId =
