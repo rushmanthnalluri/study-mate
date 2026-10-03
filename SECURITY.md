@@ -8,7 +8,7 @@
 - Login and signup use generic invalid-credential responses to reduce account enumeration.
 
 ## Authorization
-- User-owned notes, feedback, chat history and LMS state are scoped to the authenticated account.
+- User-owned notes, feedback and chat history are scoped to the authenticated account.
 - Admin endpoints use a server-side role check.
 - AI provider configuration is administrator-only.
 - Client-supplied user IDs are never trusted for ownership.
