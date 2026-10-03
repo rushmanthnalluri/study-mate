@@ -18,7 +18,7 @@ export const SelectSubjectScreen: React.FC<SelectSubjectScreenProps> = ({
   onNavigate
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const departments: Department[] = ['All', 'CSE', 'AIDS', 'ECE', 'EEE', 'Food Technology'];
+  const departments: Department[] = ['All', ...Array.from(new Set(subjects.map((subject) => subject.department))).filter(Boolean)] as Department[];
 
   const filteredSubjects = subjects.filter((s) => {
     const matchesDept = selectedDepartment === 'All' || s.department === selectedDepartment;
