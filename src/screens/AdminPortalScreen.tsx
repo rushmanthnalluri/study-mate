@@ -39,23 +39,13 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
   const [isSavingAiConfig, setIsSavingAiConfig] = useState(false);
 
   // Stats
-  const [stats, setStats] = useState({
-    totalSubjects: subjects.length,
-    totalFiles: subjects.length * 6,
-    totalQuestions: subjects.reduce((acc, s) => acc + (s.questionBank?.length || 0), 0)
-  });
+  const [stats, setStats] = useState({ totalSubjects: subjects.length, totalFiles: 0, totalQuestions: 0 });
 
   // New Subject Form State
   const [newSubjName, setNewSubjName] = useState('');
   const [newSubjCode, setNewSubjCode] = useState('');
   const [newSubjDescription, setNewSubjDescription] = useState('');
-  const [newSubjUnits, setNewSubjUnits] = useState([
-    'Unit I: Fundamental Principles & Nomenclature',
-    'Unit II: Governing Mechanisms & Unit Operations',
-    'Unit III: Kinetics, Formulations & Process Design',
-    'Unit IV: Quality Parameters & Thermal Operations',
-    'Unit V: Industrial Applications & Standards'
-  ]);
+  const [newSubjUnits, setNewSubjUnits] = useState<string[]>([]);
   const [newSubjTopics, setNewSubjTopics] = useState('');
   const [isSubmittingSubj, setIsSubmittingSubj] = useState(false);
   const [subjectSuccessMsg, setSubjectSuccessMsg] = useState('');
@@ -66,7 +56,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
   const [resourceTitle, setResourceTitle] = useState('');
   const [resourceDescription, setResourceDescription] = useState('');
   const [resourceUnit, setResourceUnit] = useState('All Units');
-  const [resourceAuthor, setResourceAuthor] = useState('KL Department Faculty');
+  const [resourceAuthor, setResourceAuthor] = useState('');
   const [resourceContent, setResourceContent] = useState('');
   const [isSavingResource, setIsSavingResource] = useState(false);
   const [resourceSuccessMsg, setResourceSuccessMsg] = useState('');
@@ -148,9 +138,9 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
         'syllabus': 'Official Syllabus & Unit Learning Outcomes'
       };
       setResourceTitle(`${selectedSubjName} ${typeLabelMap[resourceType] || 'Resource Material'}`);
-      setResourceDescription(`Reference material and lecture handouts for ${selectedSubjName} under KL curriculum.`);
+      setResourceDescription('');
       setResourceUnit('All Units');
-      setResourceAuthor('KL Department Faculty');
+      setResourceAuthor('');
     }
 
     fetch(`/api/subjects/${targetSubj.id}`)
@@ -203,7 +193,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Failed to create subject');
 
-      setSubjectSuccessMsg(`Subject "${newSubjName}" successfully created with description and 6 initialized resource files!`);
+      setSubjectSuccessMsg(`Subject "${newSubjName}" was added to the administrator-managed knowledge base.`);
       setNewSubjName('');
       setNewSubjCode('');
       setNewSubjDescription('');
@@ -455,7 +445,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
               <div><p className="text-xs font-extrabold text-[#334155]">Current status</p><p className="mt-1 text-[11px] text-[#64748b]">{aiConfigured ? 'A central provider is configured.' : 'No cloud provider is configured; offline mode is available.'}</p></div>
               <span className={`rounded-full px-3 py-1 text-[10px] font-black ${aiConfigured ? 'bg-[#dcebd5] text-[#4f6d45]' : 'bg-[#eee2d8] text-[#64748b]'}`}>{aiConfigured ? 'CONFIGURED' : 'OFFLINE'}</span>
             </div>
-            <button disabled={isSavingAiConfig || !aiSecretReady} className="w-full rounded-2xl bg-[#2563eb] px-4 py-3 text-xs font-extrabold text-white shadow-sm hover:bg-[#643c20] disabled:opacity-50">{isSavingAiConfig ? 'Saving securely…' : 'Save central AI configuration'}</button>
+            <button disabled={isSavingAiConfig || !aiSecretReady} className="w-full rounded-2xl bg-[#2563eb] px-4 py-3 text-xs font-extrabold text-white shadow-sm hover:bg-[#1d4ed8] disabled:opacity-50">{isSavingAiConfig ? 'Saving securely…' : 'Save central AI configuration'}</button>
           </form>
         </div>
       )}
