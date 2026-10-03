@@ -101,21 +101,21 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
           type="button"
           aria-label="Back to home"
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#806f61] hover:text-[#3b2b23] transition-colors"
+          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#64748b] hover:text-[#172554] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
         <div>
-          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#7c4f2c]">
+          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
             Study Schedule
           </span>
-          <h1 className="text-xl font-sans font-bold text-[#3b2b23] leading-tight">
+          <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
             KL Exam Planner
           </h1>
         </div>
       </div>
 
-      <p className="text-xs text-[#806f61]">
+      <p className="text-xs text-[#64748b]">
         Structure your revision schedule unit-by-unit according to KL semester examination timelines.
       </p>
 
@@ -139,7 +139,7 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
             type="date"
             value={examDate}
             onChange={(e) => setExamDate(e.target.value)}
-            className="text-xs font-mono bg-[#fffaf4]/10 text-white border border-white/20 rounded-lg px-2.5 py-1.5 focus:outline-none cursor-pointer"
+            className="text-xs font-mono bg-[#ffffff]/10 text-white border border-white/20 rounded-lg px-2.5 py-1.5 focus:outline-none cursor-pointer"
           />
         </div>
       </div>
@@ -160,11 +160,11 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
       {/* Revision Milestones Checklist */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-sans uppercase tracking-wider font-bold text-[#806f61] flex items-center space-x-1.5">
-            <Calendar size={13} className="text-[#7c4f2c]" />
+          <h3 className="text-xs font-sans uppercase tracking-wider font-bold text-[#64748b] flex items-center space-x-1.5">
+            <Calendar size={13} className="text-[#2563eb]" />
             <span>Unit Revision Milestones</span>
           </h3>
-          <span className="text-[10px] font-mono font-bold text-[#806f61]">
+          <span className="text-[10px] font-mono font-bold text-[#64748b]">
             {completedCount} / {plans.length} Completed
           </span>
         </div>
@@ -174,7 +174,7 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
             <div
               key={plan.id}
               onClick={() => togglePlan(plan.id)}
-              className={`bg-[#fffaf4] border rounded-xl p-3 shadow-sm transition-all cursor-pointer flex items-center justify-between ${
+              className={`bg-[#ffffff] border rounded-xl p-3 shadow-sm transition-all cursor-pointer flex items-center justify-between ${
                 plan.completed
                   ? 'border-emerald-200 bg-emerald-50/30'
                   : 'border-[#e3d6cb] hover:border-brand-300'
@@ -184,14 +184,14 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
                 <button
                   type="button"
                   className={`text-lg transition-colors ${
-                    plan.completed ? 'text-emerald-700' : 'text-[#806f61]'
+                    plan.completed ? 'text-emerald-700' : 'text-[#64748b]'
                   }`}
                 >
                   {plan.completed ? <CheckSquare size={18} /> : <Square size={18} />}
                 </button>
                 <div>
                   <div className="flex items-center space-x-1.5">
-                    <span className="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-surface-subtle text-[#806f61] font-mono">
+                    <span className="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-surface-subtle text-[#64748b] font-mono">
                       {plan.subjectName}
                     </span>
                     <span
@@ -207,8 +207,8 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
                   <h4
                     className={`text-xs font-semibold mt-0.5 ${
                       plan.completed
-                        ? 'line-through text-[#806f61]'
-                        : 'text-[#3b2b23]'
+                        ? 'line-through text-[#64748b]'
+                        : 'text-[#172554]'
                     }`}
                   >
                     {plan.unitTitle}
@@ -216,7 +216,7 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
                 </div>
               </div>
 
-              <span className="text-[10px] text-[#806f61] font-mono whitespace-nowrap pl-2">
+              <span className="text-[10px] text-[#64748b] font-mono whitespace-nowrap pl-2">
                 {plan.targetDate}
               </span>
             </div>
