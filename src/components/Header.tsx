@@ -16,7 +16,6 @@ import {
   ShieldCheck,
   Bot,
   Settings,
-  RefreshCw
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -56,7 +55,6 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'planner', label: 'Planner', icon: Calendar },
     { id: 'knowledge-base', label: 'Knowledge', icon: FolderTree },
     { id: 'glossary', label: 'Glossary', icon: BookMarked },
-    { id: 'lms-sync', label: 'LMS', icon: RefreshCw },
     { id: 'chatbot', label: 'AI Tutor', icon: Bot }
   ];
 
