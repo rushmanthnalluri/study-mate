@@ -250,55 +250,15 @@ app.post('/api/generate', requireAuth, rateLimit(60 * 1000, 10), async (req, res
       topic: cleanTopic
     });
 
-    // Attach real knowledge base grounding citations for laptop view
-    const subjPath = path.join(kbRoot, subjectMeta.department, subjectMeta.name);
-    const resourcesUsed = [];
-
-    const resManifestPath = path.join(subjPath, 'resources.json');
-    let manifest = [];
-    if (fs.existsSync(resManifestPath)) {
-      try {
-        manifest = JSON.parse(fs.readFileSync(resManifestPath, 'utf8'));
-      } catch (e) {}
-    }
-
-    if (manifest && manifest.length > 0) {
-      for (const m of manifest) {
-        resourcesUsed.push({
-          type: m.resourceType,
-          title: m.title,
-          description: m.description,
-          file: m.fileName,
-          unit: m.unit,
-          excerpt: m.description || `Grounded in ${m.title} (${m.fileName}) for ${subject}.`
-        });
-      }
-    } else {
-      if (fs.existsSync(path.join(subjPath, 'course-materials.md'))) {
-        resourcesUsed.push({
-          type: 'course-materials',
-          title: `${subject} Course Handout`,
-          file: 'course-materials.md',
-          excerpt: `Grounded in KL Course Handout Unit I-V learning outcomes and textbook compendium.`
-        });
-      }
-      if (fs.existsSync(path.join(subjPath, 'previous-papers.md'))) {
-        resourcesUsed.push({
-          type: 'previous-papers',
-          title: `KL Previous Semester Papers`,
-          file: 'previous-papers.md',
-          excerpt: `Mapped against KL End-Sem May 2024 & Dec 2023 evaluation patterns.`
-        });
-      }
-      if (fs.existsSync(path.join(subjPath, 'marks-pattern.md'))) {
-        resourcesUsed.push({
-          type: 'marks-pattern',
-          title: `KL Marks Evaluation Rubric`,
-          file: 'marks-pattern.md',
-          excerpt: `Strictly formatted: 2M (20-40 words), 5M (120-180 words), 10M (350-500 words).`
-        });
-      }
-    }
+    // Ground generated notes only with resources stored in the administrator-managed subject payload.
+    const resourcesUsed = (Array.isArray(subjectMeta.resources) ? subjectMeta.resources : []).map((resource) => ({
+      type: resource.resourceType,
+      title: resource.title,
+      description: resource.description,
+      file: resource.fileName,
+      unit: resource.unit,
+      excerpt: resource.description || `Administrator-managed resource: ${resource.title}.`
+    }));
 
     res.json({
       ...note,
