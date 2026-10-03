@@ -64,19 +64,19 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
     <div className="space-y-4 pb-24 animate-fade-in">
       {/* Dashboard Top Header */}
       <div className="space-y-1 pt-1">
-        <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#7c4f2c]">
+        <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
           Analytics & Readiness
         </span>
-        <h1 className="text-xl font-sans font-bold text-[#3b2b23] leading-tight">
+        <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
           KL Exam Readiness Dashboard
         </h1>
-        <p className="text-xs text-[#806f61]">
+        <p className="text-xs text-[#64748b]">
           Track syllabus coverage, revision streaks, and exam preparation metrics.
         </p>
       </div>
 
       {/* Hero Readiness Score Card */}
-      <div className="bg-gradient-to-br from-[#7c4f2c] to-[#4a3326] text-white rounded-2xl p-5 shadow-elevated relative overflow-hidden">
+      <div className="bg-gradient-to-br from-[#2563eb] to-[#4a3326] text-white rounded-2xl p-5 shadow-elevated relative overflow-hidden">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#f2d0a5] flex items-center space-x-1.5">
@@ -96,7 +96,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             </p>
           </div>
 
-          <div className="w-16 h-16 rounded-full border-4 border-[#e5bf93]/40 border-t-[#e5bf93] flex items-center justify-center font-mono font-bold text-sm bg-[#fffaf4]/5">
+          <div className="w-16 h-16 rounded-full border-4 border-[#e5bf93]/40 border-t-[#e5bf93] flex items-center justify-center font-mono font-bold text-sm bg-[#ffffff]/5">
             {readinessPercent}%
           </div>
         </div>
@@ -105,14 +105,14 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
         <div className="mt-4 pt-3 border-t border-white/10 flex items-center space-x-2">
           <button
             onClick={() => onNavigate('select-subject')}
-            className="flex-1 bg-[#fffaf4] text-[#5a371f] py-2 px-3 rounded-xl text-xs font-bold hover:bg-[#f4eadf] transition-colors flex items-center justify-center space-x-1 shadow-sm"
+            className="flex-1 bg-[#ffffff] text-[#5a371f] py-2 px-3 rounded-xl text-xs font-bold hover:bg-[#eff6ff] transition-colors flex items-center justify-center space-x-1 shadow-sm"
           >
             <span>Generate New Notes</span>
             <ArrowRight size={13} />
           </button>
           <button
             onClick={() => onNavigate('save')}
-            className="flex-1 bg-[#fffaf4]/15 text-white hover:bg-[#fffaf4]/20 py-2 px-3 rounded-xl text-xs font-medium transition-colors text-center"
+            className="flex-1 bg-[#ffffff]/15 text-white hover:bg-[#ffffff]/20 py-2 px-3 rounded-xl text-xs font-medium transition-colors text-center"
           >
             Review Saved ({savedCount})
           </button>
@@ -121,11 +121,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
 
       {/* Grid of Key Metrics */}
       <div className="grid grid-cols-3 gap-2.5">
-        <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
-          <span className="text-[10px] text-[#806f61] block font-sans uppercase tracking-wider">
+        <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
+          <span className="text-[10px] text-[#64748b] block font-sans uppercase tracking-wider">
             Total Subjects
           </span>
-          <span className="text-lg font-mono font-bold text-[#3b2b23]">
+          <span className="text-lg font-mono font-bold text-[#172554]">
             {totalSubjects}
           </span>
           <span className="text-[10px] text-emerald-600 font-medium block">
@@ -133,20 +133,20 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           </span>
         </div>
 
-        <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
-          <span className="text-[10px] text-[#806f61] block font-sans uppercase tracking-wider">
+        <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
+          <span className="text-[10px] text-[#64748b] block font-sans uppercase tracking-wider">
             Saved Notes
           </span>
-          <span className="text-lg font-mono font-bold text-[#7c4f2c]">
+          <span className="text-lg font-mono font-bold text-[#2563eb]">
             {savedCount}
           </span>
-          <span className="text-[10px] text-[#806f61] block">
+          <span className="text-[10px] text-[#64748b] block">
             Offline Ready
           </span>
         </div>
 
-        <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
-          <span className="text-[10px] text-[#806f61] block font-sans uppercase tracking-wider">
+        <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
+          <span className="text-[10px] text-[#64748b] block font-sans uppercase tracking-wider">
             Exam Reviewed
           </span>
           <span className="text-lg font-mono font-bold text-emerald-700">
@@ -159,26 +159,26 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-2.5">
-        <div className="rounded-xl border border-[#e3d6cb] bg-[#fffaf4] p-3 text-center shadow-sm">
-          <span className="block text-[10px] uppercase tracking-wider text-[#806f61]">Assessment Average</span>
-          <span className="text-xl font-black text-[#7c4f2c]">{attempts.length ? `${averageScore}%` : '—'}</span>
-          <span className="block text-[10px] text-[#806f61]">{attempts.length ? `${attempts.length} attempts` : 'Take a quiz to start'}</span>
+        <div className="rounded-xl border border-[#e3d6cb] bg-[#ffffff] p-3 text-center shadow-sm">
+          <span className="block text-[10px] uppercase tracking-wider text-[#64748b]">Assessment Average</span>
+          <span className="text-xl font-black text-[#2563eb]">{attempts.length ? `${averageScore}%` : '—'}</span>
+          <span className="block text-[10px] text-[#64748b]">{attempts.length ? `${attempts.length} attempts` : 'Take a quiz to start'}</span>
         </div>
-        <div className="rounded-xl border border-[#e3d6cb] bg-[#fffaf4] p-3 text-center shadow-sm">
-          <span className="block text-[10px] uppercase tracking-wider text-[#806f61]">Latest Test</span>
-          <span className="text-xl font-black text-[#7c4f2c]">{attempts[0] ? `${attempts[0].percentage}%` : '—'}</span>
-          <span className="block truncate text-[10px] text-[#806f61]">{attempts[0]?.subject || 'No test recorded'}</span>
+        <div className="rounded-xl border border-[#e3d6cb] bg-[#ffffff] p-3 text-center shadow-sm">
+          <span className="block text-[10px] uppercase tracking-wider text-[#64748b]">Latest Test</span>
+          <span className="text-xl font-black text-[#2563eb]">{attempts[0] ? `${attempts[0].percentage}%` : '—'}</span>
+          <span className="block truncate text-[10px] text-[#64748b]">{attempts[0]?.subject || 'No test recorded'}</span>
         </div>
       </div>
 
       {/* Department Readiness Progress Bars */}
-      <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-4 shadow-sm space-y-3">
+      <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-4 shadow-sm space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-sans font-bold text-[#3b2b23] flex items-center space-x-1.5">
-            <TrendingUp size={15} className="text-[#7c4f2c]" />
+          <h3 className="text-xs font-sans font-bold text-[#172554] flex items-center space-x-1.5">
+            <TrendingUp size={15} className="text-[#2563eb]" />
             <span>Readiness by Department</span>
           </h3>
-          <span className="text-[10px] text-[#806f61]">
+          <span className="text-[10px] text-[#64748b]">
             KL Engineering
           </span>
         </div>
@@ -187,11 +187,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           {deptStats.map((item) => (
             <div key={item.department} className="space-y-1">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-[#3b2b23] flex items-center space-x-1.5">
+                <span className="font-semibold text-[#172554] flex items-center space-x-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-800"></span>
                   <span>{item.department}</span>
                 </span>
-                <span className="font-mono text-[11px] text-[#806f61]">
+                <span className="font-mono text-[11px] text-[#64748b]">
                   {item.savedNotesCount} notes • {item.completionRate}%
                 </span>
               </div>
@@ -208,22 +208,22 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
 
       {/* Exam Format Marks Distribution */}
       <div className="bg-surface-subtle border border-[#e3d6cb] rounded-xl p-3.5 space-y-2">
-        <h4 className="text-xs font-semibold text-[#3b2b23] flex items-center space-x-1.5">
-          <Award size={14} className="text-[#7c4f2c]" />
+        <h4 className="text-xs font-semibold text-[#172554] flex items-center space-x-1.5">
+          <Award size={14} className="text-[#2563eb]" />
           <span>KL Exam Scheme Distribution (100 Marks Target)</span>
         </h4>
         <div className="grid grid-cols-3 gap-2 pt-1 text-center">
-          <div className="bg-[#fffaf4] p-2 rounded-lg border border-[#e3d6cb]/60">
+          <div className="bg-[#ffffff] p-2 rounded-lg border border-[#e3d6cb]/60">
             <span className="text-[9px] font-mono font-bold text-blue-700 block">Part A (10M)</span>
-            <span className="text-[10px] text-[#3b2b23] font-medium">5 × 2M Direct</span>
+            <span className="text-[10px] text-[#172554] font-medium">5 × 2M Direct</span>
           </div>
-          <div className="bg-[#fffaf4] p-2 rounded-lg border border-[#e3d6cb]/60">
+          <div className="bg-[#ffffff] p-2 rounded-lg border border-[#e3d6cb]/60">
             <span className="text-[9px] font-mono font-bold text-purple-700 block">Part B (25M)</span>
-            <span className="text-[10px] text-[#3b2b23] font-medium">5 × 5M Flowcharts</span>
+            <span className="text-[10px] text-[#172554] font-medium">5 × 5M Flowcharts</span>
           </div>
-          <div className="bg-[#fffaf4] p-2 rounded-lg border border-[#e3d6cb]/60">
+          <div className="bg-[#ffffff] p-2 rounded-lg border border-[#e3d6cb]/60">
             <span className="text-[9px] font-mono font-bold text-emerald-700 block">Part C (40M)</span>
-            <span className="text-[10px] text-[#3b2b23] font-medium">4 × 10M Essays</span>
+            <span className="text-[10px] text-[#172554] font-medium">4 × 10M Essays</span>
           </div>
         </div>
       </div>
