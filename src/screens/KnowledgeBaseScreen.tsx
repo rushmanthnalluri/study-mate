@@ -128,21 +128,21 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
           type="button"
           aria-label="Back to home"
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#806f61] hover:text-[#3b2b23] transition-colors"
+          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#64748b] hover:text-[#172554] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
         <div>
-          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#7c4f2c]">
+          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
             KL Knowledge Base
           </span>
-          <h1 className="text-xl font-sans font-bold text-[#3b2b23] leading-tight">
+          <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
             Academic Drive Library
           </h1>
         </div>
       </div>
 
-      <p className="text-xs text-[#806f61]">
+      <p className="text-xs text-[#64748b]">
         As specified in System Blueprint Section 02: A shared folder library containing the 6 standard items per subject.
       </p>
 
@@ -154,8 +154,8 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
             onClick={() => setDeptFilter(dept as Department)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
               deptFilter === dept
-                ? 'bg-[#7c4f2c] text-white shadow-sm'
-                : 'bg-[#fffaf4] text-[#3b2b23] border border-[#e3d6cb]'
+                ? 'bg-[#2563eb] text-white shadow-sm'
+                : 'bg-[#ffffff] text-[#172554] border border-[#e3d6cb]'
             }`}
           >
             {dept === 'All' ? 'All Depts' : dept}
@@ -164,9 +164,9 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
       </div>
 
       {/* Subject Dropdown / Picker */}
-      <div className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-3.5 shadow-sm space-y-2">
-        <label className="text-xs font-semibold text-[#3b2b23] flex items-center space-x-1.5">
-          <Folder size={15} className="text-[#7c4f2c]" />
+      <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3.5 shadow-sm space-y-2">
+        <label className="text-xs font-semibold text-[#172554] flex items-center space-x-1.5">
+          <Folder size={15} className="text-[#2563eb]" />
           <span>Select Subject Folder in Knowledge Base:</span>
         </label>
         <select
@@ -175,7 +175,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
             const found = subjects.find((s) => s.id === e.target.value);
             if (found) setSelectedSubject(found);
           }}
-          className="w-full bg-surface-subtle border border-[#e3d6cb] rounded-lg p-2.5 text-xs text-[#3b2b23] font-medium focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+          className="w-full bg-surface-subtle border border-[#e3d6cb] rounded-lg p-2.5 text-xs text-[#172554] font-medium focus:outline-none focus:ring-2 focus:ring-brand-800/30"
         >
           {filteredSubjects.map((s) => (
             <option key={s.id} value={s.id}>
@@ -188,10 +188,10 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
       {/* The 6 Standard Items Grid */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-sans uppercase tracking-wider font-bold text-[#806f61]">
+          <span className="text-[10px] font-sans uppercase tracking-wider font-bold text-[#64748b]">
             The 6 Standard Items in {currentSubject.name}
           </span>
-          <span className="text-[10px] text-[#806f61] font-mono">
+          <span className="text-[10px] text-[#64748b] font-mono">
             6 / 6 Items Grounded
           </span>
         </div>
@@ -203,17 +203,17 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
               <div
                 key={idx}
                 onClick={() => setActiveFile(file)}
-                className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-3.5 shadow-sm hover:border-brand-400 cursor-pointer group transition-all flex items-start justify-between"
+                className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3.5 shadow-sm hover:border-brand-400 cursor-pointer group transition-all flex items-start justify-between"
               >
                 <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#f4eadf] text-[#7c4f2c] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-lg bg-[#eff6ff] text-[#2563eb] flex items-center justify-center shrink-0 mt-0.5">
                     <Icon size={16} />
                   </div>
                   <div className="space-y-0.5">
-                    <h4 className="text-xs font-bold text-[#3b2b23] group-hover:text-[#7c4f2c] transition-colors">
+                    <h4 className="text-xs font-bold text-[#172554] group-hover:text-[#2563eb] transition-colors">
                       {file.label}
                     </h4>
-                    <p className="text-[10px] text-[#806f61]">
+                    <p className="text-[10px] text-[#64748b]">
                       {file.name}
                     </p>
                     <p className="text-[10px] text-stone-500 italic pt-1">
@@ -222,7 +222,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
                   </div>
                 </div>
 
-                <span className="text-xs text-[#806f61] group-hover:text-[#7c4f2c] p-1">
+                <span className="text-xs text-[#64748b] group-hover:text-[#2563eb] p-1">
                   <Eye size={15} />
                 </span>
               </div>
@@ -234,15 +234,15 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
       {/* File Preview Modal */}
       {activeFile && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-[#fffaf4] rounded-2xl max-w-xl w-full p-5 shadow-2xl space-y-3 max-h-[85vh] flex flex-col border border-[#e3d6cb]">
+          <div className="bg-[#ffffff] rounded-2xl max-w-xl w-full p-5 shadow-2xl space-y-3 max-h-[85vh] flex flex-col border border-[#e3d6cb]">
             <div className="flex items-center justify-between border-b border-[#e3d6cb] pb-3">
               <div className="flex items-center space-x-2">
-                <FileText size={18} className="text-[#7c4f2c]" />
+                <FileText size={18} className="text-[#2563eb]" />
                 <div>
-                  <h3 className="text-xs sm:text-sm font-bold text-[#3b2b23] font-mono">
+                  <h3 className="text-xs sm:text-sm font-bold text-[#172554] font-mono">
                     {activeFile.name}
                   </h3>
-                  <p className="text-[10px] text-[#806f61]">
+                  <p className="text-[10px] text-[#64748b]">
                     KL Knowledge Base • {currentSubject.name}
                   </p>
                 </div>
@@ -264,7 +264,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
                 </button>
                 <button
                   onClick={() => setActiveFile(null)}
-                  className="p-1.5 rounded-lg text-[#806f61] hover:text-[#3b2b23] hover:bg-surface-subtle"
+                  className="p-1.5 rounded-lg text-[#64748b] hover:text-[#172554] hover:bg-surface-subtle"
                 >
                   <X size={18} />
                 </button>
@@ -278,7 +278,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
             <div className="pt-1 flex justify-end">
               <button
                 onClick={() => setActiveFile(null)}
-                className="px-4 py-2 rounded-xl bg-[#7c4f2c] text-white font-semibold text-xs"
+                className="px-4 py-2 rounded-xl bg-[#2563eb] text-white font-semibold text-xs"
               >
                 Close File
               </button>
