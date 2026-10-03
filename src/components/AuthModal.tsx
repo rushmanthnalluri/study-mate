@@ -141,7 +141,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
               <button disabled={busy} className="auth-primary" type="submit">
                 {busy ? 'Signing in…' : <>Sign in to StudyMate <ArrowRight size={16} /></>}
               </button>
-              <p className="text-center text-[11px] text-[#64748b]">No guest/demo login is available in production.</p>
+              <p className="text-center text-[11px] text-[#64748b]">Use your university account to access your private workspace.</p>
             </>
           ) : (
             <>
