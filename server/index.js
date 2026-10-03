@@ -66,7 +66,6 @@ if (!fs.existsSync(savedNotesFile)) {
 if (!fs.existsSync(feedbackFile)) {
   fs.writeFileSync(feedbackFile, '[]', 'utf8');
 }
-const defaultFoodTechCourses = [];
 
 if (!fs.existsSync(usersFile)) {
   fs.writeFileSync(usersFile, '[]', 'utf8');
@@ -440,7 +439,7 @@ const issueAuthToken = () => crypto.randomBytes(32).toString('hex');
 const tokenHash = (token) => crypto.createHash('sha256').update(token).digest('hex');
 const sanitizeUser = (user) => {
   if (!user) return null;
-  const { password, passwordHash, authTokenHash, ...safeUser } = user;
+  const { password, passwordHash, authTokenHash, enrolledCourses, ...safeUser } = user;
   return safeUser;
 };
 const getBearerToken = (req) => {
@@ -574,7 +573,7 @@ app.post('/api/auth/login', rateLimit(15 * 60 * 1000, 20), async (req, res) => {
 // POST signup — every account is a real persisted student account.
 app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => {
   try {
-    const { name, klId, email, password, department = 'Food Technology', linkLms = false } = req.body || {};
+    const { name, klId, email, password, department = 'Food Technology' } = req.body || {};
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email, and password are required.' });
     }
@@ -606,10 +605,8 @@ app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => 
       authTokenIssuedAt: new Date().toISOString(),
       department,
       role: 'student',
-      isLmsConnected: Boolean(linkLms),
-      lmsUsername: linkLms ? cleanKlId : undefined,
-      lmsLastSynced: linkLms ? new Date().toISOString() : undefined,
-      enrolledCourses: linkLms ? defaultFoodTechCourses : []
+      isLmsConnected: false,
+      enrolledCourses: []
     };
     await saveUser(newUser);
     res.status(201).json({ success: true, message: 'Account created successfully.', user: sanitizeUser(newUser), token });
