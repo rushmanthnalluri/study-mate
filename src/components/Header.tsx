@@ -45,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="bg-[#172554] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#dbeafe]">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#b9d9a3]" /> KL University • StudyMate</span>
-          <span className="hidden sm:block text-[#d8b895]">Account-based academic workspace</span>
+          <span className="hidden sm:block text-[#bfdbfe]">Account-based academic workspace</span>
         </div>
       </div>
 
@@ -55,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({
             <GraduationCap size={22} />
           </span>
           <span className="hidden min-w-0 sm:block">
-            <span className="block truncate text-[17px] font-black tracking-tight text-[#172554] dark:text-[#fff8f1]">StudyMate <span className="text-[#a9683d]">AI</span></span>
+            <span className="block truncate text-[17px] font-black tracking-tight text-[#172554] dark:text-[#fff8f1]">StudyMate <span className="text-[#2563eb]">AI</span></span>
             <span className="block text-[10px] font-semibold text-[#64748b]">KL exam preparation suite</span>
           </span>
         </button>
@@ -76,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         <div className="ml-auto flex items-center gap-2">
           <div className="hidden items-center gap-2 rounded-2xl border border-[#dbe3ee] bg-[#f8fafc] px-2.5 py-1.5 sm:flex dark:border-[#49372c] dark:bg-[#2c211b]">
-            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#e2c2a3] text-[11px] font-black text-[#5b3822]">{currentUser?.name?.charAt(0).toUpperCase()}</span>
+            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#bfdbfe] text-[11px] font-black text-[#1e3a8a]">{currentUser?.name?.charAt(0).toUpperCase()}</span>
             <div className="max-w-28">
               <p className="truncate text-[11px] font-extrabold text-[#334155] dark:text-[#fff8f1]">{currentUser?.name}</p>
               <p className="truncate font-mono text-[9px] text-[#64748b]">{currentUser?.klId}</p>
@@ -110,12 +110,12 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
           <div className="grid grid-cols-2 gap-2">
             {items.map(({id,label,icon:Icon}) => (
-              <button key={id} type="button" onClick={() => navigate(id)} aria-current={currentScreen === id ? 'page' : undefined} className={`flex items-center gap-2 rounded-2xl border px-3 py-3 text-left text-xs font-bold ${currentScreen === id ? 'border-[#cba27d] bg-[#dbeafe] text-[#1d4ed8]' : 'border-[#e2e8f0] bg-white text-[#334155] hover:bg-[#f8fafc]'}`}>
+              <button key={id} type="button" onClick={() => navigate(id)} aria-current={currentScreen === id ? 'page' : undefined} className={`flex items-center gap-2 rounded-2xl border px-3 py-3 text-left text-xs font-bold ${currentScreen === id ? 'border-[#93c5fd] bg-[#dbeafe] text-[#1d4ed8]' : 'border-[#e2e8f0] bg-white text-[#334155] hover:bg-[#f8fafc]'}`}>
                 <Icon size={15} /> {label}
               </button>
             ))}
             {currentUser?.role === 'admin' && (
-              <button type="button" onClick={() => navigate('admin')} aria-current={currentScreen === 'admin' ? 'page' : undefined} className="flex items-center gap-2 rounded-2xl border border-[#cdb9a7] bg-[#172554] px-3 py-3 text-left text-xs font-bold text-white">
+              <button type="button" onClick={() => navigate('admin')} aria-current={currentScreen === 'admin' ? 'page' : undefined} className="flex items-center gap-2 rounded-2xl border border-[#bfdbfe] bg-[#172554] px-3 py-3 text-left text-xs font-bold text-white">
                 <ShieldCheck size={15} /> Admin Console
               </button>
             )}
