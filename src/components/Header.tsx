@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Department, ScreenId, UserProfile } from '../types';
-import { GraduationCap, LayoutDashboard, Award, Sparkles, Calendar, Layers, FileSearch, BookMarked, FolderTree, FileSpreadsheetMenu, X, ShieldCheck, Bot, Settings, RefreshCw } from 'lucide-react';
+import { GraduationCap, LayoutDashboard, Award, Sparkles, Calendar, Layers, FileSearch, BookMarked, FolderTree, FileSpreadsheet, Menu, X, ShieldCheck, Bot, Settings, RefreshCw } from 'lucide-react';
 
 interface HeaderProps {
   currentScreen: ScreenId;
