@@ -38,7 +38,7 @@ export const App: React.FC = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<Department>('All');
   const [subjects, setSubjects] = useState<Subject[]>([]);
   
-  // User Authentication & KL LMS State
+  // User authentication state
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
     try {
       const stored = localStorage.getItem('studymate_user');
@@ -110,6 +110,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     document.documentElement.classList.remove('dark');
     localStorage.removeItem('studymate_night_mode');
+    localStorage.removeItem('studymate_lms_state');
   }, []);
 
   const fetchSubjects = async () => {
@@ -550,10 +551,6 @@ export const App: React.FC = () => {
           if (user.department && user.department !== selectedDepartment && user.department !== 'All') {
             setSelectedDepartment(user.department);
           }
-        }}
-        onNavigateToLmsSync={() => {
-          setIsAuthModalOpen(false);
-          setCurrentScreen('lms-sync');
         }}
       />
 
