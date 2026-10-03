@@ -35,22 +35,22 @@ export const SelectSubjectScreen: React.FC<SelectSubjectScreenProps> = ({
       <div className="flex items-center space-x-3 pt-1">
         <button
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#64748b] hover:text-[#172554] transition-colors"
+          className="p-1.5 rounded-lg border border-[#E8E4DF] bg-[#ffffff] text-[#6B6B6B] hover:text-[#1A1A1A] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
         <div>
-          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
+          <span className="text-[10px] font-mono font-medium tracking-wider uppercase text-[#B8860B]">
             Step 02 of 06
           </span>
-          <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
+          <h1 className="text-xl font-mono font-medium text-[#172554] leading-tight">
             Select Subject
           </h1>
         </div>
       </div>
 
       <p className="text-xs text-[#64748b]">
-        Pick a subject from the KL Knowledge Base. All course units, question banks, and answer rubrics are pre-grounded.
+        Choose from subjects published by an administrator. Course units and resources appear only after they are stored in the StudyMate database.
       </p>
 
       {/* Search Input */}
@@ -75,8 +75,8 @@ export const SelectSubjectScreen: React.FC<SelectSubjectScreenProps> = ({
               onClick={() => onSelectDepartment(dept)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                 isSelected
-                  ? 'bg-[#2563eb] text-white shadow-sm'
-                  : 'bg-[#ffffff] text-[#172554] border border-[#e3d6cb] hover:bg-surface-subtle'
+                  ? 'bg-[#B8860B] text-white shadow-sm'
+                  : 'bg-[#ffffff] text-[#172554] border border-[#e3d6cb] hover:bg-[#F5F3F0]'
               }`}
             >
               {dept === 'All' ? 'All Depts' : dept}
@@ -92,7 +92,7 @@ export const SelectSubjectScreen: React.FC<SelectSubjectScreenProps> = ({
             <BookOpen size={32} className="mx-auto text-[#64748b] mb-2 opacity-50" />
             <h3 className="text-sm font-semibold text-[#172554]">No subjects found</h3>
             <p className="text-xs text-[#64748b] mt-1">
-              Try adjusting your search query or department filter.
+              An administrator has not published a subject matching this selection yet.
             </p>
           </div>
         ) : (
@@ -100,7 +100,7 @@ export const SelectSubjectScreen: React.FC<SelectSubjectScreenProps> = ({
             <div
               key={subject.id}
               onClick={() => onSelectSubject(subject)}
-              className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-4 shadow-sm hover:border-brand-400 hover:shadow-md transition-all cursor-pointer group"
+              className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-4 shadow-sm hover:border-[#B8860B] hover:shadow-md transition-all cursor-pointer group"
             >
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
@@ -108,7 +108,7 @@ export const SelectSubjectScreen: React.FC<SelectSubjectScreenProps> = ({
                     <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-surface-subtle border border-[#e3d6cb] text-[#172554]">
                       {subject.code}
                     </span>
-                    <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#eff6ff] text-[#2563eb]">
+                    <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#F5F3F0] text-[#2563eb]">
                       {subject.department}
                     </span>
                   </div>
@@ -128,7 +128,7 @@ export const SelectSubjectScreen: React.FC<SelectSubjectScreenProps> = ({
                   <span>{subject.units?.length || 5} Course Units mapped to Bloom's Taxonomy</span>
                 </div>
                 {subject.topics && subject.topics.length > 0 && (
-                  <p className="text-[10px] text-stone-500 italic line-clamp-1">
+                  <p className="text-[10px] text-[#6B6B6B] italic line-clamp-1">
                     Exam topics: {subject.topics.slice(0, 3).join(' • ')}
                   </p>
                 )}
