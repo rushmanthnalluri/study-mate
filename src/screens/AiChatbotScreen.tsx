@@ -27,32 +27,22 @@ interface AiChatbotScreenProps {
 const DEFAULT_WELCOME_MESSAGE: ChatMessage = {
   id: 'msg-welcome',
   role: 'assistant',
-  content: `### 🎓 Welcome to StudyMate AI Academic Tutor!
+  content: `### Welcome to StudyMate AI Tutor
 
-I am your personal 24/7 AI tutor customized for **KL University engineering examinations** (specialized in **Food Technology**).
+I can help you understand published study material, work through concepts, generate structured notes, and practice with questions.
 
-You can ask me to:
-- **Explain complex kinetics & formulas** (e.g., *D-value, z-value, Stokes' Law, Planck's Equation*)
-- **Generate 2M, 5M, or 10M exam answers** matching the official KL marking rubric
-- **Clarify doubts** from your lecture handouts or previous semester question papers
-- **Review Critical Control Points (CCPs)** and process flowcharts
-
-Click any suggested question below or type your question!`,
+Ask a question whenever you are ready.`,
   timestamp: new Date().toISOString(),
   suggestedActions: [
-    { label: 'Explain Thermal Death Kinetics', actionType: 'notes', payload: 'Thermal Death Kinetics (D, z, F Values)' },
-    { label: 'HTST Pasteurization Guide', actionType: 'notes', payload: 'HTST Pasteurization System' },
-    { label: 'Take Practice Quiz', actionType: 'flashcards', payload: 'Food Microbiology' }
+    { label: 'Explain a concept', actionType: 'notes', payload: 'Explain this concept clearly' },
+    { label: 'Create practice questions', actionType: 'flashcards' }
   ]
 };
 
 const SUGGESTION_PROMPTS = [
-  'Explain D-value and z-value kinetics with equations and units',
-  'What are the HTST pasteurization parameters and why is ALP tested?',
-  'Derive Planck Freezing Equation and explain shape factors P and R',
-  'How to structure a 10-mark answer to score full marks in KL In-Sem?',
-  'Explain the 12D Botulinum cook concept for low-acid canned food',
-  'What is the difference between Toned and Double Toned milk under FSSAI?'
+  'Explain a difficult concept with a simple example',
+  'Compare two related concepts',
+  'Create a short practice quiz',
 ];
 
 export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
@@ -74,7 +64,7 @@ export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
 
   const [inputMessage, setInputMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const [selectedSubject, setSelectedSubject] = useState('Food Microbiology');
+  const [selectedSubject] = useState('General study');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -147,8 +137,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
 *(Live connection response grounded in local academic syllabus).*`,
         timestamp: new Date().toISOString(),
         suggestedActions: [
-          { label: `Generate Notes for ${selectedSubject}`, actionType: 'notes', payload: selectedSubject },
-          { label: 'Check KL LMS Course', actionType: 'topic', payload: 'lms-sync' }
+          { label: `Generate notes for ${selectedSubject}`, actionType: 'notes', payload: selectedSubject }
         ]
       };
       setMessages(prev => [...prev, fallbackBotMsg]);
@@ -176,11 +165,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
     } else if (action.actionType === 'mock-exam') {
       onNavigate('mock-exam');
     } else if (action.actionType === 'topic') {
-      if (action.payload === 'lms-sync') {
-        onNavigate('lms-sync');
-      } else {
-        onNavigate('enter-topic');
-      }
+      onNavigate('enter-topic');
     }
   };
 
