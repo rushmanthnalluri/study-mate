@@ -178,7 +178,7 @@ app.get('/api/departments', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Request could not be completed.' });
   }
-}
+});
 
 // API: List subjects (default: all administrator-managed subjects)
 app.get('/api/subjects', async (req, res) => {
