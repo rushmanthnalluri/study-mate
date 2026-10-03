@@ -256,8 +256,6 @@ Hello! I am your AI academic tutor aligned with the **KL University curriculum f
 What topic or problem would you like to explore today? You can ask me to derive a formula, write an answer, or quiz you!`,
     suggestedActions: [
       { label: `Study ${subj}`, actionType: 'notes', payload: subj },
-      { label: 'Take Practice Quiz', actionType: 'flashcards', payload: subj },
-      { label: 'Check KL LMS Attendance', actionType: 'topic', payload: 'lms-sync' }
-    ]
+      { label: 'Take Practice Quiz', actionType: 'flashcards', payload: subj }    ]
   };
 }
