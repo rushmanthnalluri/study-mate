@@ -46,44 +46,44 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
   };
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#2d241e]/60 p-4 backdrop-blur-md" role="presentation">
-      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="settings-modal-title" tabIndex={-1} className="w-full max-w-lg overflow-hidden rounded-[28px] border border-[#e5d7c8] bg-[#fffaf4] shadow-2xl">
-        <div className="flex items-center justify-between border-b border-[#eadfd4] bg-[#f7efe6] px-6 py-5">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#0f172a]/60 p-4 backdrop-blur-md" role="presentation">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="settings-modal-title" tabIndex={-1} className="w-full max-w-lg overflow-hidden rounded-[28px] border border-[#dbe3ee] bg-[#ffffff] shadow-2xl">
+        <div className="flex items-center justify-between border-b border-[#e2e8f0] bg-[#f8fafc] px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e2c2a3] text-[#6e4228]"><UserRound size={18} /></div>
             <div>
-              <h3 id="settings-modal-title" className="font-extrabold text-[#3b2b23]">Account settings</h3>
-              <p className="text-[11px] text-[#8d7868]">Manage your StudyMate profile</p>
+              <h3 id="settings-modal-title" className="font-extrabold text-[#172554]">Account settings</h3>
+              <p className="text-[11px] text-[#64748b]">Manage your StudyMate profile</p>
             </div>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close account settings" className="rounded-xl p-2 text-[#806f61] hover:bg-white"><X size={18} /></button>
+          <button type="button" onClick={onClose} aria-label="Close account settings" className="rounded-xl p-2 text-[#64748b] hover:bg-white"><X size={18} /></button>
         </div>
 
         <form onSubmit={save} className="space-y-5 p-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
-              <span className="mb-1.5 block text-xs font-bold text-[#4b392e]">Full name</span>
+              <span className="mb-1.5 block text-xs font-bold text-[#334155]">Full name</span>
               <input className="auth-input" value={name} onChange={e => setName(e.target.value)} required />
             </label>
             <label className="block">
-              <span className="mb-1.5 block text-xs font-bold text-[#4b392e]">KL ID</span>
+              <span className="mb-1.5 block text-xs font-bold text-[#334155]">KL ID</span>
               <input className="auth-input font-mono" value={klId} onChange={e => setKlId(e.target.value)} required />
             </label>
           </div>
           <label className="block">
-            <span className="mb-1.5 block text-xs font-bold text-[#4b392e]">Department</span>
+            <span className="mb-1.5 block text-xs font-bold text-[#334155]">Department</span>
             <select className="auth-input" value={department} onChange={e => setDepartment(e.target.value as Department)}>
               <option>Food Technology</option><option>CSE</option><option>AIDS</option><option>ECE</option><option>EEE</option>
             </select>
           </label>
 
           <div className="rounded-2xl border border-[#e7d4bd] bg-[#fbf3e9] p-4">
-            <div className="mb-3 flex items-center gap-2"><KeyRound size={16} className="text-[#9b633c]"/><p className="text-xs font-extrabold text-[#4b392e]">Change password</p></div>
+            <div className="mb-3 flex items-center gap-2"><KeyRound size={16} className="text-[#9b633c]"/><p className="text-xs font-extrabold text-[#334155]">Change password</p></div>
             <div className="grid gap-2 sm:grid-cols-2">
               <input className="auth-input" type="password" autoComplete="current-password" placeholder="Current password" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)}/>
               <input className="auth-input" type="password" autoComplete="new-password" minLength={8} placeholder="New password" value={newPassword} onChange={e=>setNewPassword(e.target.value)}/>
             </div>
-            <button type="button" disabled={!currentPassword||newPassword.length<8} onClick={async()=>{try{await onChangePassword(currentPassword,newPassword);setCurrentPassword('');setNewPassword('');setPasswordMessage('Password changed successfully.');}catch(e){setPasswordMessage(e instanceof Error?e.message:'Password change failed.');}}} className="mt-3 rounded-xl bg-[#3b2b23] px-3 py-2 text-xs font-bold text-white disabled:opacity-40">Update password</button>
+            <button type="button" disabled={!currentPassword||newPassword.length<8} onClick={async()=>{try{await onChangePassword(currentPassword,newPassword);setCurrentPassword('');setNewPassword('');setPasswordMessage('Password changed successfully.');}catch(e){setPasswordMessage(e instanceof Error?e.message:'Password change failed.');}}} className="mt-3 rounded-xl bg-[#172554] px-3 py-2 text-xs font-bold text-white disabled:opacity-40">Update password</button>
             {passwordMessage&&<p className="mt-2 text-[11px] font-semibold text-[#6f594a]">{passwordMessage}</p>}
           </div>
 
@@ -91,17 +91,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
             <div className="flex items-start gap-3">
               <ShieldCheck className="mt-0.5 text-[#9b633c]" size={18} />
               <div>
-                <p className="text-xs font-extrabold text-[#4b392e]">AI configuration is administrator-controlled</p>
-                <p className="mt-1 text-[11px] leading-relaxed text-[#806f61]">Students cannot enter, replace, or expose the Groq/Gemini keys used by the application. The administrator manages the single app-wide provider configuration.</p>
+                <p className="text-xs font-extrabold text-[#334155]">AI configuration is administrator-controlled</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-[#64748b]">Students cannot enter, replace, or expose the Groq/Gemini keys used by the application. The administrator manages the single app-wide provider configuration.</p>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#eadfd4] pt-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e2e8f0] pt-4">
             <button type="button" onClick={onResetData} className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold text-[#a04434] hover:bg-[#fff0ec]"><Trash2 size={14} /> Clear local session</button>
             <div className="flex gap-2">
-              <button type="button" onClick={onClose} className="rounded-xl border border-[#ddcdbd] bg-white px-4 py-2.5 text-xs font-bold text-[#5e4a3d] hover:bg-[#f7efe6]">Cancel</button>
-              <button type="submit" className="inline-flex items-center gap-1.5 rounded-xl bg-[#7c4f2c] px-4 py-2.5 text-xs font-extrabold text-white shadow-sm hover:bg-[#643c20]"><Save size={14} /> Save profile</button>
+              <button type="button" onClick={onClose} className="rounded-xl border border-[#ddcdbd] bg-white px-4 py-2.5 text-xs font-bold text-[#5e4a3d] hover:bg-[#f8fafc]">Cancel</button>
+              <button type="submit" className="inline-flex items-center gap-1.5 rounded-xl bg-[#2563eb] px-4 py-2.5 text-xs font-extrabold text-white shadow-sm hover:bg-[#643c20]"><Save size={14} /> Save profile</button>
             </div>
           </div>
         </form>
