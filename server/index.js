@@ -181,12 +181,12 @@ app.get('/api/departments', async (req, res) => {
   }
 }
 
-// API: List subjects (default: Food Technology)
+// API: List subjects (default: all administrator-managed subjects)
 app.get('/api/subjects', async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   try {
     const { department } = req.query;
-    const targetDept = department || 'Food Technology';
+    const targetDept = department || 'All';
     const list = await getAllSubjects(targetDept);
     res.json(list);
   } catch (err) {
