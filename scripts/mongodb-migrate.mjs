@@ -88,7 +88,16 @@ try {
   }
 
 
-  console.log('MongoDB schema migrations verified through v3.');
+  if (!(await hasMigration(db, 4))) {
+    await db.collection('users').updateMany(
+      {},
+      { $unset: { isLmsConnected: '', lmsUsername: '', lmsLastSynced: '', enrolledCourses: '' } }
+    );
+    await recordMigration(db, 4, 'Remove legacy LMS connection and enrollment fields from user records.');
+    console.log('Applied MongoDB schema migration v4.');
+  }
+
+  console.log('MongoDB schema migrations verified through v4.');
 } finally {
   await mongoose.disconnect();
 }
