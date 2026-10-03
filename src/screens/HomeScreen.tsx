@@ -12,8 +12,6 @@ import {
   Calendar,
   FileSearch,
   FileSpreadsheet,
-  GraduationCap,
-  RefreshCw,
   Bot
 } from 'lucide-react';
 
@@ -96,24 +94,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           ))}
         </div>
       </section>
-
-      <button
-        type="button"
-        onClick={() => onNavigate('lms-sync')}
-        className="editorial-card editorial-card-accent group flex w-full items-center justify-between gap-6 p-6 text-left"
-      >
-        <div className="flex items-start gap-4">
-          <GraduationCap size={23} strokeWidth={1.5} className="mt-0.5 shrink-0 text-[var(--accent)]" />
-          <div>
-            <p className="small-caps text-[var(--accent)]">Separate connection</p>
-            <h2 className="mt-2 font-serif text-xl text-[var(--foreground)]">KL LMS</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--muted-foreground)]">
-              Connect to the official portal separately. StudyMate does not invent, estimate or display LMS academic records here.
-            </p>
-          </div>
-        </div>
-        <ChevronRight size={19} className="shrink-0 text-[var(--accent)] transition-transform duration-200 group-hover:translate-x-1" />
-      </button>
 
       <section>
         <div className="editorial-section-label"><span>Published subjects</span></div>
