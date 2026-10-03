@@ -130,33 +130,33 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
           type="button"
           aria-label="Back to home"
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#806f61] hover:text-[#3b2b23] transition-colors"
+          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#64748b] hover:text-[#172554] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
         <div>
-          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#7c4f2c]">
+          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
             KL Engineering Reference
           </span>
-          <h1 className="text-xl font-sans font-bold text-[#3b2b23] leading-tight">
+          <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
             Technical Glossary
           </h1>
         </div>
       </div>
 
-      <p className="text-xs text-[#806f61]">
+      <p className="text-xs text-[#64748b]">
         High-yield technical terminology and governing principles frequently evaluated in KL exams.
       </p>
 
       {/* Search Bar */}
       <div className="relative">
-        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#806f61]" />
+        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748b]" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search glossary terms (e.g. Belady, Ferranti, 12D, Kernel)..."
-          className="w-full bg-[#fffaf4] border border-[#e3d6cb] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[#3b2b23] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm"
+          className="w-full bg-[#ffffff] border border-[#e3d6cb] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[#172554] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm"
         />
       </div>
 
@@ -168,8 +168,8 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
             onClick={() => setDeptFilter(dept as Department)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
               deptFilter === dept
-                ? 'bg-[#7c4f2c] text-white shadow-sm'
-                : 'bg-[#fffaf4] text-[#3b2b23] border border-[#e3d6cb] hover:bg-surface-subtle'
+                ? 'bg-[#2563eb] text-white shadow-sm'
+                : 'bg-[#ffffff] text-[#172554] border border-[#e3d6cb] hover:bg-surface-subtle'
             }`}
           >
             {dept === 'All' ? 'All Depts' : dept}
@@ -182,35 +182,35 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
         {filtered.map((item, idx) => (
           <div
             key={idx}
-            className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-4 shadow-sm space-y-2 hover:border-brand-300 transition-all"
+            className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-4 shadow-sm space-y-2 hover:border-brand-300 transition-all"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <span className="text-xs font-bold text-[#3b2b23] font-sans">
+                <span className="text-xs font-bold text-[#172554] font-sans">
                   {item.term}
                 </span>
-                <span className="text-[9px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#f4eadf] text-[#7c4f2c]">
+                <span className="text-[9px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#eff6ff] text-[#2563eb]">
                   {item.department}
                 </span>
               </div>
-              <span className="text-[10px] text-[#806f61] font-mono">
+              <span className="text-[10px] text-[#64748b] font-mono">
                 {item.subject}
               </span>
             </div>
 
-            <p className="text-xs text-[#3b2b23] leading-relaxed font-sans">
+            <p className="text-xs text-[#172554] leading-relaxed font-sans">
               {item.definition}
             </p>
 
             <div className="bg-surface-subtle p-2 rounded-lg border border-[#e3d6cb]/50 text-[11px] text-stone-700">
-              <span className="font-semibold text-[#7c4f2c]">KL Evaluator Key Criterion: </span>
+              <span className="font-semibold text-[#2563eb]">KL Evaluator Key Criterion: </span>
               <span>{item.keyRule}</span>
             </div>
 
             <div className="pt-2 border-t border-[#e3d6cb]/40 flex justify-end">
               <button
                 onClick={() => onGenerateForTerm(item.term, item.department)}
-                className="text-xs font-semibold text-[#7c4f2c] hover:underline flex items-center space-x-1"
+                className="text-xs font-semibold text-[#2563eb] hover:underline flex items-center space-x-1"
               >
                 <Sparkles size={13} className="text-amber-500" />
                 <span>Generate Full Exam Note</span>
