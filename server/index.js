@@ -738,7 +738,7 @@ app.post('/api/auth/kl-lms/connect', requireAuth, rateLimit(60 * 60 * 1000, 10),
     const safeUser = sanitizeUser(user);
     res.json({
       success: true,
-      message: 'KL LMS account connection recorded. Verified course and attendance data will appear after a successful LMS sync.',
+      message: 'KL LMS account connection recorded. Verified LMS information will appear after a successful integration sync.',
       user: safeUser,
       syncedCourses: user.enrolledCourses
     });
@@ -761,7 +761,7 @@ app.post('/api/auth/kl-lms/sync', requireAuth, rateLimit(60 * 60 * 1000, 10), as
     const safeUser = sanitizeUser(user);
     res.json({
       success: true,
-      message: 'KL LMS sync connection refreshed. No course or attendance data is fabricated; verified LMS data will appear when available.',
+      message: 'KL LMS connection refreshed. No academic records are fabricated; verified LMS information will appear when available.',
       user: safeUser,
       syncedCourses: user.enrolledCourses,
       lastSynced: user.lmsLastSynced
