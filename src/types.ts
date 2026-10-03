@@ -133,9 +133,6 @@ export interface UserProfile {
   email: string;
   department: Department;
   role: 'student' | 'faculty' | 'admin';
-  isLmsConnected: boolean;
-  lmsUsername?: string;
-  lmsLastSynced?: string;
 }
 
 export type ScreenId =
@@ -155,6 +152,5 @@ export type ScreenId =
   | 'quiz'
   | 'studio'
   | 'admin'
-  | 'lms-sync'
   | 'chatbot';
 
