@@ -58,9 +58,6 @@ export const App: React.FC = () => {
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [appError, setAppError] = useState<string>('');
-  const [isNightMode, setIsNightMode] = useState<boolean>(() => {
-    return localStorage.getItem('studymate_night_mode') === 'true';
-  });
 
   const authHeaders = (): Record<string, string> => {
     const token = localStorage.getItem('studymate_token');
@@ -110,24 +107,11 @@ export const App: React.FC = () => {
     }
   };
 
-  const toggleNightMode = () => {
-    const next = !isNightMode;
-    setIsNightMode(next);
-    localStorage.setItem('studymate_night_mode', String(next));
-    if (next) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
-
+  // StudyMate uses the light editorial theme as the single production UI mode.
   useEffect(() => {
-    if (isNightMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isNightMode]);
+    document.documentElement.classList.remove('dark');
+    localStorage.removeItem('studymate_night_mode');
+  }, []);
 
   const fetchSubjects = async () => {
     try {
@@ -348,8 +332,6 @@ export const App: React.FC = () => {
         onSelectDepartment={setSelectedDepartment}
         onNavigate={setCurrentScreen}
         departments={['All', ...Array.from(new Set(subjects.map((subject) => subject.department))).filter(Boolean)] as Department[]}
-        isNightMode={isNightMode}
-        onToggleNightMode={toggleNightMode}
         currentUser={currentUser}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onOpenSettings={() => setIsSettingsModalOpen(true)}
