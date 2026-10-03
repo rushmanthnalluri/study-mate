@@ -194,39 +194,35 @@ app.get('/api/subjects', async (req, res) => {
   }
 });
 
-// API: Get subject details and resource contents
+// API: Get subject details and administrator-managed resources.
 app.get('/api/subjects/:id', async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   try {
-    const { id } = req.params;
+    const id = String(req.params.id || '').trim();
     const all = await getAllSubjects('All');
-    const subjMeta = all.find(s => s.id === id);
+    const subject = all.find(s => s.id === id);
 
-    if (!subjMeta) {
-      return res.status(404).json({ error: 'Subject not found in knowledge base' });
+    if (!subject) {
+      return res.status(404).json({ error: 'Subject not found.' });
     }
 
-    const subjPath = path.join(kbRoot, subjMeta.department, subjMeta.name);
-    const qbFile = path.join(subjPath, 'question-bank.json');
-    const prevPapersFile = path.join(subjPath, 'previous-papers.md');
-    const courseMatFile = path.join(subjPath, 'course-materials.md');
-    const marksPatternFile = path.join(subjPath, 'marks-pattern.md');
-    const answerStyleFile = path.join(subjPath, 'answer-style.md');
-
+    // Student-facing resource content comes only from the administrator-persisted MongoDB payload.
     res.json({
-      ...subjMeta,
-      courseMaterials: subjMeta.courseMaterials || (fs.existsSync(courseMatFile) ? fs.readFileSync(courseMatFile, 'utf8') : ''),
-      previousPapers: subjMeta.previousPapers || (fs.existsSync(prevPapersFile) ? fs.readFileSync(prevPapersFile, 'utf8') : ''),
-      marksPattern: subjMeta.marksPattern || (fs.existsSync(marksPatternFile) ? fs.readFileSync(marksPatternFile, 'utf8') : ''),
-      answerStyle: subjMeta.answerStyle || (fs.existsSync(answerStyleFile) ? fs.readFileSync(answerStyleFile, 'utf8') : ''),
-      questionBank: subjMeta.questionBank || (fs.existsSync(qbFile) ? JSON.parse(fs.readFileSync(qbFile, 'utf8')) : [])
+      ...subject,
+      courseMaterials: typeof subject.courseMaterials === 'string' ? subject.courseMaterials : '',
+      previousPapers: typeof subject.previousPapers === 'string' ? subject.previousPapers : '',
+      marksPattern: typeof subject.marksPattern === 'string' ? subject.marksPattern : '',
+      answerStyle: typeof subject.answerStyle === 'string' ? subject.answerStyle : '',
+      questionBank: Array.isArray(subject.questionBank) ? subject.questionBank : [],
+      resources: Array.isArray(subject.resources) ? subject.resources : []
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
 
-// API: Generate KL Exam Notes with resource citations
+// API: Generate KL Exam Notes with administrator-managed subject grounding.
+
 app.post('/api/generate', requireAuth, rateLimit(60 * 1000, 10), async (req, res) => {
   try {
     const { department, subject, topic } = req.body || {};
