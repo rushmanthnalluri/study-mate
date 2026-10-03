@@ -76,7 +76,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       </div>
 
       {/* Hero Readiness Score Card */}
-      <div className="bg-gradient-to-br from-[#2563eb] to-[#4a3326] text-white rounded-2xl p-5 shadow-elevated relative overflow-hidden">
+      <div className="bg-gradient-to-br from-[#2563eb] to-[#60a5fa] text-white rounded-2xl p-5 shadow-elevated relative overflow-hidden">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#f2d0a5] flex items-center space-x-1.5">
