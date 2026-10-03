@@ -48,34 +48,34 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
           type="button"
           aria-label="Back to home"
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#fffaf4] text-[#806f61] hover:text-[#3b2b23] transition-colors"
+          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#64748b] hover:text-[#172554] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
         <div>
-          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#7c4f2c]">
+          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
             Step 05 of 06
           </span>
-          <h1 className="text-xl font-sans font-bold text-[#3b2b23] leading-tight">
+          <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
             Revision Library
           </h1>
         </div>
       </div>
 
-      <p className="text-xs text-[#806f61]">
+      <p className="text-xs text-[#64748b]">
         Notes stay saved on your device for fast offline revision before exams.
       </p>
 
       {/* Search & Filter Bar */}
       <div className="space-y-2">
         <div className="relative">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#806f61]" />
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748b]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search saved revision notes..."
-            className="w-full bg-[#fffaf4] border border-[#e3d6cb] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[#3b2b23] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm"
+            className="w-full bg-[#ffffff] border border-[#e3d6cb] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[#172554] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm"
           />
         </div>
 
@@ -86,8 +86,8 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
               onClick={() => setSelectedDeptFilter(dept as Department)}
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                 selectedDeptFilter === dept
-                  ? 'bg-[#7c4f2c] text-white'
-                  : 'bg-[#fffaf4] text-[#3b2b23] border border-[#e3d6cb]'
+                  ? 'bg-[#2563eb] text-white'
+                  : 'bg-[#ffffff] text-[#172554] border border-[#e3d6cb]'
               }`}
             >
               {dept}
@@ -99,15 +99,15 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
       {/* Notes List */}
       <div className="space-y-2.5 pt-1">
         {filteredNotes.length === 0 ? (
-          <div className="text-center py-14 bg-[#fffaf4] border border-dashed border-[#e3d6cb] rounded-xl p-6 space-y-3">
-            <Bookmark size={36} className="mx-auto text-[#806f61] opacity-40" />
-            <h3 className="text-sm font-semibold text-[#3b2b23]">No revision notes saved yet</h3>
-            <p className="text-xs text-[#806f61] max-w-xs mx-auto">
+          <div className="text-center py-14 bg-[#ffffff] border border-dashed border-[#e3d6cb] rounded-xl p-6 space-y-3">
+            <Bookmark size={36} className="mx-auto text-[#64748b] opacity-40" />
+            <h3 className="text-sm font-semibold text-[#172554]">No revision notes saved yet</h3>
+            <p className="text-xs text-[#64748b] max-w-xs mx-auto">
               Generate answers for any topic and click &quot;Save&quot; to keep them ready for quick pre-exam review.
             </p>
             <button
               onClick={() => onNavigate('select-subject')}
-              className="bg-[#7c4f2c] text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-sm hover:bg-[#7c4f2c] transition-colors"
+              className="bg-[#2563eb] text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-sm hover:bg-[#2563eb] transition-colors"
             >
               Start Generating
             </button>
@@ -116,24 +116,24 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
           filteredNotes.map((note) => (
             <div
               key={note.id || note.topic}
-              className="bg-[#fffaf4] border border-[#e3d6cb] rounded-xl p-3.5 shadow-sm hover:border-brand-300 transition-all flex flex-col justify-between space-y-2"
+              className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3.5 shadow-sm hover:border-brand-300 transition-all flex flex-col justify-between space-y-2"
             >
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface-subtle text-[#806f61]">
+                    <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface-subtle text-[#64748b]">
                       {note.code}
                     </span>
-                    <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#7c4f2c]">
+                    <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#2563eb]">
                       {note.department}
                     </span>
-                    <span className="text-[10px] text-[#806f61] truncate max-w-[120px]">
+                    <span className="text-[10px] text-[#64748b] truncate max-w-[120px]">
                       {note.subject}
                     </span>
                   </div>
                   <h3
                     onClick={() => onOpenNote(note)}
-                    className="text-xs sm:text-sm font-bold text-[#3b2b23] hover:text-[#7c4f2c] cursor-pointer line-clamp-2"
+                    className="text-xs sm:text-sm font-bold text-[#172554] hover:text-[#2563eb] cursor-pointer line-clamp-2"
                   >
                     {note.topic}
                   </h3>
@@ -146,7 +146,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
                     className={`p-1.5 rounded-lg border text-xs transition-colors ${
                       note.isReviewed
                         ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                        : 'bg-[#fffaf4] text-[#806f61] border-[#e3d6cb] hover:bg-surface-subtle'
+                        : 'bg-[#ffffff] text-[#64748b] border-[#e3d6cb] hover:bg-surface-subtle'
                     }`}
                   >
                     <CheckCircle size={15} />
@@ -154,7 +154,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
                   <button
                     onClick={() => note.id && onDeleteNote(note.id)}
                     title="Delete Note"
-                    className="p-1.5 rounded-lg text-[#806f61] hover:text-red-600 hover:bg-red-50 transition-colors"
+                    className="p-1.5 rounded-lg text-[#64748b] hover:text-red-600 hover:bg-red-50 transition-colors"
                   >
                     <Trash2 size={15} />
                   </button>
@@ -166,26 +166,26 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
                 {note.keywords.slice(0, 3).map((kw, i) => (
                   <span
                     key={i}
-                    className="text-[9px] bg-surface-subtle px-1.5 py-0.5 rounded text-[#806f61] font-medium"
+                    className="text-[9px] bg-surface-subtle px-1.5 py-0.5 rounded text-[#64748b] font-medium"
                   >
                     #{kw}
                   </span>
                 ))}
                 {note.keywords.length > 3 && (
-                  <span className="text-[9px] text-[#806f61]">
+                  <span className="text-[9px] text-[#64748b]">
                     +{note.keywords.length - 3} more
                   </span>
                 )}
               </div>
 
               <div className="pt-2 border-t border-[#e3d6cb]/50 flex items-center justify-between">
-                <span className="text-[10px] text-[#806f61] flex items-center space-x-1">
+                <span className="text-[10px] text-[#64748b] flex items-center space-x-1">
                   <Clock size={11} />
                   <span>{note.savedAt ? new Date(note.savedAt).toLocaleDateString() : 'Ready'}</span>
                 </span>
                 <button
                   onClick={() => onOpenNote(note)}
-                  className="text-xs font-semibold text-[#7c4f2c] hover:underline flex items-center space-x-1"
+                  className="text-xs font-semibold text-[#2563eb] hover:underline flex items-center space-x-1"
                 >
                   <span>Revise Now</span>
                   <ArrowRight size={13} />
