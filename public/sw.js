@@ -1,4 +1,4 @@
-const CACHE_NAME = 'studymate-kl-v1';
+const CACHE_NAME = 'studymate-kl-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
