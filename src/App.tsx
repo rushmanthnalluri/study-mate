@@ -36,7 +36,7 @@ import { SettingsModal } from './components/SettingsModal';
 
 export const App: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<ScreenId>('home');
-  const [selectedDepartment, setSelectedDepartment] = useState<Department>('Food Technology');
+  const [selectedDepartment, setSelectedDepartment] = useState<Department>('All');
   const [subjects, setSubjects] = useState<Subject[]>([]);
   
   // User Authentication & KL LMS State
@@ -134,12 +134,11 @@ export const App: React.FC = () => {
       const res = await fetch('/api/subjects');
       if (!res.ok) throw new Error('API offline');
       const data: Subject[] = await res.json();
-      if (data && data.length > 0) {
-        setSubjects(data);
-        const ftSubj = data.find((s) => s.department === 'Food Technology');
-        if (ftSubj && (!currentSubject || currentSubject.department !== 'Food Technology')) {
-          setCurrentSubject(ftSubj);
-        }
+      setSubjects(Array.isArray(data) ? data : []);
+      if (Array.isArray(data) && data.length > 0 && !currentSubject) {
+        setCurrentSubject(data[0]);
+      } else if (!Array.isArray(data) || data.length === 0) {
+        setCurrentSubject(null);
       }
     } catch {
       setSubjects([]);
@@ -348,7 +347,7 @@ export const App: React.FC = () => {
         selectedDepartment={selectedDepartment}
         onSelectDepartment={setSelectedDepartment}
         onNavigate={setCurrentScreen}
-        departments={['All', 'CSE', 'AIDS', 'ECE', 'EEE', 'Food Technology']}
+        departments={['All', ...Array.from(new Set(subjects.map((subject) => subject.department))).filter(Boolean)] as Department[]}
         isNightMode={isNightMode}
         onToggleNightMode={toggleNightMode}
         currentUser={currentUser}
