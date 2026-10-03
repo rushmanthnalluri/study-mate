@@ -9,7 +9,6 @@ import {
   FeedbackSource,
   UserProfile
 } from './types';
-import { fallbackSubjects, fallbackGoldAnswers } from './data/mockData';
 import { Header } from './components/Header';
 import { AppErrorBoundary } from './components/AppErrorBoundary';
 import { BottomNav } from './components/BottomNav';
@@ -38,7 +37,7 @@ import { SettingsModal } from './components/SettingsModal';
 export const App: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<ScreenId>('home');
   const [selectedDepartment, setSelectedDepartment] = useState<Department>('Food Technology');
-  const [subjects, setSubjects] = useState<Subject[]>(fallbackSubjects);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   
   // User Authentication & KL LMS State
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
@@ -53,8 +52,7 @@ export const App: React.FC = () => {
   const [isAuthValidated, setIsAuthValidated] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState<boolean>(false);
   
-  const defaultFoodTechSubj = fallbackSubjects[0];
-  const [currentSubject, setCurrentSubject] = useState<Subject | null>(defaultFoodTechSubj);
+  const [currentSubject, setCurrentSubject] = useState<Subject | null>(null);
   const [currentNote, setCurrentNote] = useState<ExamNote | null>(null);
   const [savedNotes, setSavedNotes] = useState<ExamNote[]>([]);
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
@@ -144,7 +142,8 @@ export const App: React.FC = () => {
         }
       }
     } catch {
-      setSubjects(fallbackSubjects);
+      setSubjects([]);
+      setCurrentSubject(null);
     }
   };
 
