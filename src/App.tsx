@@ -602,13 +602,12 @@ export const App: React.FC = () => {
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
         currentUser={currentUser}
-        departments={['All', ...Array.from(new Set(subjects.map((subject) => subject.department))).filter(Boolean)] as Department[]}
         onSaveProfile={async (updated) => {
           try {
             const res = await fetch('/api/auth/profile', {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json', ...authHeaders() },
-              body: JSON.stringify({ name: updated.name, klId: updated.klId, department: updated.department })
+              body: JSON.stringify({ name: updated.name, klId: updated.klId })
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Profile update failed');
