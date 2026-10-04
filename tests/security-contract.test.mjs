@@ -385,3 +385,20 @@ test('profile update is department-independent', () => {
   const settings = fs.readFileSync(path.join(root, 'src', 'components', 'SettingsModal.tsx'), 'utf8');
   assert.doesNotMatch(settings, /setDepartment|departments\.filter/);
 });
+
+test('private glossary catalog requests carry authenticated session credentials', () => {
+  const glossary = fs.readFileSync(path.join(root, 'src', 'screens', 'GlossaryScreen.tsx'), 'utf8');
+  assert.match(glossary, /localStorage\.getItem\('studymate_token'\)/);
+  assert.match(glossary, /fetch\('\/api\/subjects', \{\s*headers: \{ Authorization: 'Bearer ' \+ token \}/);
+});
+
+test('mock exam never fabricates institutional paper metadata or questions', () => {
+  const mockExam = fs.readFileSync(path.join(root, 'src', 'screens', 'MockExamScreen.tsx'), 'utf8');
+  assert.match(mockExam, /activeSubject\?\.questionBank/);
+  assert.match(mockExam, /StudyMate no longer fabricates exam questions/);
+  assert.doesNotMatch(mockExam, /Regulation: 2021-2026/);
+  assert.doesNotMatch(mockExam, /Max Marks: 75/);
+  assert.doesNotMatch(mockExam, /KONERU LAKSHMAIAH EDUCATION FOUNDATION/);
+  assert.doesNotMatch(mockExam, /BTL 1 \(Remember\)/);
+  assert.doesNotMatch(mockExam, /CO1/);
+});
