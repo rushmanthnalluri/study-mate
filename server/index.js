@@ -327,7 +327,7 @@ app.post('/api/chat', requireAuth, rateLimit(60 * 1000, 20), async (req, res) =>
 
     // Persist user prompt
     await saveChatMessage({
-      id: `chat-${Date.now()}-user`,
+      id: `chat-${crypto.randomUUID()}-user`,
       userId: req.user.id,
       role: 'user',
       content: cleanMessage,
@@ -346,7 +346,7 @@ app.post('/api/chat', requireAuth, rateLimit(60 * 1000, 20), async (req, res) =>
 
     // Persist bot reply
     await saveChatMessage({
-      id: `chat-${Date.now()}-bot`,
+      id: `chat-${crypto.randomUUID()}-bot`,
       userId: req.user.id,
       role: 'assistant',
       content: reply.content,
