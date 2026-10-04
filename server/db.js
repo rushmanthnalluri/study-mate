@@ -221,7 +221,7 @@ export async function saveKnowledgeBaseOverride({ subjectId, department, payload
         payload,
         updatedAt: new Date().toISOString()
       },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
     ).lean();
   }
   return { subjectId, department, deleted, payload };
@@ -274,7 +274,7 @@ export async function saveUser(user) {
     return UserModel.findOneAndUpdate(
       { id: user.id },
       user,
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
     ).lean();
   }
   const users = await getAllUsers();
@@ -311,7 +311,7 @@ export async function addSavedNote(note) {
     return SavedNoteModel.findOneAndUpdate(
       { userId: note.userId, topic: note.topic, subject: note.subject },
       note,
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
     ).lean();
   }
   // File fallback must preserve every user's records. Never replace the
@@ -463,7 +463,7 @@ export async function saveFlashcardProgress(progress) {
       return await FlashcardProgressModel.findOneAndUpdate(
         { userId, flashcardId },
         payload,
-        { upsert: true, new: true, setDefaultsOnInsert: true }
+        { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
       ).lean();
     } catch (e) {
       throw new Error('Database unavailable.');
