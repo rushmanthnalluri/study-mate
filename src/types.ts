@@ -133,7 +133,7 @@ export interface UserProfile {
   klId: string;
   email: string;
   department: Department;
-  role: 'student' | 'faculty' | 'admin';
+  role: 'student' | 'admin';
 }
 
 export type ScreenId =
