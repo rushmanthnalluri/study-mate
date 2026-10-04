@@ -98,7 +98,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
           type="button"
           aria-label="Back to home"
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] dark:bg-[var(--foreground)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+          className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
@@ -106,7 +106,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
           <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[var(--accent)] ">
             Document & Exam Parser
           </span>
-          <h1 className="text-xl font-sans font-bold text-[var(--foreground)] dark:text-white leading-tight">
+          <h1 className="text-xl font-sans font-bold text-[var(--foreground)] leading-tight">
             Lecture & Paper Analyzer
           </h1>
         </div>
@@ -116,16 +116,16 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
         Paste text from professor slides, notes, or question papers to extract key definitions and 2M/5M/10M exam-question candidates. Real PDF files should be uploaded through Study Studio.
       </p>
 
-      <div className="bg-[var(--surface)]/60 dark:bg-[var(--foreground)]/60 border border-[var(--border)] dark:border-[var(--border)] rounded-2xl p-3.5">
+      <div className="bg-[var(--surface)]/60 border border-[var(--border)] rounded-2xl p-3.5">
         <p className="text-[11px] leading-5 text-[var(--foreground)] ">
           Need to analyze a real PDF? Open <button type="button" onClick={() => onNavigate('studio')} className="font-extrabold underline underline-offset-2">Study Studio</button> and upload it to your private source library. This analyzer intentionally uses real pasted text rather than fabricated sample documents.
         </p>
       </div>
 
       {/* Upload or Paste Box */}
-      <div className="bg-[#ffffff] dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] rounded-2xl p-4 shadow-sm space-y-3">
+      <div className="bg-[#ffffff] border border-[var(--border)] rounded-2xl p-4 shadow-sm space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-[var(--foreground)] dark:text-white flex items-center space-x-1.5">
+          <span className="text-xs font-bold text-[var(--foreground)] flex items-center space-x-1.5">
             <UploadCloud size={16} className="text-[var(--accent)] " />
             <span>Document / Slide Text</span>
           </span>
@@ -140,7 +140,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
             value={customText}
             onChange={(e) => setCustomText(e.target.value)}
             placeholder="Paste text from lecture slides, syllabus notes, or question papers..."
-            className="w-full bg-surface-subtle dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] dark:text-white placeholder-surface-muted focus:outline-none focus:ring-1 focus:ring-brand-800 leading-relaxed"
+            className="w-full bg-surface-subtle border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted focus:outline-none focus:ring-1 focus:ring-brand-800 leading-relaxed"
           />
           <button
             type="submit"
@@ -154,28 +154,28 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
 
         {/* Analysis Results Display */}
         {analysisResult && (
-          <div className="pt-3 border-t border-surface-subtle dark:border-[var(--border)] space-y-3 animate-fade-in">
+          <div className="pt-3 border-t border-surface-subtle space-y-3 animate-fade-in">
             {/* Executive Summary */}
-            <div className="bg-[var(--muted)]/60 dark:bg-[var(--foreground)]/80 p-3 rounded-xl border border-[var(--border)]/60 dark:border-[var(--border)] space-y-1">
+            <div className="bg-[var(--muted)]/60 p-3 rounded-xl border border-[var(--border)]/60 space-y-1">
               <span className="text-[11px] font-bold text-[var(--accent)]  flex items-center space-x-1">
                 <FileCheck size={14} />
                 <span>Executive Academic Summary:</span>
               </span>
-              <p className="text-xs text-[var(--foreground)] dark:text-[var(--card)] leading-relaxed font-sans">
+              <p className="text-xs text-[var(--foreground)] leading-relaxed font-sans">
                 {analysisResult.summary}
               </p>
             </div>
 
             {/* Key Definitions */}
             <div className="space-y-1.5">
-              <span className="text-[11px] font-bold text-[var(--foreground)] dark:text-white">
+              <span className="text-[11px] font-bold text-[var(--foreground)]">
                 Key Exam Definitions Identified:
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {analysisResult.keyDefinitions.map((kd, idx) => (
                   <div
                     key={idx}
-                    className="p-2.5 rounded-xl border border-[var(--border)] dark:border-[var(--border)] bg-surface-subtle dark:bg-[var(--foreground)]/60 text-xs"
+                    className="p-2.5 rounded-xl border border-[var(--border)] bg-surface-subtle text-xs"
                   >
                     <span className="font-bold block text-[var(--accent)]  mb-0.5">
                       {kd.term}
@@ -191,7 +191,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
             {/* Extracted Exam Questions */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-400 flex items-center space-x-1">
+                <span className="text-[11px] font-bold text-emerald-800 flex items-center space-x-1">
                   <CheckCircle2 size={13} />
                   <span>Potential Exam Questions ({analysisResult.questions.length}):</span>
                 </span>
@@ -210,13 +210,13 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
                   <div
                     key={idx}
                     onClick={() => onGenerateQuestion(q.text, targetSubject, selectedDept === 'All' ? (subjects.find(s => s.name === targetSubject)?.department || '') : selectedDept)}
-                    className="bg-surface-subtle dark:bg-[var(--foreground)]/80 border border-[var(--border)] dark:border-[var(--border)] p-2.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-brand-400 group"
+                    className="bg-surface-subtle border border-[var(--border)] p-2.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-brand-400 group"
                   >
                     <div className="space-y-0.5">
                       <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#f0e0cf] text-[var(--accent)] font-mono">
                         {q.marks} Marks
                       </span>
-                      <p className="text-xs text-[var(--foreground)] dark:text-[var(--card)] group-hover:text-[var(--accent)] transition-colors">
+                      <p className="text-xs text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
                         {q.text}
                       </p>
                     </div>
@@ -232,7 +232,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
       {/* KL Previous Exam Question Bank Explorer */}
       <div className="space-y-3 pt-1">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-sans font-bold text-[var(--foreground)] dark:text-white flex items-center space-x-1.5">
+          <h3 className="text-xs font-sans font-bold text-[var(--foreground)] flex items-center space-x-1.5">
             <BookOpen size={16} className="text-[var(--accent)] " />
             <span>Official KL Previous Papers Archive</span>
           </h3>
@@ -250,7 +250,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                 selectedDept === dept
                   ? 'bg-[var(--accent)] text-white shadow-sm'
-                  : 'bg-[#ffffff] dark:bg-[var(--foreground)] text-[var(--foreground)] dark:text-[var(--card)] border border-[var(--border)] dark:border-[var(--border)]'
+                  : 'bg-[#ffffff] text-[var(--foreground)] border border-[var(--border)]'
               }`}
             >
               {dept}
@@ -264,7 +264,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
             <div
               key={idx}
               onClick={() => onGenerateQuestion(q.text, q.subject, q.dept)}
-              className="bg-[#ffffff] dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] rounded-xl p-3 shadow-sm hover:border-brand-400 cursor-pointer group transition-all"
+              className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm hover:border-brand-400 cursor-pointer group transition-all"
             >
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center space-x-1.5">
@@ -279,10 +279,10 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
                   Unit {q.unit}
                 </span>
               </div>
-              <p className="text-xs font-semibold text-[var(--foreground)] dark:text-[var(--card)] group-hover:text-[var(--accent)] transition-colors leading-relaxed">
+              <p className="text-xs font-semibold text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors leading-relaxed">
                 {q.text}
               </p>
-              <div className="mt-2 pt-1.5 border-t border-surface-subtle dark:border-[var(--border)] flex items-center justify-between text-[11px] text-[var(--accent)]  font-medium">
+              <div className="mt-2 pt-1.5 border-t border-surface-subtle flex items-center justify-between text-[11px] text-[var(--accent)]  font-medium">
                 <span>Generate Model Answer</span>
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
               </div>
