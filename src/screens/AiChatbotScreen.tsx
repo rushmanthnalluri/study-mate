@@ -51,16 +51,7 @@ export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
   onSelectSubjectAndTopic,
   selectedDepartment
 }) => {
-  const chatStorageKey = `studymate_chat_history_${currentUser?.id || 'anonymous'}`;
-
-  const [messages, setMessages] = useState<ChatMessage[]>(() => {
-    try {
-      const stored = currentUser?.id ? localStorage.getItem(`studymate_chat_history_${currentUser.id}`) : null;
-      return stored ? JSON.parse(stored) : [DEFAULT_WELCOME_MESSAGE];
-    } catch {
-      return [DEFAULT_WELCOME_MESSAGE];
-    }
-  });
+  const [messages, setMessages] = useState<ChatMessage[]>([DEFAULT_WELCOME_MESSAGE]);
 
   const [inputMessage, setInputMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -72,12 +63,38 @@ export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
   };
 
   useEffect(() => {
+    if (!currentUser?.id) {
+      setMessages([DEFAULT_WELCOME_MESSAGE]);
+      return;
+    }
+
+    const token = localStorage.getItem('studymate_token');
+    if (!token) {
+      setMessages([DEFAULT_WELCOME_MESSAGE]);
+      return;
+    }
+
+    let cancelled = false;
+    fetch('/api/chat/history?limit=100', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+      .then(async res => {
+        if (!res.ok) throw new Error('Unable to load chat history.');
+        const data = await res.json();
+        if (!cancelled) setMessages(Array.isArray(data) && data.length > 0 ? data : [DEFAULT_WELCOME_MESSAGE]);
+      })
+      .catch(() => {
+        if (!cancelled) setMessages([DEFAULT_WELCOME_MESSAGE]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentUser?.id]);
+
+  useEffect(() => {
     scrollToBottom();
-    if (!currentUser?.id) return;
-    try {
-      localStorage.setItem(chatStorageKey, JSON.stringify(messages));
-    } catch (e) {}
-  }, [messages, currentUser?.id, chatStorageKey]);
+  }, [messages]);
 
   const handleSendMessage = async (customText?: string) => {
     const textToSend = customText || inputMessage.trim();
@@ -126,19 +143,11 @@ export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
       setMessages(prev => [...prev, botMsg]);
     } catch (err: any) {
       const fallbackBotMsg: ChatMessage = {
-        id: `bot-${Date.now()}`,
+        id: 'bot-error-' + Date.now(),
         role: 'assistant',
-        content: `### 📚 StudyMate Academic Response for: ${textToSend}
-
-According to the KL University curriculum for **${selectedDepartment} (${selectedSubject})**:
-- **Standard Evaluation Tenet:** Always state the official definition, followed by governing parameters and boundary safety limits.
-- **Marks Recommendation:** For 2M, write 20-40 words with SI units; for 5M, include a comparative table; for 10M, draw a clearly labeled process flowchart with Critical Control Points (CCPs).
-
-*(Live connection response grounded in local academic syllabus).*`,
+        content: 'I could not get a response from the AI tutor right now. Please try again when the service is available.',
         timestamp: new Date().toISOString(),
-        suggestedActions: [
-          { label: `Generate notes for ${selectedSubject}`, actionType: 'notes', payload: selectedSubject }
-        ]
+        suggestedActions: []
       };
       setMessages(prev => [...prev, fallbackBotMsg]);
     } finally {
@@ -146,10 +155,20 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
     }
   };
 
-  const handleClearChat = () => {
-    if (window.confirm('Clear your conversation history?')) {
+  const handleClearChat = async () => {
+    if (!window.confirm('Clear your conversation history?')) return;
+    const token = localStorage.getItem('studymate_token');
+    if (!token) return;
+
+    try {
+      const res = await fetch('/api/chat/history', {
+        method: 'DELETE',
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      if (!res.ok) throw new Error('Unable to clear chat history.');
       setMessages([DEFAULT_WELCOME_MESSAGE]);
-      localStorage.removeItem(chatStorageKey);
+    } catch {
+      window.alert('Unable to clear your conversation history right now.');
     }
   };
 
