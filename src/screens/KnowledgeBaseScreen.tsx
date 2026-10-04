@@ -1,7 +1,16 @@
 import React, { useMemo, useState } from 'react';
-import { Department, ScreenId, Subject, SubjectResourceItem } from '../types';
+import { Department, ScreenId, Subject } from '../types';
 import { ArrowLeft, BookOpen, Copy, Download, Eye, FileText, X, Check, Database } from 'lucide-react';
 import { EmptyState, EditorialCard, PageHeader, SectionLabel } from '../components/Editorial';
+
+interface LibraryResource {
+  id: string;
+  title: string;
+  resourceType: string;
+  fileName: string;
+  description: string;
+  content: string;
+}
 
 interface KnowledgeBaseScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -16,7 +25,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
 }) => {
   const [deptFilter, setDeptFilter] = useState<Department>(selectedDepartment);
   const [selectedSubjectId, setSelectedSubjectId] = useState(subjects[0]?.id || '');
-  const [activeFile, setActiveFile] = useState<SubjectResourceItem | null>(null);
+  const [activeFile, setActiveFile] = useState<LibraryResource | null>(null);
   const [copied, setCopied] = useState(false);
 
   const filteredSubjects = useMemo(
@@ -30,7 +39,69 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
     filteredSubjects[0] ||
     subjects[0];
 
-  const resources = currentSubject?.resources || [];
+  const resources = useMemo<LibraryResource[]>(() => {
+    if (!currentSubject) return [];
+
+    const published: LibraryResource[] = [];
+    const addTextResource = (id: string, title: string, resourceType: string, fileName: string, value?: string) => {
+      if (value?.trim()) published.push({
+        id,
+        title,
+        resourceType,
+        fileName,
+        description: 'Administrator-published resource',
+        content: value
+      });
+    };
+
+    addTextResource('course-materials', 'Course materials', 'course-materials', 'course-materials.md', currentSubject.courseMaterials);
+    addTextResource('previous-papers', 'Previous papers', 'previous-papers', 'previous-papers.md', currentSubject.previousPapers);
+    addTextResource('marks-pattern', 'Marks pattern', 'marks-pattern', 'marks-pattern.md', currentSubject.marksPattern);
+    addTextResource('answer-style', 'Answer style', 'answer-style', 'answer-style.md', currentSubject.answerStyle);
+
+    if (currentSubject.questionBank?.length) {
+      published.push({
+        id: 'question-bank',
+        title: 'Question bank',
+        resourceType: 'question-bank',
+        fileName: 'question-bank.json',
+        description: currentSubject.questionCount + ' administrator-published questions',
+        content: JSON.stringify(currentSubject.questionBank, null, 2)
+      });
+    }
+
+    if (currentSubject.units.length || currentSubject.topics.length) {
+      published.push({
+        id: 'syllabus',
+        title: 'Syllabus & metadata',
+        resourceType: 'syllabus',
+        fileName: 'syllabus.json',
+        description: 'Published subject metadata',
+        content: JSON.stringify({
+          id: currentSubject.id,
+          name: currentSubject.name,
+          code: currentSubject.code,
+          department: currentSubject.department,
+          units: currentSubject.units,
+          topics: currentSubject.topics
+        }, null, 2)
+      });
+    }
+
+    for (const resource of currentSubject.resources || []) {
+      if (published.some((item) => item.id === resource.id)) continue;
+      published.push({
+        id: resource.id,
+        title: resource.title,
+        resourceType: resource.resourceType || 'resource',
+        fileName: resource.fileName || 'managed-resource.txt',
+        description: resource.description || 'Administrator-published resource',
+        content: resource.description || ''
+      });
+    }
+
+    return published;
+  }, [currentSubject]);
 
   const handleCopy = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -40,7 +111,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
 
   const handleDownload = (resource: SubjectResourceItem) => {
     if (!resource.description) return;
-    const blob = new Blob([resource.description], { type: 'text/plain;charset=utf-8' });
+    const blob = new Blob([resource.content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -130,7 +201,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
                         <span className="small-caps text-[var(--muted-foreground)]">{resource.resourceType || 'Resource'}</span>
                       </div>
                       <h3 className="mt-5 font-serif text-xl leading-tight text-[var(--foreground)]">{resource.title}</h3>
-                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--muted-foreground)]">{resource.description || 'Administrator-published resource.'}</p>
+                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--muted-foreground)]">{resource.description}</p>
                       <div className="mt-auto flex items-center justify-between gap-3 pt-5">
                         <span className="truncate font-mono text-[10px] text-[var(--muted-foreground)]">{resource.fileName}</span>
                         <button
@@ -168,11 +239,11 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
             </div>
 
             <div className="min-h-0 flex-1 overflow-y-auto bg-[var(--surface)] p-4 text-sm leading-7 text-[var(--foreground)]">
-              {activeFile.description || 'No description was supplied for this resource.'}
+              {activeFile.content || 'No content was supplied for this resource.'}
             </div>
 
             <div className="flex flex-wrap justify-end gap-2 border-t border-[var(--border)] pt-4">
-              <button type="button" onClick={() => handleCopy(activeFile.description || '')} className="editorial-secondary inline-flex items-center gap-2 px-4 py-2.5 text-xs">
+              <button type="button" onClick={() => handleCopy(activeFile.content || '')} className="editorial-secondary inline-flex items-center gap-2 px-4 py-2.5 text-xs">
                 {copied ? <Check size={14} /> : <Copy size={14} />}
                 {copied ? 'Copied' : 'Copy'}
               </button>
