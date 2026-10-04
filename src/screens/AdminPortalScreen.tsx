@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Department, ScreenId, Subject } from '../types';
-import { EditorialCard, EditorialButton, PageHeader, SectionLabel, StatCard } from '../components/Editorial';
+import { EditorialButton, PageHeader, StatCard } from '../components/Editorial';
 import {
   ShieldCheck,
   PlusCircle,
