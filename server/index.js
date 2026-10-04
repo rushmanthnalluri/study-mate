@@ -11,6 +11,7 @@ import {
   getSavedNotes,
   addSavedNote,
   deleteSavedNote,
+  updateSavedNoteReview,
   getFeedbacks,
   addFeedback,
   getChatMessages,
@@ -244,6 +245,19 @@ app.delete('/api/saved-notes/:id', requireAuth, async (req, res) => {
     await deleteSavedNote(id, req.user.id);
     res.json({ success: true, id });
   } catch (err) {
+    res.status(500).json({ error: 'Request could not be completed.' });
+  }
+});
+
+app.put('/api/saved-notes/:id/reviewed', requireAuth, rateLimit(60 * 1000, 60), async (req, res) => {
+  try {
+    if (typeof req.body?.isReviewed !== 'boolean') {
+      return res.status(400).json({ error: 'isReviewed must be a boolean.' });
+    }
+    const updated = await updateSavedNoteReview(req.params.id, req.user.id, req.body.isReviewed);
+    if (!updated) return res.status(404).json({ error: 'Saved note not found.' });
+    res.json(updated);
+  } catch {
     res.status(500).json({ error: 'Request could not be completed.' });
   }
 });
