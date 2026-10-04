@@ -54,6 +54,12 @@ function rateLimit(windowMs, maxRequests) {
         if (now - bucket.startedAt >= windowMs) rateLimitBuckets.delete(bucketKey);
         if (rateLimitBuckets.size <= MAX_RATE_LIMIT_BUCKETS) break;
       }
+      // Keep the bound strict even when every bucket is still active.
+      while (rateLimitBuckets.size > MAX_RATE_LIMIT_BUCKETS) {
+        const oldestKey = rateLimitBuckets.keys().next().value;
+        if (oldestKey === undefined) break;
+        rateLimitBuckets.delete(oldestKey);
+      }
     }
 
     const current = rateLimitBuckets.get(key);
@@ -224,12 +230,27 @@ app.get('/api/saved-notes', requireAuth, async (req, res) => {
 
 app.post('/api/saved-notes', requireAuth, rateLimit(60 * 1000, 30), async (req, res) => {
   try {
+    const body = req.body && typeof req.body === 'object' && !Array.isArray(req.body) ? req.body : {};
     const newNote = {
-      ...req.body,
+      topic: String(body.topic || '').trim(),
+      subject: String(body.subject || '').trim(),
+      department: String(body.department || '').trim(),
+      code: String(body.code || '').trim(),
+      unit: String(body.unit || '').trim(),
+      keywords: Array.isArray(body.keywords) ? body.keywords.map(String).slice(0, 100) : [],
+      twoMarks: body.twoMarks,
+      fiveMarks: body.fiveMarks,
+      tenMarks: body.tenMarks,
+      diagram: body.diagram,
+      resourcesUsed: Array.isArray(body.resourcesUsed) ? body.resourcesUsed.slice(0, 50) : [],
       userId: req.user.id,
-      id: req.body.id || `note-${Date.now()}`,
-      savedAt: req.body.savedAt || new Date().toISOString()
+      id: crypto.randomUUID(),
+      savedAt: new Date().toISOString(),
+      isReviewed: false
     };
+    if (!newNote.topic || !newNote.subject) {
+      return res.status(400).json({ error: 'Topic and subject are required.' });
+    }
     const saved = await addSavedNote(newNote);
     res.json(saved);
   } catch (err) {
