@@ -174,12 +174,12 @@ test('Mermaid output is rendered as an isolated image resource, not injected HTM
 });
 
 
-test('admin knowledge-base filesystem writes are path-confined and resource types are allowlisted', () => {
-  assert.match(server, /const resolveKnowledgeBasePath = \(\.\.\.segments\)/);
-  assert.match(server, /path\.relative\(kbRoot, candidate\)/);
-  assert.match(server, /if \(!targetFile\) return res\.status\(400\)/);
-  assert.match(server, /path\.dirname\(filePath\) !== subjDir/);
-  assert.match(server, /resolveKnowledgeBasePath\(String\(department\)\.trim\(\), String\(name\)\.trim\(\)\)/);
+test('admin knowledge-base writes are MongoDB-only and resource types are allowlisted', () => {
+  assert.match(server, /app\.post\('\/api\/admin\/subjects', requireAdmin/);
+  assert.match(server, /app\.post\('\/api\/admin\/resources', requireAdmin/);
+  assert.match(server, /const allowedTypes = \{/);
+  assert.match(server, /await saveKnowledgeBaseOverride\(/);
+  assert.doesNotMatch(server, /fs\.writeFileSync\([^\n]*knowledge-base/);
 });
 
 
@@ -207,7 +207,8 @@ test('admin knowledge-base mutations persist through MongoDB overrides', () => {
   assert.match(db, /saveKnowledgeBaseOverride/);
   assert.match(server, /getKnowledgeBaseOverrides/);
   assert.match(server, /await saveKnowledgeBaseOverride\(/);
-  assert.match(server, /const persistedSubject =/);
+  assert.match(server, /contentSource: 'administrator-created'/);
+  assert.match(server, /contentSource: existingSubject\.contentSource/);
 });
 
 
@@ -247,7 +248,9 @@ test('legacy fabricated Food Technology content is absent from active product da
 
 test('note generation fails closed without administrator-configured AI', () => {
   const generator = fs.readFileSync(path.join(root, 'server', 'generator.js'), 'utf8');
+  const chatbot = fs.readFileSync(path.join(root, 'server', 'chatbot.js'), 'utf8');
   assert.match(generator, /administrator-published subject context/);
-  assert.match(generator, /No administrator-configured AI provider/);
+  assert.match(generator, /generateConfiguredCompletion/);
+  assert.match(chatbot, /No administrator-configured AI provider/);
   assert.doesNotMatch(generator, /goldStandardAnswers|Food Technology|fallback/);
 });
