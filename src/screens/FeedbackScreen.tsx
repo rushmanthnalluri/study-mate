@@ -234,7 +234,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                     ? 'e.g. Ensure the D121 and z-value units are explicitly defined...'
                     : 'Tell us how this helped or what was missing...'
                 }
-                className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm"
+                className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm"
               />
             </div>
 
