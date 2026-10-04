@@ -4,7 +4,6 @@ import { EditorialCard, EmptyState, PageHeader, SectionLabel } from '../componen
 import {
   ArrowRight,
   BookOpen,
-  Clock3,
   Award,
   ChevronRight,
   Sparkles,
@@ -159,7 +158,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     {subject.units?.length || 0} units · {subject.questionCount || 0} questions
                   </span>
                   <ArrowRight size={15} className="text-[var(--accent)] transition-transform duration-200 group-hover:translate-x-1" />
-                </EditorialCard>
+                </div>
               </button>
             ))}
           </div>
@@ -169,7 +168,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {recentNotes.length > 0 && (
         <section>
           <div className="editorial-section-label"><span>Recent revision</span></div>
-          <EditorialCard className="divide-y divide-[var(--border)] overflow-hidden">
+          <divlCard className="divide-y divide-[var(--border)] overflow-hidden">
             {recentNotes.slice(0, 3).map((note, index) => (
               <button
                 key={note.id || index}
