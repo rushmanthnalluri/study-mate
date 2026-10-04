@@ -18,7 +18,7 @@ export const FloatingChatbot: React.FC<FloatingChatbotProps> = ({
     <div className="fixed bottom-20 right-4 z-40 print:hidden animate-fade-in">
       <button
         onClick={() => onNavigate('chatbot')}
-        className="group relative flex items-center space-x-2 bg-gradient-to-r from-brand-900 to-amber-700 hover:from-brand-800 hover:to-amber-600 text-white pl-3.5 pr-4 py-2.5 rounded-full shadow-elevated border border-amber-400/40 transition-all duration-300 hover:scale-105 active:scale-95"
+        className="group relative flex items-center space-x-2 bg-gradient-to-r from-[var(--accent-900)] to-amber-700 hover:from-[var(--accent-800)] hover:to-amber-600 text-white pl-3.5 pr-4 py-2.5 rounded-full shadow-[var(--shadow-lg)] border border-amber-400/40 transition-all duration-300 hover:scale-105 active:scale-95"
         title="Open StudyMate AI Tutor"
       >
         <span className="relative flex h-3 w-3">
