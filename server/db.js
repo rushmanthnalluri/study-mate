@@ -36,6 +36,7 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true });
 UserSchema.index({ email: 1 }, { unique: true, collation: { locale: 'en', strength: 2 }, name: 'users_email_unique_ci' });
 UserSchema.index({ klId: 1 }, { unique: true, collation: { locale: 'en', strength: 2 }, name: 'users_klid_unique_ci' });
+UserSchema.index({ authTokenHash: 1 }, { sparse: true, name: 'users_auth_token_hash' });
 
 const SavedNoteSchema = new mongoose.Schema({
   userId: { type: String, required: true, index: true },
@@ -265,6 +266,26 @@ export async function getAllUsers() {
     return JSON.parse(fs.readFileSync(usersFile, 'utf8'));
   } catch (e) {
     return [];
+  }
+}
+
+export async function getUserByAuthTokenHash(authTokenHash) {
+  assertStorageReady();
+  const hash = String(authTokenHash || '').trim();
+  if (!hash) return null;
+  if (isMongoConnected && UserModel) {
+    try {
+      return await UserModel.findOne({ authTokenHash: hash }).lean();
+    } catch (e) {
+      throw new Error('Database unavailable.');
+    }
+  }
+  if (!fs.existsSync(usersFile)) return null;
+  try {
+    const users = JSON.parse(fs.readFileSync(usersFile, 'utf8'));
+    return users.find(user => user.authTokenHash === hash) || null;
+  } catch (e) {
+    return null;
   }
 }
 
