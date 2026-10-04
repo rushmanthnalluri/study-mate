@@ -110,7 +110,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
               role="tab"
               aria-selected={mode === tab}
               onClick={() => { setMode(tab); resetMessage(); }}
-              className={`py-3.5 text-sm font-bold transition-colors ${mode === tab ? 'bg-[#ffffff] text-[#2563eb] border-b-2 border-[#3b82f6]' : 'text-[#64748b] hover:text-[#334155]'}`}
+              className={`py-3.5 text-sm font-bold transition-colors ${mode === tab ? 'bg-[#ffffff] text-[var(--accent)] border-b-2 border-[#3b82f6]' : 'text-[var(--muted-foreground)] hover:text-[#334155]'}`}
             >
               {tab === 'login' ? 'Sign in' : 'Create account'}
             </button>
@@ -134,13 +134,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 <div className="relative">
                   <LockKeyhole className="absolute left-3.5 top-3.5 text-[#94a3b8]" size={16} />
                   <input type={showPassword ? 'text' : 'password'} value={loginPassword} onChange={e => setLoginPassword(e.target.value)} required autoComplete="current-password" placeholder="Your password" className="auth-input pl-10 pr-10" />
-                  <button type="button" onClick={() => setShowPassword(v => !v)} aria-label={showPassword ? 'Hide password' : 'Show password'} className="absolute right-2.5 top-2.5 rounded-lg p-1.5 text-[#64748b] hover:bg-[#e2e8f0]">{showPassword ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                  <button type="button" onClick={() => setShowPassword(v => !v)} aria-label={showPassword ? 'Hide password' : 'Show password'} className="absolute right-2.5 top-2.5 rounded-lg p-1.5 text-[var(--muted-foreground)] hover:bg-[#e2e8f0]">{showPassword ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                 </div>
               </div>
               <button disabled={busy} className="auth-primary" type="submit">
                 {busy ? 'Signing in…' : <>Sign in to StudyMate <ArrowRight size={16} /></>}
               </button>
-              <p className="text-center text-[11px] text-[#64748b]">Use your university account to access your private workspace.</p>
+              <p className="text-center text-[11px] text-[var(--muted-foreground)]">Use your university account to access your private workspace.</p>
             </>
           ) : (
             <>
@@ -174,7 +174,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
               <button disabled={busy} className="auth-primary" type="submit">
                 {busy ? 'Creating account…' : <>Create my account <ArrowRight size={16} /></>}
               </button>
-              <p className="text-center text-[11px] leading-relaxed text-[#64748b]">AI provider keys are centrally managed by the administrator. Students never enter or store app-wide API keys.</p>
+              <p className="text-center text-[11px] leading-relaxed text-[var(--muted-foreground)]">AI provider keys are centrally managed by the administrator. Students never enter or store app-wide API keys.</p>
             </>
           )}
         </form>
