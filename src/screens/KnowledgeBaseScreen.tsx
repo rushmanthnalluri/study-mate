@@ -1,21 +1,7 @@
-import React, { useState } from 'react';
-import { Department, ScreenId, Subject } from '../types';
-import {
-  Folder,
-  FileText,
-  FileCode,
-  ArrowLeft,
-  Search,
-  BookOpen,
-  Download,
-  Copy,
-  Check,
-  Eye,
-  X,
-  ExternalLink,
-  PlusCircle,
-  Database
-} from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { Department, ScreenId, Subject, SubjectResourceItem } from '../types';
+import { ArrowLeft, BookOpen, Copy, Download, Eye, FileText, X, Check, Database } from 'lucide-react';
+import { EmptyState, EditorialCard, PageHeader, SectionLabel } from '../components/Editorial';
 
 interface KnowledgeBaseScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -29,258 +15,169 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
   selectedDepartment
 }) => {
   const [deptFilter, setDeptFilter] = useState<Department>(selectedDepartment);
-  const [selectedSubject, setSelectedSubject] = useState<Subject>(subjects[0]);
-  const [activeFile, setActiveFile] = useState<{ name: string; type: string; content: string } | null>(null);
+  const [selectedSubjectId, setSelectedSubjectId] = useState(subjects[0]?.id || '');
+  const [activeFile, setActiveFile] = useState<SubjectResourceItem | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const filteredSubjects = subjects.filter(
-    (s) => deptFilter === 'All' || s.department === deptFilter
+  const filteredSubjects = useMemo(
+    () => subjects.filter((subject) => deptFilter === 'All' || subject.department === deptFilter),
+    [subjects, deptFilter]
   );
 
-  const currentSubject = subjects.find((s) => s.id === selectedSubject?.id) || filteredSubjects[0] || subjects[0];
+  const currentSubject =
+    filteredSubjects.find((subject) => subject.id === selectedSubjectId) ||
+    subjects.find((subject) => subject.id === selectedSubjectId) ||
+    filteredSubjects[0] ||
+    subjects[0];
 
-  const getSubjectFiles = (subj: Subject) => {
-    return [
-      {
-        name: 'course-materials.md',
-        label: 'Course Materials',
-        desc: 'Lecture notes & Bloom’s taxonomy units',
-        icon: FileText,
-        type: 'markdown',
-        content: `# Course Materials: ${subj.name} (${subj.code})\nDepartment: ${subj.department} | KL University\n\n## Course Units\n${(subj.units || []).map((u) => `- ${u}`).join('\n')}\n\n## Syllabus Learning Outcomes\n- Understand fundamental theoretical formulations.\n- Analyze mathematical derivations under KL exam standards.\n- Formulate practical engineering implementations.`
-      },
-      {
-        name: 'previous-papers.md',
-        label: 'Previous Papers',
-        desc: 'KL End-Sem & In-Sem Exam Catalog',
-        icon: FileText,
-        type: 'markdown',
-        content: `# Previous Examination Papers — ${subj.name}\nDepartment of ${subj.department}, KL University\n\n## Catalog of Papers Mapped\n- KL End-Semester May 2024 (Regular & Supplementary)\n- KL End-Semester Dec 2023 (Odd Semester)\n- KL In-Semester Examination 1 (Mid-Term 2024)\n- KL In-Semester Examination 2 (Mid-Term 2024)\n\n## Question Structure\n- Part A: 5 questions × 2 marks = 10 marks\n- Part B: 5 questions × 5 marks = 25 marks\n- Part C: 4 questions × 10 marks = 40 marks`
-      },
-      {
-        name: 'question-bank.json',
-        label: 'Question Bank',
-        desc: `${subj.questionCount || 4} Curated high-frequency questions`,
-        icon: FileCode,
-        type: 'json',
-        content: JSON.stringify(subj.questionBank || [], null, 2)
-      },
-      {
-        name: 'marks-pattern.md',
-        label: 'Marks Pattern',
-        desc: 'Official 2M, 5M, 10M grading rubrics',
-        icon: FileText,
-        type: 'markdown',
-        content: `# KL University Marks Pattern & Grading Rubric\nSubject: ${subj.name} (${subj.code})\n\n## 2 Marks Questions\n- Target words: 20-40 words.\n- Exact definition, formula, standard units, zero fluff.\n\n## 5 Marks Questions\n- Target words: 120-180 words.\n- Subheadings, 4-5 bullet points, mini-flowchart.\n\n## 10 Marks Questions\n- Target words: 350-500 words.\n- Comprehensive essay: Intro, Principle, Mechanism, Flowchart, Industrial Applications, Conclusion.`
-      },
-      {
-        name: 'answer-style.md',
-        label: 'Answer Style',
-        desc: 'KL Examiner expectations & keyword density',
-        icon: FileText,
-        type: 'markdown',
-        content: `# KL University Examiner Answer Style Guide\nSubject: ${subj.name}\n\n1. Highlight Keywords First.\n2. Label all diagrams and state inputs, outputs, and parameters.\n3. Equations must have a legend defining variables.\n4. Avoid conversational filler; maintain high technical density.`
-      },
-      {
-        name: 'syllabus.json',
-        label: 'Syllabus & Metadata',
-        desc: 'Course codes, units & taxonomy',
-        icon: FileCode,
-        type: 'json',
-        content: JSON.stringify(
-          {
-            id: subj.id,
-            name: subj.name,
-            code: subj.code,
-            department: subj.department,
-            units: subj.units,
-            topics: subj.topics,
-            questionCount: subj.questionCount
-          },
-          null,
-          2
-        )
-      }
-    ];
-  };
+  const resources = currentSubject?.resources || [];
 
-  const handleCopyFile = (text: string) => {
-    navigator.clipboard.writeText(text);
+  const handleCopy = async (text: string) => {
+    await navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    window.setTimeout(() => setCopied(false), 1500);
   };
 
-  const handleDownloadFile = (fileName: string, content: string) => {
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const handleDownload = (resource: SubjectResourceItem) => {
+    if (!resource.description) return;
+    const blob = new Blob([resource.description], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = fileName;
+    link.download = resource.fileName || resource.title.replace(/\s+/g, '-').toLowerCase() + '.txt';
     link.click();
     URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="space-y-4 pb-24 animate-fade-in">
-      {/* Screen Header */}
-      <div className="flex items-center space-x-3 pt-1">
-        <button
-          type="button"
-          aria-label="Back to home"
-          onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-        >
-          <ArrowLeft size={16} />
-        </button>
-        <div>
-          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[var(--accent)]">
-            KL Knowledge Base
-          </span>
-          <h1 className="text-xl font-sans font-bold text-[var(--foreground)] leading-tight">
-            Academic Drive Library
-          </h1>
-        </div>
-      </div>
-
-      <p className="text-xs text-[var(--muted-foreground)]">
-        As specified in System Blueprint Section 02: A shared folder library containing the 6 standard items per subject.
-      </p>
-
-      {/* Department Tabs */}
-      <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
-        {['All', ...Array.from(new Set(subjects.map(subject => subject.department).filter(Boolean)))].map((dept) => (
-          <button
-            key={dept}
-            onClick={() => setDeptFilter(dept as Department)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
-              deptFilter === dept
-                ? 'bg-[var(--accent)] text-white shadow-sm'
-                : 'bg-[#ffffff] text-[var(--foreground)] border border-[var(--border)]'
-            }`}
-          >
-            {dept === 'All' ? 'All Depts' : dept}
+    <div className="editorial-page-wide space-y-10 animate-fade-in">
+      <PageHeader
+        eyebrow="Knowledge base"
+        title="Published resources"
+        description="This library displays only resources published by an administrator for your account. No synthetic folders, exam catalogs or fallback files are created in the student interface."
+        actions={
+          <button type="button" onClick={() => onNavigate('home')} className="editorial-secondary inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold">
+            <ArrowLeft size={15} /> Home
           </button>
-        ))}
-      </div>
+        }
+      />
 
-      {/* Subject Dropdown / Picker */}
-      <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3.5 shadow-sm space-y-2">
-        <label className="text-xs font-semibold text-[var(--foreground)] flex items-center space-x-1.5">
-          <Folder size={15} className="text-[var(--accent)]" />
-          <span>Select Subject Folder in Knowledge Base:</span>
-        </label>
-        <select
-          value={currentSubject.id}
-          onChange={(e) => {
-            const found = subjects.find((s) => s.id === e.target.value);
-            if (found) setSelectedSubject(found);
-          }}
-          className="w-full bg-surface-subtle border border-[var(--border)] rounded-lg p-2.5 text-xs text-[var(--foreground)] font-medium editorial-focus"
-        >
-          {filteredSubjects.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name} ({s.code}) — {s.department}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* The 6 Standard Items Grid */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] font-sans uppercase tracking-wider font-bold text-[var(--muted-foreground)]">
-            The 6 Standard Items in {currentSubject.name}
-          </span>
-          <span className="text-[10px] text-[var(--muted-foreground)] font-mono">
-            6 / 6 Items Grounded
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {getSubjectFiles(currentSubject).map((file, idx) => {
-            const Icon = file.icon;
-            return (
-              <div
-                key={idx}
-                onClick={() => setActiveFile(file)}
-                className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3.5 shadow-sm hover:border-brand-400 cursor-pointer group transition-all flex items-start justify-between"
-              >
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 rounded-lg bg-[var(--muted)] text-[var(--accent)] flex items-center justify-center shrink-0 mt-0.5">
-                    <Icon size={16} />
-                  </div>
-                  <div className="space-y-0.5">
-                    <h4 className="text-xs font-bold text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
-                      {file.label}
-                    </h4>
-                    <p className="text-[10px] text-[var(--muted-foreground)]">
-                      {file.name}
-                    </p>
-                    <p className="text-[10px] text-[var(--muted-foreground)] italic pt-1">
-                      {file.desc}
-                    </p>
-                  </div>
-                </div>
-
-                <span className="text-xs text-[var(--muted-foreground)] group-hover:text-[var(--accent)] p-1">
-                  <Eye size={15} />
-                </span>
+      {subjects.length === 0 ? (
+        <EmptyState
+          icon={<Database size={30} />}
+          title="No subjects published"
+          description="There are currently no administrator-published subjects available for your account."
+        />
+      ) : (
+        <>
+          <EditorialCard className="p-5 sm:p-6">
+            <SectionLabel>Library filters</SectionLabel>
+            <div className="grid gap-4 md:grid-cols-[auto_1fr]">
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {['All', ...Array.from(new Set(subjects.map((subject) => subject.department).filter(Boolean)))].map((department) => (
+                  <button
+                    key={department}
+                    type="button"
+                    onClick={() => setDeptFilter(department as Department)}
+                    className={deptFilter === department ? 'editorial-primary whitespace-nowrap px-4 py-2 text-xs' : 'editorial-secondary whitespace-nowrap px-4 py-2 text-xs'}
+                  >
+                    {department === 'All' ? 'All departments' : department}
+                  </button>
+                ))}
               </div>
-            );
-          })}
-        </div>
-      </div>
 
-      {/* File Preview Modal */}
+              <label className="space-y-2">
+                <span className="small-caps text-[var(--muted-foreground)]">Subject</span>
+                <select
+                  value={currentSubject?.id || ''}
+                  onChange={(event) => setSelectedSubjectId(event.target.value)}
+                  className="editorial-input w-full"
+                >
+                  {filteredSubjects.map((subject) => (
+                    <option key={subject.id} value={subject.id}>
+                      {subject.name} · {subject.code}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </EditorialCard>
+
+          {currentSubject ? (
+            <section className="space-y-5">
+              <div>
+                <p className="small-caps text-[var(--accent)]">{currentSubject.code} · {currentSubject.department}</p>
+                <h2 className="mt-1 font-serif text-3xl text-[var(--foreground)]">{currentSubject.name}</h2>
+                {currentSubject.description && (
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted-foreground)]">{currentSubject.description}</p>
+                )}
+              </div>
+
+              {resources.length === 0 ? (
+                <EmptyState
+                  icon={<BookOpen size={30} />}
+                  title="No resources published"
+                  description="The subject exists, but an administrator has not published any resources for it yet."
+                />
+              ) : (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {resources.map((resource) => (
+                    <EditorialCard key={resource.id} className="flex min-h-48 flex-col p-5">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[var(--muted)] text-[var(--accent)]">
+                          <FileText size={17} />
+                        </div>
+                        <span className="small-caps text-[var(--muted-foreground)]">{resource.resourceType || 'Resource'}</span>
+                      </div>
+                      <h3 className="mt-5 font-serif text-xl leading-tight text-[var(--foreground)]">{resource.title}</h3>
+                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-[var(--muted-foreground)]">{resource.description || 'Administrator-published resource.'}</p>
+                      <div className="mt-auto flex items-center justify-between gap-3 pt-5">
+                        <span className="truncate font-mono text-[10px] text-[var(--muted-foreground)]">{resource.fileName}</span>
+                        <button
+                          type="button"
+                          onClick={() => setActiveFile(resource)}
+                          className="editorial-ghost shrink-0 px-2 text-xs"
+                          aria-label={'View ' + resource.title}
+                        >
+                          <Eye size={14} />
+                        </button>
+                      </div>
+                    </EditorialCard>
+                  ))}
+                </div>
+              )}
+            </section>
+          ) : (
+            <EmptyState title="Choose a subject" description="Select a published subject to inspect its administrator-managed resources." />
+          )}
+        </>
+      )}
+
       {activeFile && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-[#ffffff] rounded-2xl max-w-xl w-full p-5 shadow-2xl space-y-3 max-h-[85vh] flex flex-col border border-[var(--border)]">
-            <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
-              <div className="flex items-center space-x-2">
-                <FileText size={18} className="text-[var(--accent)]" />
-                <div>
-                  <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] font-mono">
-                    {activeFile.name}
-                  </h3>
-                  <p className="text-[10px] text-[var(--muted-foreground)]">
-                    KL Knowledge Base • {currentSubject.name}
-                  </p>
-                </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--foreground)]/60 p-4 backdrop-blur-sm">
+          <div className="flex max-h-[85vh] w-full max-w-2xl flex-col space-y-4 overflow-hidden border border-[var(--border)] bg-[var(--card)] p-5 shadow-[var(--shadow-lg)]">
+            <div className="flex items-start justify-between gap-4 border-b border-[var(--border)] pb-4">
+              <div className="min-w-0">
+                <p className="small-caps text-[var(--accent)]">{activeFile.resourceType}</p>
+                <h3 className="mt-1 font-serif text-2xl text-[var(--foreground)]">{activeFile.title}</h3>
+                <p className="mt-1 truncate font-mono text-[10px] text-[var(--muted-foreground)]">{activeFile.fileName}</p>
               </div>
-              <div className="flex items-center space-x-1.5">
-                <button
-                  onClick={() => handleCopyFile(activeFile.content)}
-                  className="p-1.5 rounded-lg border border-[var(--border)] hover:bg-surface-subtle text-xs flex items-center space-x-1"
-                >
-                  {copied ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
-                  <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy'}</span>
-                </button>
-                <button
-                  onClick={() => handleDownloadFile(activeFile.name, activeFile.content)}
-                  className="p-1.5 rounded-lg border border-[var(--border)] hover:bg-surface-subtle text-xs flex items-center space-x-1"
-                >
-                  <Download size={14} />
-                  <span className="hidden sm:inline">Save</span>
-                </button>
-                <button
-                  onClick={() => setActiveFile(null)}
-                  className="p-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-surface-subtle"
-                >
-                  <X size={18} />
-                </button>
-              </div>
+              <button type="button" onClick={() => setActiveFile(null)} aria-label="Close resource" className="editorial-ghost shrink-0 px-2">
+                <X size={18} />
+              </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto bg-surface-subtle p-3.5 rounded-xl border border-[var(--border)]/60 text-xs font-mono text-[var(--foreground)] whitespace-pre-wrap leading-relaxed">
-              {activeFile.content}
+            <div className="min-h-0 flex-1 overflow-y-auto bg-[var(--surface)] p-4 text-sm leading-7 text-[var(--foreground)]">
+              {activeFile.description || 'No description was supplied for this resource.'}
             </div>
 
-            <div className="pt-1 flex justify-end">
-              <button
-                onClick={() => setActiveFile(null)}
-                className="px-4 py-2 rounded-xl bg-[var(--accent)] text-white font-semibold text-xs"
-              >
-                Close File
+            <div className="flex flex-wrap justify-end gap-2 border-t border-[var(--border)] pt-4">
+              <button type="button" onClick={() => handleCopy(activeFile.description || '')} className="editorial-secondary inline-flex items-center gap-2 px-4 py-2.5 text-xs">
+                {copied ? <Check size={14} /> : <Copy size={14} />}
+                {copied ? 'Copied' : 'Copy'}
+              </button>
+              <button type="button" onClick={() => handleDownload(activeFile)} className="editorial-primary inline-flex items-center gap-2 px-4 py-2.5 text-xs">
+                <Download size={14} /> Save
               </button>
             </div>
           </div>
