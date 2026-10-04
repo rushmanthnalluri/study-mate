@@ -193,11 +193,11 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
       {/* The Official KL University Exam Paper Sheet */}
       <div className="bg-[#ffffff] border border-[var(--border)] rounded-2xl p-5 sm:p-7 shadow-elevated space-y-5 print:border-none print:shadow-none print:p-0">
         {/* Official KL Header */}
-        <div className="text-center border-b-2 border-stone-800 pb-4 space-y-1">
+        <div className="text-center border-b-2 border-[var(--border)] pb-4 space-y-1">
           <h2 className="text-sm sm:text-base font-sans font-extrabold uppercase tracking-wide text-stone-900">
             KONERU LAKSHMAIAH EDUCATION FOUNDATION
           </h2>
-          <p className="text-[11px] text-stone-700 italic font-sans">
+          <p className="text-[11px] text-[var(--foreground)] italic font-sans">
             (Deemed to be University, Estd. u/s 3 of UGC Act, 1956)
           </p>
           <p className="text-xs font-bold uppercase tracking-wider text-[var(--accent)] pt-1">
@@ -206,7 +206,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
           <h3 className="text-xs sm:text-sm font-bold text-stone-900 font-sans">
             End Semester Examination — {activeSubject.name} ({activeSubject.code})
           </h3>
-          <div className="flex items-center justify-between pt-2 text-[11px] font-mono text-stone-800 border-t border-stone-300 mt-2">
+          <div className="flex items-center justify-between pt-2 text-[11px] font-mono text-[var(--foreground)] border-t border-[var(--border)] mt-2">
             <span>Time: 3 Hours</span>
             <span>Regulation: 2021-2026</span>
             <span>Max Marks: 75</span>
@@ -214,7 +214,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
         </div>
 
         {/* Instructions */}
-        <div className="text-[11px] text-stone-600 italic bg-surface-subtle p-2.5 rounded-lg border border-[var(--border)]/50">
+        <div className="text-[11px] text-[var(--muted-foreground)] italic bg-surface-subtle p-2.5 rounded-lg border border-[var(--border)]/50">
           <p>Instructions: (1) Answer ALL questions in Part A. (2) Answer any THREE in Part B and TWO in Part C. (3) Draw neat diagrams wherever necessary.</p>
         </div>
 
@@ -224,7 +224,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
             <span className="text-xs font-bold uppercase font-sans tracking-wider text-stone-900">
               PART – A (Compulsory: 5 × 2 = 10 Marks)
             </span>
-            <span className="text-[10px] font-mono text-stone-600">Cognitive Level: BTL 1 & 2</span>
+            <span className="text-[10px] font-mono text-[var(--muted-foreground)]">Cognitive Level: BTL 1 & 2</span>
           </div>
 
           <div className="space-y-2 text-xs">
@@ -237,7 +237,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                   <div className="space-y-1 pr-2">
                     <div className="flex items-center space-x-2">
                       <span className="font-mono font-bold text-[var(--accent)]">{q.num}</span>
-                      <span className="text-[9px] font-mono bg-[#e7d9cd] text-stone-700 px-1.5 py-0.2 rounded">
+                      <span className="text-[9px] font-mono bg-[#e7d9cd] text-[var(--foreground)] px-1.5 py-0.2 rounded">
                         {q.co} | {q.btl}
                       </span>
                     </div>
@@ -273,7 +273,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
             <span className="text-xs font-bold uppercase font-sans tracking-wider text-stone-900">
               PART – B (Descriptive: 5 Marks Each)
             </span>
-            <span className="text-[10px] font-mono text-stone-600">Cognitive Level: BTL 3 & 4</span>
+            <span className="text-[10px] font-mono text-[var(--muted-foreground)]">Cognitive Level: BTL 3 & 4</span>
           </div>
 
           <div className="space-y-2 text-xs">
@@ -286,7 +286,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                   <div className="space-y-1 pr-2">
                     <div className="flex items-center space-x-2">
                       <span className="font-mono font-bold text-[var(--accent)]">Q{q.num}.</span>
-                      <span className="text-[9px] font-mono bg-[#e7d9cd] text-stone-700 px-1.5 py-0.2 rounded">
+                      <span className="text-[9px] font-mono bg-[#e7d9cd] text-[var(--foreground)] px-1.5 py-0.2 rounded">
                         {q.co} | {q.btl}
                       </span>
                     </div>
@@ -295,7 +295,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="font-mono font-bold text-xs bg-purple-50 text-purple-900 px-2 py-0.5 rounded border border-purple-200">
+                    <span className="font-mono font-bold text-xs bg-[var(--accent-50)] text-[var(--accent-900)] px-2 py-0.5 rounded border border-[var(--accent-200)]">
                       {q.marks}M
                     </span>
                   </div>
@@ -322,7 +322,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
             <span className="text-xs font-bold uppercase font-sans tracking-wider text-stone-900">
               PART – C (Comprehensive Essays: 10 Marks Each)
             </span>
-            <span className="text-[10px] font-mono text-stone-600">Cognitive Level: BTL 4 & 5</span>
+            <span className="text-[10px] font-mono text-[var(--muted-foreground)]">Cognitive Level: BTL 4 & 5</span>
           </div>
 
           <div className="space-y-2 text-xs">
@@ -335,7 +335,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                   <div className="space-y-1 pr-2">
                     <div className="flex items-center space-x-2">
                       <span className="font-mono font-bold text-[var(--accent)]">Q{q.num}.</span>
-                      <span className="text-[9px] font-mono bg-[#e7d9cd] text-stone-700 px-1.5 py-0.2 rounded">
+                      <span className="text-[9px] font-mono bg-[#e7d9cd] text-[var(--foreground)] px-1.5 py-0.2 rounded">
                         {q.co} | {q.btl}
                       </span>
                     </div>
@@ -366,7 +366,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
         </div>
 
         {/* Paper End Stamp */}
-        <div className="text-center pt-4 text-xs font-mono font-bold text-stone-500 tracking-widest uppercase">
+        <div className="text-center pt-4 text-xs font-mono font-bold text-[var(--muted-foreground)] tracking-widest uppercase">
           *** END OF EXAMINATION QUESTION PAPER ***
         </div>
       </div>
