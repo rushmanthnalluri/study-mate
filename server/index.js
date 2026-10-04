@@ -36,6 +36,27 @@ const app = express();
 if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3001;
 
+const rateLimitBuckets = new Map();
+function rateLimit(windowMs, maxRequests) {
+  return (req, res, next) => {
+    const identity = String(req.user?.id || req.ip || 'anonymous');
+    const key = `${identity}:${req.path}`;
+    const now = Date.now();
+    const current = rateLimitBuckets.get(key);
+    if (!current || now - current.startedAt >= windowMs) {
+      rateLimitBuckets.set(key, { startedAt: now, count: 1 });
+      return next();
+    }
+    if (current.count >= maxRequests) {
+      const retryAfter = Math.max(1, Math.ceil((windowMs - (now - current.startedAt)) / 1000));
+      res.setHeader('Retry-After', String(retryAfter));
+      return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+    }
+    current.count += 1;
+    return next();
+  };
+}
+
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
     res.setHeader('Content-Security-Policy', [
