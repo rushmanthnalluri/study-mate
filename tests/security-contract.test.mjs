@@ -247,13 +247,11 @@ test('LMS is completely removed from the application surface', () => {
 
 
 test('legacy fabricated Food Technology content is absent from active product data', () => {
-  const quiz = fs.readFileSync(path.join(root, 'src', 'data', 'quizData.ts'), 'utf8');
-  const flashcards = fs.readFileSync(path.join(root, 'src', 'data', 'flashcardsData.ts'), 'utf8');
+  assert.equal(fs.existsSync(path.join(root, 'src', 'data', 'quizData.ts')), false);
+  assert.equal(fs.existsSync(path.join(root, 'src', 'data', 'flashcardsData.ts')), false);
   const glossary = fs.readFileSync(path.join(root, 'src', 'screens', 'GlossaryScreen.tsx'), 'utf8');
   const generator = fs.readFileSync(path.join(root, 'server', 'generator.js'), 'utf8');
   const chatbot = fs.readFileSync(path.join(root, 'server', 'chatbot.js'), 'utf8');
-  assert.doesNotMatch(quiz, /Food Technology|Food Microbiology|Dairy Technology/);
-  assert.doesNotMatch(flashcards, /Food Technology|Food Microbiology|Dairy Technology/);
   assert.doesNotMatch(glossary, /Food Technology|Food Microbiology|Dairy Technology/);
   assert.doesNotMatch(generator, /Food Technology|goldStandardAnswers|synthesizeFoodTechAnswer/);
   assert.doesNotMatch(chatbot, /Food Technology|Food Microbiology|Thermal Death Kinetics|HTST Pasteurization/);
