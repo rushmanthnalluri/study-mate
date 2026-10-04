@@ -149,7 +149,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
       </div>
 
       {!started && (
-        <div className="rounded-[28px] border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm">
+        <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm">
           <div className="mb-4 flex items-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--accent-50)] p-3 text-[11px] text-[var(--muted-foreground)]">
             <Sparkles size={15} className="text-[var(--accent)]" />
             <span>Questions are generated from the subject question bank using the administrator-configured AI provider. If the provider is unavailable, the assessment will not invent questions.</span>
@@ -212,7 +212,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
       )}
 
       {started && !finished && current && (
-        <div className="rounded-[28px] border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm">
+        <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm">
           <div className="mb-5 flex items-center justify-between">
             <span className="text-[10px] font-black uppercase text-[var(--accent)]">
               Question {index + 1}/{questions.length}
@@ -267,7 +267,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
       )}
 
       {finished && (
-        <div className="rounded-[28px] border border-[var(--border)] bg-[var(--card)] p-7 text-center shadow-sm">
+        <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-7 text-center shadow-sm">
           <Trophy className="mx-auto text-[var(--accent)]" size={42} />
           <p className="mt-3 text-[10px] font-black uppercase tracking-[.2em] text-[var(--accent)]">Test complete</p>
           <h2 className="mt-1 text-3xl font-black text-[var(--foreground)]">{score}/{questions.length}</h2>
