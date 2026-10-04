@@ -14,13 +14,11 @@ test('MongoDB operations are explicitly environment-driven and fail closed', () 
   assert.match(backup, /MONGODB_URI/);
   assert.match(backup, /spawn\('mongodump'/);
   assert.match(backup, /shell:\s*false/);
-
   assert.match(restore, /MONGODB_URI/);
   assert.match(restore, /ALLOW_MONGORESTORE !== 'true'/);
   assert.match(restore, /--drop/);
   assert.match(restore, /spawn\('mongorestore'/);
   assert.match(restore, /shell:\s*false/);
-
   assert.match(migrate, /hasMigration\(db, 1\)/);
   assert.match(migrate, /hasMigration\(db, 2\)/);
   assert.match(migrate, /knowledgebaseoverrides/);
@@ -38,11 +36,13 @@ test('health endpoint is unauthenticated and reports storage readiness', () => {
   assert.match(server, /service:\s*'studymate'/);
 });
 
-test('production launcher runs MongoDB migrations before the server when MongoDB is configured', () => {
+test('production launcher initializes MongoDB before serving requests', () => {
   const launcher = read('server.js');
   assert.match(launcher, /if \(process\.env\.MONGODB_URI\)/);
   assert.match(launcher, /await import\('\.\/scripts\/mongodb-migrate\.mjs'\)/);
-  assert.match(launcher, /await import\('\.\/server\/index\.js'\)/);\n  assert.match(launcher, /await initDatabase\(\)/);\n  assert.match(launcher, /MONGODB_URI.*initialization failed|databaseReady/);
+  assert.match(launcher, /await initDatabase\(\)/);
+  assert.match(launcher, /databaseReady/);
+  assert.match(launcher, /await import\('\.\/server\/index\.js'\)/);
 });
 
 test('Render production service has a deterministic Node start command', () => {
@@ -50,7 +50,6 @@ test('Render production service has a deterministic Node start command', () => {
   assert.equal(packageJson.scripts.start, 'node server.js');
   assert.equal(packageJson.engines.node, '>=22.12.0');
 });
-
 
 test('JSON API routes have a bounded body parser before route handlers', () => {
   const server = read('server/index.js');
