@@ -326,3 +326,13 @@ test('chat history clear is authenticated and server-authoritative', () => {
   assert.doesNotMatch(chatbot, /Here is the academic explanation for your query/);
   assert.match(chatbot, /\/api\/chat\/history\?limit=100/);
 });
+test('seeded flashcards and glossary are absent from the student bundle', () => {
+  const flashcardPath = path.join(root, 'src', 'data', 'flashcardsData.ts');
+  const quizPath = path.join(root, 'src', 'data', 'quizData.ts');
+  assert.equal(fs.existsSync(flashcardPath), false);
+  assert.equal(fs.existsSync(quizPath), false);
+  const glossary = fs.readFileSync(path.join(root, 'src', 'screens', 'GlossaryScreen.tsx'), 'utf8');
+  assert.doesNotMatch(glossary, /Belady's Anomaly|Ferranti Effect|Kernel Trick|Twiddle Factor/);
+  assert.match(server, /'flashcards': 'flashcards'/);
+  assert.match(server, /'glossary': 'glossary'/);
+});
