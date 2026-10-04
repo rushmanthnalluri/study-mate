@@ -254,3 +254,10 @@ test('note generation fails closed without administrator-configured AI', () => {
   assert.match(chatbot, /No administrator-configured AI provider/);
   assert.doesNotMatch(generator, /goldStandardAnswers|Food Technology|fallback/);
 });
+
+
+test('production academic content has no repository-seeded catalog fallback', () => {
+  assert.equal(fs.existsSync(path.join(root, 'knowledge-base')), false);
+  assert.equal(fs.existsSync(path.join(root, 'scripts', 'seedKnowledgeBase.js')), false);
+  assert.match(server, /administrator-persisted MongoDB data only/);
+});
