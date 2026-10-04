@@ -42,7 +42,7 @@ const SavedNoteSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   topic: { type: String, required: true },
   subject: { type: String, required: true },
-  department: { type: String, default: 'Food Technology' },
+  department: { type: String },
   code: { type: String },
   unit: { type: String },
   keywords: [String],
