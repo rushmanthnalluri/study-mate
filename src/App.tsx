@@ -297,7 +297,7 @@ export const App: React.FC = () => {
   return (
     <div className="editorial-app min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-colors">
       {!currentUser && (
-        <div className="min-h-screen w-full bg-[radial-gradient(circle_at_top,#FFFFFF_0%,#FAFAF8_58%,#F5F3F0_100%)] px-5 py-10">
+        <div className="min-h-screen w-full bg-[radial-gradient(circle_at_top,var(--accent-foreground)_0%,#FAFAF8_58%,#F5F3F0_100%)] px-5 py-10">
           <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-4xl items-center justify-center">
             <div className="grid w-full overflow-hidden rounded-[36px] border border-[var(--border)] bg-white/95 shadow-[0_30px_90px_rgba(75,55,42,0.16)] md:grid-cols-[1.05fr_.95fr]">
               <div className="hidden bg-[var(--foreground)] p-10 text-white md:flex md:flex-col md:justify-between">
@@ -305,9 +305,9 @@ export const App: React.FC = () => {
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--muted)] text-[var(--foreground)]"><GraduationCap size={28}/></div>
                   <p className="mt-8 text-[11px] font-black uppercase tracking-[.22em] text-[var(--accent)]">StudyMate AI</p>
                   <h1 className="mt-3 text-4xl font-black leading-tight">Your private academic workspace.</h1>
-                  <p className="mt-4 max-w-sm text-sm leading-6 text-[#dbeafe]">Create an account to generate notes, take tests, build flashcards, use AI tutoring and keep your study history private to your account.</p>
+                  <p className="mt-4 max-w-sm text-sm leading-6 text-[var(--accent-50)]">Create an account to generate notes, take tests, build flashcards, use AI tutoring and keep your study history private to your account.</p>
                 </div>
-                <div className="grid grid-cols-2 gap-2 text-[11px] font-bold text-[#dbeafe]"><span className="rounded-2xl bg-white/10 p-3">AI notes & tutor</span><span className="rounded-2xl bg-white/10 p-3">Quiz & model tests</span><span className="rounded-2xl bg-white/10 p-3">Flashcards & voice</span><span className="rounded-2xl bg-white/10 p-3">Flowcharts & mind maps</span></div>
+                <div className="grid grid-cols-2 gap-2 text-[11px] font-bold text-[var(--accent-50)]"><span className="rounded-2xl bg-white/10 p-3">AI notes & tutor</span><span className="rounded-2xl bg-white/10 p-3">Quiz & model tests</span><span className="rounded-2xl bg-white/10 p-3">Flashcards & voice</span><span className="rounded-2xl bg-white/10 p-3">Flowcharts & mind maps</span></div>
               </div>
               <div className="flex flex-col justify-center p-7 sm:p-10">
                 <p className="text-[10px] font-black uppercase tracking-[.2em] text-[var(--accent)]">Account required</p>
@@ -321,9 +321,9 @@ export const App: React.FC = () => {
         </div>
       )}
       {appError && currentUser && (
-        <div role="alert" className="mx-auto mt-3 flex w-full max-w-7xl items-center justify-between gap-3 rounded-2xl border border-[#D9C5C0] bg-[#FBF2EF] px-4 py-3 text-xs font-semibold text-[#7A332A]">
+        <div role="alert" className="mx-auto mt-3 flex w-full max-w-7xl items-center justify-between gap-3 rounded-2xl border border-[var(--border)] bg-[var(--danger-soft)] px-4 py-3 text-xs font-semibold text-[var(--danger)]">
           <span>{appError}</span>
-          <button onClick={() => setAppError('')} className="rounded-lg px-2 py-1 hover:bg-[#f8d9d1]" aria-label="Dismiss error">Dismiss</button>
+          <button onClick={() => setAppError('')} className="rounded-lg px-2 py-1 hover:bg-[var(--danger-border)]" aria-label="Dismiss error">Dismiss</button>
         </div>
       )}
       {currentUser && <>
@@ -535,7 +535,7 @@ export const App: React.FC = () => {
       <button
         type="button"
         onClick={signOut}
-        className="fixed bottom-20 right-4 z-30 hidden rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[10px] font-black text-[#6f4a31] shadow-md hover:bg-[#f4e8dc] sm:block print:hidden"
+        className="fixed bottom-20 right-4 z-30 hidden rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[10px] font-black text-[var(--foreground)] shadow-md hover:bg-[var(--accent-50)] sm:block print:hidden"
       >
         Sign out
       </button>
