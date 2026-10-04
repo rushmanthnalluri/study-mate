@@ -402,3 +402,23 @@ test('mock exam never fabricates institutional paper metadata or questions', () 
   assert.doesNotMatch(mockExam, /BTL 1 \(Remember\)/);
   assert.doesNotMatch(mockExam, /CO1/);
 });
+
+
+test('student UI does not fabricate institutional grading or paper claims', () => {
+  const generateNotes = fs.readFileSync(path.join(root, 'src', 'screens', 'GenerateNotesScreen.tsx'), 'utf8');
+  const mermaid = fs.readFileSync(path.join(root, 'src', 'components', 'MermaidViewer.tsx'), 'utf8');
+  const selfTest = fs.readFileSync(path.join(root, 'src', 'components', 'SelfTestModal.tsx'), 'utf8');
+  const analyzer = fs.readFileSync(path.join(root, 'src', 'screens', 'PaperAnalyzerScreen.tsx'), 'utf8');
+  assert.doesNotMatch(generateNotes, /20-40 words|120-180 words|350-500 words|KL Evaluators|official subject resources|KL Drive KB/);
+  assert.doesNotMatch(mermaid, /mandatory 2 marks|secures the mandatory/);
+  assert.doesNotMatch(selfTest, /official KL mark rubric|Simulated KL Score|KL evaluators expect/);
+  assert.doesNotMatch(analyzer, /Official KL Previous Papers Archive/);
+  assert.match(generateNotes, /Administrator-published material/);
+});
+
+test('admin templates do not seed invented academic units or grading rules', () => {
+  const admin = fs.readFileSync(path.join(root, 'src', 'screens', 'AdminPortalScreen.tsx'), 'utf8');
+  assert.match(admin, /"unit": 0/);
+  assert.match(admin, /Enter only grading guidance published or verified by your institution/);
+  assert.doesNotMatch(admin, /20-40 words|120-180 words|350-500 words/);
+});
