@@ -172,14 +172,14 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
   return (
     <div className="flex flex-col h-[calc(100vh-8.5rem)] max-w-4xl mx-auto pb-4 animate-fade-in">
       {/* Header bar */}
-      <div className="bg-white border border-surface-border rounded-2xl p-4 shadow-sm mb-3 flex items-center justify-between shrink-0">
+      <div className="bg-white border border-[var(--border)] rounded-2xl p-4 shadow-sm mb-3 flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[var(--accent-900)] to-[var(--accent-700)] text-white flex items-center justify-center shadow-sm">
             <Bot size={22} className="text-amber-300" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <h2 className="font-bold text-base text-surface-dark leading-tight">
+              <h2 className="font-bold text-base text-[var(--foreground)] leading-tight">
                 StudyMate AI Tutor
               </h2>
               <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
@@ -187,7 +187,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
                 <span>Study grounded</span>
               </span>
             </div>
-            <p className="text-xs text-surface-muted">
+            <p className="text-xs text-[var(--muted-foreground)]">
               Ask questions, explore concepts, or work through your study material
             </p>
           </div>
@@ -197,7 +197,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
           <button
             onClick={handleClearChat}
             title="Clear Chat History"
-            className="p-1.5 rounded-lg border border-surface-border text-surface-muted hover:text-rose-600 transition-colors"
+            className="p-1.5 rounded-lg border border-[var(--border)] text-[var(--muted-foreground)] hover:text-rose-600 transition-colors"
           >
             <Trash2 size={16} />
           </button>
@@ -205,7 +205,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
       </div>
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto space-y-4 px-1 pr-2 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto space-y-4 px-1 pr-2 scrollbar-none">
         {messages.map((msg) => {
           const isUser = msg.role === 'user';
           return (
@@ -216,8 +216,8 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
               <div
                 className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${
                   isUser
-                    ? 'bg-brand-800 text-amber-300'
-                    : 'bg-gradient-to-tr from-amber-600 to-brand-900 text-white'
+                    ? 'bg-[var(--accent-800)] text-amber-300'
+                    : 'bg-gradient-to-tr from-amber-600 to-[var(--accent-900)] text-white'
                 }`}
               >
                 {isUser ? <User size={16} /> : <Bot size={16} />}
@@ -226,8 +226,8 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
               <div
                 className={`max-w-[85%] rounded-2xl p-4 shadow-sm ${
                   isUser
-                    ? 'bg-brand-800 text-white rounded-tr-none'
-                    : 'bg-white border border-surface-border text-surface-dark rounded-tl-none'
+                    ? 'bg-[var(--accent-800)] text-white rounded-tr-none'
+                    : 'bg-white border border-[var(--border)] text-[var(--foreground)] rounded-tl-none'
                 }`}
               >
                 <div className="text-xs sm:text-sm leading-relaxed whitespace-pre-line font-sans space-y-2">
@@ -236,12 +236,12 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
 
                 {/* Suggested Action Chips */}
                 {!isUser && msg.suggestedActions && msg.suggestedActions.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-surface-subtle flex flex-wrap gap-1.5">
+                  <div className="mt-3 pt-3 border-t border-[var(--surface)] flex flex-wrap gap-1.5">
                     {msg.suggestedActions.map((action, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleActionClick(action)}
-                        className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-900  text-xs font-semibold transition-colors border border-brand-200 shadow-2xs"
+                        className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-[var(--accent-50)] hover:bg-[var(--accent-100)] text-[var(--accent-900)]  text-xs font-semibold transition-colors border border-[var(--accent-200)] shadow-[var(--shadow-sm)]"
                       >
                         <Sparkles size={11} className="text-amber-600" />
                         <span>{action.label}</span>
@@ -253,7 +253,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
 
                 <div
                   className={`text-[10px] mt-1 text-right font-mono ${
-                    isUser ? 'text-brand-200' : 'text-surface-muted'
+                    isUser ? 'text-[var(--accent-200)]' : 'text-[var(--muted-foreground)]'
                   }`}
                 >
                   {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -264,8 +264,8 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
         })}
 
         {isSending && (
-          <div className="flex items-center space-x-2 text-xs text-surface-muted animate-pulse p-2">
-            <Bot size={16} className="text-brand-800" />
+          <div className="flex items-center space-x-2 text-xs text-[var(--muted-foreground)] animate-pulse p-2">
+            <Bot size={16} className="text-[var(--accent-800)]" />
             <span>StudyMate AI is analyzing KL course rubrics and formulating response...</span>
           </div>
         )}
@@ -275,7 +275,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
 
       {/* Suggested Quick Prompt Chips (Horizontal Carousel) */}
       <div className="py-2 overflow-x-auto scrollbar-none flex items-center space-x-2 shrink-0">
-        <span className="text-[11px] font-bold text-surface-muted shrink-0 flex items-center space-x-1 pl-1">
+        <span className="text-[11px] font-bold text-[var(--muted-foreground)] shrink-0 flex items-center space-x-1 pl-1">
           <Lightbulb size={13} className="text-amber-500" />
           <span>Quick:</span>
         </span>
@@ -284,7 +284,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
             key={idx}
             onClick={() => handleSendMessage(prompt)}
             disabled={isSending}
-            className="text-xs bg-white hover:bg-brand-50 text-surface-dark border border-surface-border px-3 py-1 rounded-full whitespace-nowrap transition-colors shrink-0 shadow-2xs"
+            className="text-xs bg-white hover:bg-[var(--accent-50)] text-[var(--foreground)] border border-[var(--border)] px-3 py-1 rounded-full whitespace-nowrap transition-colors shrink-0 shadow-[var(--shadow-sm)]"
           >
             {prompt}
           </button>
@@ -297,20 +297,20 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
           e.preventDefault();
           handleSendMessage();
         }}
-        className="bg-white border border-surface-border rounded-2xl p-2 shadow-sm flex items-center space-x-2 shrink-0"
+        className="bg-white border border-[var(--border)] rounded-2xl p-2 shadow-sm flex items-center space-x-2 shrink-0"
       >
         <input
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
           placeholder="Ask a study question…"
-          className="flex-1 bg-transparent px-3 py-2 text-sm text-surface-dark placeholder:text-surface-muted focus:outline-none"
+          className="flex-1 bg-transparent px-3 py-2 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none"
           disabled={isSending}
         />
         <button
           type="submit"
           disabled={!inputMessage.trim() || isSending}
-          className="px-4 py-2.5 rounded-xl bg-brand-800 hover:bg-brand-900 disabled:opacity-40 text-white font-bold text-xs flex items-center space-x-1.5 transition-all active:scale-95 shadow-sm"
+          className="px-4 py-2.5 rounded-xl bg-[var(--accent-800)] hover:bg-[var(--accent-900)] disabled:opacity-40 text-white font-bold text-xs flex items-center space-x-1.5 transition-all active:scale-95 shadow-sm"
         >
           <Send size={15} />
           <span className="hidden sm:inline">Ask AI</span>
