@@ -20,7 +20,7 @@
     "topic": "Two-Phase Locking (2PL)",
     "marks": 5,
     "unit": 4,
-    "paperYear": "KL In-Sem Exam 2, 2024",
+    "paperYear": "KL assessment Exam 2, 2024",
     "question": "Describe Strict and Rigorous 2-Phase Locking (2PL) protocols and how they avoid cascading aborts."
   },
   {
