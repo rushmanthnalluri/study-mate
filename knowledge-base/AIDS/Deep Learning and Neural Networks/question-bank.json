@@ -20,7 +20,7 @@
     "topic": "LSTM Gates and Operations",
     "marks": 5,
     "unit": 3,
-    "paperYear": "KL In-Sem Exam 2, 2024",
+    "paperYear": "KL assessment Exam 2, 2024",
     "question": "Illustrate the architecture of an LSTM cell and explain the mathematical equations of the Forget, Input, and Output gates."
   },
   {
