@@ -7,6 +7,7 @@ import { generateKLNotes } from './generator.js';
 import {
   initDatabase,
   getAllUsers,
+  getUserByAuthTokenHash,
   saveUser,
   getSavedNotes,
   addSavedNote,
@@ -440,9 +441,7 @@ const getBearerToken = (req) => {
 const authenticateRequest = async (req) => {
   const token = getBearerToken(req);
   if (!token) return null;
-  const users = await getAllUsers();
-  const hashed = tokenHash(token);
-  const user = users.find(u => u.authTokenHash === hashed) || null;
+  const user = await getUserByAuthTokenHash(tokenHash(token));
   if (!user) return null;
   const issued = Date.parse(user.authTokenIssuedAt || '');
   if (!Number.isFinite(issued) || Date.now() - issued > 30 * 24 * 60 * 60 * 1000) return null;
