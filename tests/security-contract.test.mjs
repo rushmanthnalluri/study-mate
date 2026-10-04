@@ -13,6 +13,7 @@ test('all personalized API routes require authentication', () => {
     "app.get('/api/saved-notes', requireAuth",
     "app.post('/api/saved-notes', requireAuth",
     "app.delete('/api/saved-notes/:id', requireAuth",
+    "app.put('/api/saved-notes/:id/reviewed', requireAuth, rateLimit",
     "app.post('/api/feedback', requireAuth",
     "app.get('/api/feedback/summary', requireAuth",
     "app.post('/api/chat', requireAuth",
@@ -97,6 +98,18 @@ test('PDF Studio ingestion is authenticated and size-limited', () => {
   assert.match(server, /express\.raw\(\{ type: \['application\/pdf', 'application\/octet-stream'\], limit: '12mb' \}\)/);
   assert.match(server, /buffer\.length > 10 \* 1024 \* 1024/);
   assert.match(server, /extractPdfText\(buffer\)/);
+});
+
+
+
+test('saved-note mutations remain server-authoritative', () => {
+  assert.match(server, /app\.put\('\/api\/saved-notes\/:id\/reviewed', requireAuth, rateLimit/);
+  assert.match(server, /updateSavedNoteReview\(req\.params\.id, req\.user\.id, req\.body\.isReviewed\)/);
+  assert.match(db, /updateSavedNoteReview/);
+  const app = fs.readFileSync(path.join(root, 'src', 'App.tsx'), 'utf8');
+  assert.match(app, /\/api\/saved-notes\/\$\{encodeURIComponent\(existing\.id\)\}/);
+  assert.match(app, /\/api\/saved-notes\/\$\{encodeURIComponent\(id\)\}\/reviewed/);
+  assert.doesNotMatch(app, /setSavedNotes\(savedNotes\.filter\(n => n\.topic !== note\.topic/);
 });
 
 
