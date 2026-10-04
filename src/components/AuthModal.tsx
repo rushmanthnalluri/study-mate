@@ -6,9 +6,10 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAuthSuccess: (user: UserProfile, token: string) => void;
+  canDismiss?: boolean;
 }
 
-export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess }) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess, canDismiss = true }) => {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [loginIdentifier, setLoginIdentifier] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -25,10 +26,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
     if (!isOpen) return;
     const previous = document.activeElement as HTMLElement | null;
     dialogRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); };
+    const onKeyDown = (event: KeyboardEvent) => { if (canDismiss && event.key === 'Escape') onClose(); };
     document.addEventListener('keydown', onKeyDown);
     return () => { document.removeEventListener('keydown', onKeyDown); previous?.focus?.(); };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, canDismiss]);
 
   if (!isOpen) return null;
 
@@ -88,9 +89,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 <p className="small-caps mt-1 text-[9px] text-[var(--accent-secondary)]">Private study workspace</p>
               </div>
             </div>
-            <button type="button" onClick={onClose} aria-label="Close sign-in dialog" className="rounded-xl p-2 text-[var(--accent-50)] hover:bg-white/10 hover:text-white">
-              <X size={19} />
-            </button>
+            {canDismiss && (
+              <button type="button" onClick={onClose} aria-label="Close sign-in dialog" className="rounded-xl p-2 text-[var(--accent-50)] hover:bg-white/10 hover:text-white">
+                <X size={19} />
+              </button>
+            )}
           </div>
           <div className="mt-5 flex items-center gap-2 text-[11px] font-semibold text-[var(--accent-200)]">
             <ShieldCheck size={14} />
