@@ -142,8 +142,8 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
           <ArrowLeft size={17} />
         </button>
         <div className="text-center">
-          <p className="text-[10px] font-black uppercase tracking-[.18em] text-[#2563eb]">Assessment Lab</p>
-          <h1 className="text-xl font-black text-[#172554]">Quiz & Model Test</h1>
+          <p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--accent)]">Assessment Lab</p>
+          <h1 className="text-xl font-black text-[var(--foreground)]">Quiz & Model Test</h1>
         </div>
         <div className="w-9" />
       </div>
@@ -187,8 +187,8 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
               ['4', 'Options']
             ].map(([value, label]) => (
               <div key={label} className="rounded-2xl bg-[#f1f5f9] p-3 text-center">
-                <b className="block text-lg text-[#2563eb]">{value}</b>
-                <span className="text-[9px] font-bold text-[#64748b]">{label}</span>
+                <b className="block text-lg text-[var(--accent)]">{value}</b>
+                <span className="text-[9px] font-bold text-[var(--muted-foreground)]">{label}</span>
               </div>
             ))}
           </div>
@@ -203,7 +203,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
           <button
             onClick={start}
             disabled={!subject || loading}
-            className="mt-5 w-full rounded-2xl bg-[#2563eb] py-3.5 text-xs font-black text-white hover:bg-[#643c20] disabled:opacity-50"
+            className="mt-5 w-full rounded-2xl bg-[var(--accent)] py-3.5 text-xs font-black text-white hover:bg-[#643c20] disabled:opacity-50"
           >
             {loading ? 'Building assessment…' : `Start ${mode === 'model' ? 'Model Test' : 'Quiz'}`}
             {!loading && <ChevronRight className="ml-1 inline" size={16} />}
@@ -214,7 +214,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
       {started && !finished && current && (
         <div className="rounded-[28px] border border-[#dbe3ee] bg-[#ffffff] p-5 shadow-sm">
           <div className="mb-5 flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase text-[#2563eb]">
+            <span className="text-[10px] font-black uppercase text-[var(--accent)]">
               Question {index + 1}/{questions.length}
             </span>
             <span className="inline-flex items-center gap-1 rounded-full bg-[#f3e4d5] px-3 py-1 text-[10px] font-black text-[#76513a]">
@@ -223,7 +223,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
             </span>
           </div>
 
-          <h2 className="whitespace-pre-line text-base font-extrabold leading-7 text-[#172554]">{current.question}</h2>
+          <h2 className="whitespace-pre-line text-base font-extrabold leading-7 text-[var(--foreground)]">{current.question}</h2>
 
           <div className="mt-5 space-y-2">
             {current.options.map((option, choice) => {
@@ -258,7 +258,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
           <button
             disabled={selected === null}
             onClick={next}
-            className="mt-5 w-full rounded-2xl bg-[#172554] py-3 text-xs font-black text-white disabled:opacity-40"
+            className="mt-5 w-full rounded-2xl bg-[var(--foreground)] py-3 text-xs font-black text-white disabled:opacity-40"
           >
             {index + 1 === questions.length ? 'Finish test' : 'Next question'}
             <ChevronRight className="ml-1 inline" size={15} />
@@ -269,14 +269,14 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
       {finished && (
         <div className="rounded-[28px] border border-[#dbe3ee] bg-[#ffffff] p-7 text-center shadow-sm">
           <Trophy className="mx-auto text-[#b77943]" size={42} />
-          <p className="mt-3 text-[10px] font-black uppercase tracking-[.2em] text-[#2563eb]">Test complete</p>
-          <h2 className="mt-1 text-3xl font-black text-[#172554]">{score}/{questions.length}</h2>
-          <p className="mt-2 text-xs text-[#64748b]">{percentage}% • {mode === 'model' ? 'Model Test' : 'Quick Quiz'} • {subject?.name}</p>
+          <p className="mt-3 text-[10px] font-black uppercase tracking-[.2em] text-[var(--accent)]">Test complete</p>
+          <h2 className="mt-1 text-3xl font-black text-[var(--foreground)]">{score}/{questions.length}</h2>
+          <p className="mt-2 text-xs text-[var(--muted-foreground)]">{percentage}% • {mode === 'model' ? 'Model Test' : 'Quick Quiz'} • {subject?.name}</p>
           <div className="mt-5 flex gap-2">
             <button onClick={reset} className="flex-1 rounded-2xl border border-[#ddcdbd] bg-white py-3 text-xs font-black text-[#5e4a3d]">
               <RotateCcw className="mr-1 inline" size={14} />Retake
             </button>
-            <button onClick={() => onNavigate('flashcards')} className="flex-1 rounded-2xl bg-[#2563eb] py-3 text-xs font-black text-white">
+            <button onClick={() => onNavigate('flashcards')} className="flex-1 rounded-2xl bg-[var(--accent)] py-3 text-xs font-black text-white">
               <BookOpen className="mr-1 inline" size={14} />Revise
             </button>
           </div>
