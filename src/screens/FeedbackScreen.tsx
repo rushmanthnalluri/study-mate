@@ -70,7 +70,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
           type="button"
           aria-label="Back to home"
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+          className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
@@ -89,7 +89,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
       </p>
 
       {/* Blueprint Step 06 Form */}
-      <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-4">
+      <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-4">
         {isSubmitted ? (
           <div className="text-center py-6 space-y-3">
             <div className="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto">
@@ -146,7 +146,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                   className={`py-2.5 px-3 rounded-xl border flex items-center justify-center space-x-2 text-xs font-semibold transition-all ${
                     rating === 'useful'
                       ? 'bg-emerald-50 border-emerald-400 text-emerald-800 ring-2 ring-emerald-500/20'
-                      : 'bg-[#ffffff] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
+                      : 'bg-[var(--card)] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
                   }`}
                 >
                   <ThumbsUp size={15} />
@@ -158,7 +158,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                   className={`py-2.5 px-3 rounded-xl border flex items-center justify-center space-x-2 text-xs font-semibold transition-all ${
                     rating === 'not_useful'
                       ? 'bg-rose-50 border-rose-400 text-rose-800 ring-2 ring-rose-500/20'
-                      : 'bg-[#ffffff] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
+                      : 'bg-[var(--card)] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
                   }`}
                 >
                   <ThumbsDown size={15} />
@@ -203,7 +203,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                       className={`p-2 rounded-xl border text-left flex flex-col justify-between transition-all ${
                         isSelected
                           ? 'bg-brand-50 border-brand-500 text-[var(--accent)] ring-1 ring-brand-500/20'
-                          : 'bg-[#ffffff] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
+                          : 'bg-[var(--card)] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1">
@@ -234,7 +234,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                     ? 'e.g. Ensure the D121 and z-value units are explicitly defined...'
                     : 'Tell us how this helped or what was missing...'
                 }
-                className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm"
+                className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm"
               />
             </div>
 
@@ -272,7 +272,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
           {recentFeedbacks.slice(0, 4).map((item) => (
             <div
               key={item.id}
-              className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm text-left space-y-1"
+              className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 shadow-sm text-left space-y-1"
             >
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-50 text-[var(--accent)]">
