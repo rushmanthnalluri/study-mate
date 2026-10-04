@@ -116,8 +116,8 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
         Paste text from professor slides, notes, or question papers to extract key definitions and 2M/5M/10M exam-question candidates. Real PDF files should be uploaded through Study Studio.
       </p>
 
-      <div className="bg-[#fbf3e9]/60 dark:bg-[var(--foreground)]/60 border border-[#e2c8ad] dark:border-[var(--border)] rounded-2xl p-3.5">
-        <p className="text-[11px] leading-5 text-[#714628] ">
+      <div className="bg-[var(--surface)]/60 dark:bg-[var(--foreground)]/60 border border-[var(--border)] dark:border-[var(--border)] rounded-2xl p-3.5">
+        <p className="text-[11px] leading-5 text-[var(--foreground)] ">
           Need to analyze a real PDF? Open <button type="button" onClick={() => onNavigate('studio')} className="font-extrabold underline underline-offset-2">Study Studio</button> and upload it to your private source library. This analyzer intentionally uses real pasted text rather than fabricated sample documents.
         </p>
       </div>
@@ -156,7 +156,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
         {analysisResult && (
           <div className="pt-3 border-t border-surface-subtle dark:border-[var(--border)] space-y-3 animate-fade-in">
             {/* Executive Summary */}
-            <div className="bg-[var(--muted)]/60 dark:bg-[var(--foreground)]/80 p-3 rounded-xl border border-[#d7b99d]/60 dark:border-[var(--border)] space-y-1">
+            <div className="bg-[var(--muted)]/60 dark:bg-[var(--foreground)]/80 p-3 rounded-xl border border-[var(--border)]/60 dark:border-[var(--border)] space-y-1">
               <span className="text-[11px] font-bold text-[var(--accent)]  flex items-center space-x-1">
                 <FileCheck size={14} />
                 <span>Executive Academic Summary:</span>
