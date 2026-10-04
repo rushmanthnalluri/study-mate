@@ -29,9 +29,9 @@ interface FeedbackScreenProps {
 }
 
 export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
-  currentTopic = "Banker's Algorithm for Deadlock Avoidance",
-  currentDepartment = "CSE",
-  currentSubject = "Operating Systems",
+  currentTopic = "",
+  currentDepartment = "",
+  currentSubject = "",
   onNavigate,
   onSubmitFeedback,
   recentFeedbacks
