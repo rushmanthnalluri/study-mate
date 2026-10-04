@@ -267,7 +267,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     "id": "",
     "topic": "",
     "marks": 2,
-    "unit": 1,
+    "unit": 0,
     "paperYear": "",
     "question": ""
   }
@@ -279,14 +279,16 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     const sample = `# Marks Pattern & Grading Rubric
 Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === selectedSubjName)?.department || ''}
 
-## 2 Marks Questions (20-40 words)
-- Direct scientific definition, units, zero fluff.
+Enter only grading guidance published or verified by your institution.
 
-## 5 Marks Questions (120-180 words)
-- 4-5 bulleted points, subheadings, mini-flowchart.
+## 2 Marks Questions
+- Published guidance:
 
-## 10 Marks Questions (350-500 words)
-- Comprehensive essay: Intro, Scientific Principle, Step-by-step Mechanism, Labeled Flowchart, Industrial Applications, Conclusion.`;
+## 5 Marks Questions
+- Published guidance:
+
+## 10 Marks Questions
+- Published guidance:`;
     setResourceContent(sample);
   };
 
