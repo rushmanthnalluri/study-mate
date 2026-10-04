@@ -342,3 +342,11 @@ test('signup does not require a department field', () => {
   assert.doesNotMatch(auth, /department: signupDepartment/);
   assert.match(server, /const \{ name, klId, email, password \} = req\.body \|\| \{\};/);
 });
+
+test('profile update is department-independent', () => {
+  assert.match(server, /app\.put\('\/api\/auth\/profile', requireAuth/);
+  assert.match(server, /const \{ name, klId \} = req\.body \|\| \{\};/);
+  assert.doesNotMatch(server, /req\.user\.department = cleanDepartment/);
+  const settings = fs.readFileSync(path.join(root, 'src', 'components', 'SettingsModal.tsx'), 'utf8');
+  assert.doesNotMatch(settings, /setDepartment|departments\.filter/);
+});
