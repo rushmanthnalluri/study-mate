@@ -110,7 +110,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
   };
 
   const handleDownload = (resource: SubjectResourceItem) => {
-    if (!resource.description) return;
+    if (!resource.content) return;
     const blob = new Blob([resource.content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
