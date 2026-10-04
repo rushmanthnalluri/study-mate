@@ -57,6 +57,8 @@ function rateLimit(windowMs, maxRequests) {
   };
 }
 
+app.use(express.json({ limit: '1mb' }));
+
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
     res.setHeader('Content-Security-Policy', [
