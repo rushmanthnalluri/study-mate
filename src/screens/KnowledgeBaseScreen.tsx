@@ -109,7 +109,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
     window.setTimeout(() => setCopied(false), 1500);
   };
 
-  const handleDownload = (resource: SubjectResourceItem) => {
+  const handleDownload = (resource: LibraryResource) => {
     if (!resource.content) return;
     const blob = new Blob([resource.content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
