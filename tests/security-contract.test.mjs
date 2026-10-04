@@ -7,6 +7,16 @@ const root = process.cwd();
 const server = fs.readFileSync(path.join(root, 'server', 'index.js'), 'utf8');
 const db = fs.readFileSync(path.join(root, 'server', 'db.js'), 'utf8');
 
+test('academic catalog endpoints are private and client loading is authenticated', () => {
+  assert.match(server, /app\.get\('\/api\/departments', requireAuth/);
+  assert.match(server, /app\.get\('\/api\/subjects', requireAuth/);
+  assert.match(server, /app\.get\('\/api\/subjects\/:id', requireAuth/);
+  const app = fs.readFileSync(path.join(root, 'src', 'App.tsx'), 'utf8');
+  assert.match(app, /fetch\('\/api\/subjects', \{ headers: authHeaders\(\) \}\)/);
+  assert.match(app, /if \(!token\) \{\s*setSubjects\(\[\]\);\s*setCurrentSubject\(null\);/);
+  assert.match(app, /\}, \[currentUser\?\.id\]\);/);
+});
+
 test('all personalized API routes require authentication', () => {
   const required = [
     "app.post('/api/generate', requireAuth",
