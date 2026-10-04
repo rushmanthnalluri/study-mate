@@ -572,6 +572,31 @@ export async function saveChatMessage(msg) {
   return msg;
 }
 
+export async function deleteChatMessages(userId) {
+  assertStorageReady();
+  const ownerId = String(userId || '');
+  if (!ownerId) throw new Error('Chat history requires an authenticated user.');
+
+  if (isMongoConnected && ChatMessageModel) {
+    try {
+      await ChatMessageModel.deleteMany({ userId: ownerId });
+      return;
+    } catch (e) {
+      throw new Error('Database unavailable.');
+    }
+  }
+
+  let list = [];
+  if (fs.existsSync(chatHistoryFile)) {
+    try {
+      list = JSON.parse(fs.readFileSync(chatHistoryFile, 'utf8'));
+    } catch (e) {
+      list = [];
+    }
+  }
+  atomicWriteJson(chatHistoryFile, list.filter(message => message.userId !== ownerId));
+}
+
 export async function clearStudyMateData() {
   assertStorageReady();
   if (isMongoConnected) {
