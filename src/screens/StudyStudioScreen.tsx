@@ -74,22 +74,22 @@ export const StudyStudioScreen:React.FC<Props>=({note,onNavigate})=>{
 
   return <div className="space-y-5 pb-28">
     <div className="flex items-center justify-between">
-      <button type="button" aria-label="Back to home" onClick={()=>onNavigate('home')} className="rounded-xl border border-[#e2d4c8] bg-[#ffffff] p-2"><ArrowLeft size={17}/></button>
+      <button type="button" aria-label="Back to home" onClick={()=>onNavigate('home')} className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-2"><ArrowLeft size={17}/></button>
       <div className="text-center"><p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--accent)]">Notebook Studio</p><h1 className="text-xl font-black text-[var(--foreground)]">Study, listen & visualize</h1></div>
       <div className="w-9"/>
     </div>
     {!note
-      ? <div className="rounded-[28px] bg-[#ffffff] p-7 text-center"><Headphones className="mx-auto text-[#9b633c]" size={38}/><h2 className="mt-3 font-black">Open a generated note first</h2><button onClick={()=>onNavigate('enter-topic')} className="mt-4 rounded-2xl bg-[var(--accent)] px-5 py-3 text-xs font-black text-white">Generate notes</button></div>
+      ? <div className="rounded-[28px] bg-[var(--card)] p-7 text-center"><Headphones className="mx-auto text-[var(--accent)]" size={38}/><h2 className="mt-3 font-black">Open a generated note first</h2><button onClick={()=>onNavigate('enter-topic')} className="mt-4 rounded-2xl bg-[var(--accent)] px-5 py-3 text-xs font-black text-white">Generate notes</button></div>
       : <>
-        <div className="rounded-[28px] border border-[#dbe3ee] bg-[var(--accent)] p-6 text-white shadow-sm">
-          <p className="text-[10px] font-black uppercase tracking-[.18em] text-[#f2d4b4]">{note.subject}</p><h2 className="mt-2 text-2xl font-black">{note.topic}</h2><p className="mt-2 text-xs leading-5 text-[#f0ddc9]">A single study workspace for audio overview, voice capture, flowchart and mind map.</p>
+        <div className="rounded-[28px] border border-[var(--border)] bg-[var(--accent)] p-6 text-white shadow-sm">
+          <p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--accent-100)]">{note.subject}</p><h2 className="mt-2 text-2xl font-black">{note.topic}</h2><p className="mt-2 text-xs leading-5 text-[var(--accent-50)]">A single study workspace for audio overview, voice capture, flowchart and mind map.</p>
           <div className="mt-5 flex flex-wrap gap-2">
-            <button onClick={playing?stop:speak} className="inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-[#6f4528]">{playing?<Pause size={15}/>:<Play size={15}/>} {playing?'Pause':'Listen'}</button>
+            <button onClick={playing?stop:speak} className="inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-[var(--foreground)]">{playing?<Pause size={15}/>:<Play size={15}/>} {playing?'Pause':'Listen'}</button>
             <button onClick={stop} className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-black"><Square size={14}/>Stop</button>
             <button onClick={copyScript} className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-black">{copied?<Check size={14}/>:<Copy size={14}/>} {copied?'Copied':'Copy audio script'}</button>
           </div>
         </div>
-        <section className="rounded-[24px] border border-[#e2d5ca] bg-[#ffffff] p-5">
+        <section className="rounded-[24px] border border-[var(--border)] bg-[var(--card)] p-5">
           <div className="flex items-center justify-between gap-3">
             <div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--accent)]">Private sources</p><h3 className="text-lg font-black">Ask your own material</h3></div>
             <label className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[var(--accent)] px-4 py-2.5 text-xs font-black text-white">
@@ -98,19 +98,19 @@ export const StudyStudioScreen:React.FC<Props>=({note,onNavigate})=>{
             </label>
           </div>
           <p className="mt-2 text-[11px] leading-5 text-[var(--muted-foreground)]">Sources are private to your account. PDFs are extracted on the server and stored as text only; scanned/image-only PDFs are rejected. Answers are grounded only in the selected source and will say when the source lacks the answer.</p>
-          {sourceError&&<div className="mt-3 rounded-xl border border-[#efc4b8] bg-[#fff0ec] p-3 text-[11px] font-semibold text-[#8f3328]">{sourceError}</div>}
-          {sources.length>0&&<div className="mt-3 space-y-2">{sources.map(s=><div key={s.id} className={`flex items-center gap-2 rounded-xl border p-2.5 ${selectedSource===s.id?'border-[#cba27d] bg-[#f5e6d7]':'border-[#e2e8f0] bg-white'}`}><button onClick={()=>setSelectedSource(s.id)} className="min-w-0 flex-1 text-left"><span className="block truncate text-xs font-bold text-[#334155]">{s.name}</span><span className="text-[10px] text-[var(--muted-foreground)]">{s.characters.toLocaleString()} characters</span></button><button onClick={()=>void removeSource(s.id)} aria-label={`Delete ${s.name}`} className="rounded-lg p-2 text-[#8f6f5a] hover:bg-[#f1e1d5]"><Trash2 size={14}/></button></div>)}</div>}
+          {sourceError&&<div className="mt-3 rounded-xl border border-[var(--danger-border)] bg-[var(--danger-soft)] p-3 text-[11px] font-semibold text-[var(--danger)]">{sourceError}</div>}
+          {sources.length>0&&<div className="mt-3 space-y-2">{sources.map(s=><div key={s.id} className={`flex items-center gap-2 rounded-xl border p-2.5 ${selectedSource===s.id?'border-[var(--accent-secondary)] bg-[var(--accent-50)]':'border-[var(--border)] bg-white'}`}><button onClick={()=>setSelectedSource(s.id)} className="min-w-0 flex-1 text-left"><span className="block truncate text-xs font-bold text-[var(--foreground)]">{s.name}</span><span className="text-[10px] text-[var(--muted-foreground)]">{s.characters.toLocaleString()} characters</span></button><button onClick={()=>void removeSource(s.id)} aria-label={`Delete ${s.name}`} className="rounded-lg p-2 text-[var(--muted-foreground)] hover:bg-[var(--accent-100)]"><Trash2 size={14}/></button></div>)}</div>}
           <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]"><input value={question} onChange={e=>setQuestion(e.target.value)} disabled={!selectedSource||sourceBusy} placeholder={selectedSource?'Ask a question about this source…':'Select a source first'} className="auth-input"/><button onClick={()=>void askSource()} disabled={!selectedSource||!question.trim()||sourceBusy} className="rounded-2xl bg-[var(--foreground)] px-4 py-3 text-xs font-black text-white disabled:opacity-40"><MessageCircle size={14} className="mr-1 inline"/>Ask</button></div>
-          {answer&&<div className="mt-3 rounded-2xl bg-[#f8fafc] p-4 text-xs leading-6 text-[#5f4a3d]"><b>Source-grounded answer</b><div className="mt-1 whitespace-pre-wrap">{answer}</div></div>}
+          {answer&&<div className="mt-3 rounded-2xl bg-[var(--muted)] p-4 text-xs leading-6 text-[var(--foreground)]"><b>Source-grounded answer</b><div className="mt-1 whitespace-pre-wrap">{answer}</div></div>}
         </section>
-        <section className="rounded-[24px] border border-[#e2d5ca] bg-[#ffffff] p-5">
+        <section className="rounded-[24px] border border-[var(--border)] bg-[var(--card)] p-5">
           <div className="flex items-center justify-between"><div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--accent)]">Voice notes</p><h3 className="text-lg font-black text-[var(--foreground)]">Talk through your revision</h3></div>
-            <button onClick={toggleVoice} className={listening?'rounded-2xl bg-[#a04434] px-4 py-2.5 text-xs font-black text-white':'rounded-2xl bg-[#f0e0cf] px-4 py-2.5 text-xs font-black text-[#6f4528]'}>{listening?<><MicOff size={14} className="mr-1 inline"/>Stop</>:<><Mic size={14} className="mr-1 inline"/>Record</>}</button>
+            <button onClick={toggleVoice} className={listening?'rounded-2xl bg-[var(--danger)] px-4 py-2.5 text-xs font-black text-white':'rounded-2xl bg-[var(--accent-100)] px-4 py-2.5 text-xs font-black text-[var(--foreground)]'}>{listening?<><MicOff size={14} className="mr-1 inline"/>Stop</>:<><Mic size={14} className="mr-1 inline"/>Record</>}</button>
           </div>
-          <div className="mt-3 min-h-24 rounded-2xl bg-[#f8fafc] p-4 text-xs leading-6 text-[#6b5748]">{voiceText||'Your spoken revision transcript will appear here. This uses the browser voice engine; no audio is uploaded by StudyMate.'}</div>
+          <div className="mt-3 min-h-24 rounded-2xl bg-[var(--muted)] p-4 text-xs leading-6 text-[var(--muted-foreground)]">{voiceText||'Your spoken revision transcript will appear here. This uses the browser voice engine; no audio is uploaded by StudyMate.'}</div>
         </section>
-        <section className="rounded-[24px] border border-[#e2d5ca] bg-[#ffffff] p-5"><div className="mb-3 flex items-center gap-2"><Workflow size={17} className="text-[var(--accent)]"/><div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--accent)]">Flowchart</p><h3 className="text-lg font-black">Process at a glance</h3></div></div><MermaidViewer code={flow}/></section>
-        <section className="rounded-[24px] border border-[#e2d5ca] bg-[#ffffff] p-5"><div className="mb-3 flex items-center gap-2"><Network size={17} className="text-[var(--accent)]"/><div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--accent)]">Mind map</p><h3 className="text-lg font-black">Connect the concepts</h3></div></div><MermaidViewer code={mind}/></section>
+        <section className="rounded-[24px] border border-[var(--border)] bg-[var(--card)] p-5"><div className="mb-3 flex items-center gap-2"><Workflow size={17} className="text-[var(--accent)]"/><div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--accent)]">Flowchart</p><h3 className="text-lg font-black">Process at a glance</h3></div></div><MermaidViewer code={flow}/></section>
+        <section className="rounded-[24px] border border-[var(--border)] bg-[var(--card)] p-5"><div className="mb-3 flex items-center gap-2"><Network size={17} className="text-[var(--accent)]"/><div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--accent)]">Mind map</p><h3 className="text-lg font-black">Connect the concepts</h3></div></div><MermaidViewer code={mind}/></section>
       </>}
   </div>;
 };
