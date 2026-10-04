@@ -96,22 +96,24 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
     if (choice === questions[index]?.answer) setScore(value => value + 1);
   };
 
-  const recordAttempt = async () => {
+  const recordAttempt = async (finalScore = score) => {
     const token = localStorage.getItem('studymate_token');
     if (!token || !subject) return;
     try {
       await fetch('/api/quiz/attempts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ subject: subject.name, mode, score, total: questions.length })
+        body: JSON.stringify({ subject: subject.name, mode, score: finalScore, total: questions.length })
       });
     } catch {}
   };
 
   const next = () => {
     if (index + 1 >= questions.length) {
+      const finalScore = score + (selected === current?.answer ? 1 : 0);
       setFinished(true);
-      void recordAttempt();
+      setScore(finalScore);
+      void recordAttempt(finalScore);
     } else {
       setIndex(value => value + 1);
       setSelected(null);
