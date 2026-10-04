@@ -786,7 +786,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
 
               <div>
                 <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
-                  Author / Faculty Contributor
+                  Author / Contributor
                 </label>
                 <input
                   type="text"
