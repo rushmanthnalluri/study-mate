@@ -31,7 +31,7 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
 
     fetch('/api/subjects', {
       headers: { Authorization: 'Bearer ' + token }
-    }
+    })
       .then(async (response) => {
         if (!response.ok) throw new Error('Published glossary content could not be loaded.');
         const data = await response.json();
