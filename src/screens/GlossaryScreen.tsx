@@ -98,7 +98,6 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
           placeholder="Search published terms…"
-          aria-label="Search glossary"
           className="w-full min-h-11 bg-[var(--card)] border border-[var(--border)] rounded-xl pl-10 pr-4 py-2.5 text-xs text-[var(--foreground)] editorial-focus"
         />
       </div>
