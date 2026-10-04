@@ -35,6 +35,28 @@ import { extractPdfText } from './pdf-extractor.js';
 const app = express();
 if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3001;
+
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Content-Security-Policy', [
+      "default-src 'self'",
+      "script-src 'self'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob:",
+      "font-src 'self'",
+      "connect-src 'self'",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'"
+    ].join('; '));
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('X-Frame-Options', 'DENY');
+  }
+  next();
+});
 // Helper: Get subjects from administrator-persisted MongoDB data only.
 // The repository knowledge-base directory is intentionally NOT a student-facing source.
 // This prevents packaged/demo/seeded subjects from appearing in production.
