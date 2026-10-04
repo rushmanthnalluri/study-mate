@@ -71,6 +71,9 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
         <div className="relative">
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]" />
           <input
+            id="saved-notes-search"
+            name="search"
+            aria-label="Search saved notes"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
