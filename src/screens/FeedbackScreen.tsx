@@ -220,10 +220,12 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
 
             {/* Comment Area */}
             <div>
-              <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
+              <label htmlFor="feedback-comment" className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                 Short Comment / Examiner Insight
               </label>
               <textarea
+                id="feedback-comment"
+                name="comment"
                 rows={3}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
