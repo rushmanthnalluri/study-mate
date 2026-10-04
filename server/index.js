@@ -225,10 +225,10 @@ app.get('/api/subjects/:id', async (req, res) => {
 app.post('/api/generate', requireAuth, rateLimit(60 * 1000, 10), async (req, res) => {
   try {
     const { department, subject, topic } = req.body || {};
-    if (!topic || !subject) {
+    if (!topic || !subject || !department) {
       return res.status(400).json({ error: 'Topic and subject are required.' });
     }
-    const cleanDepartment = String(department || 'Food Technology').trim();
+    const cleanDepartment = String(department || '').trim();
     const cleanSubject = String(subject).trim();
     const cleanTopic = String(topic).trim();
     if (cleanTopic.length < 2 || cleanTopic.length > 500) {
@@ -317,7 +317,7 @@ app.post('/api/feedback', requireAuth, rateLimit(60 * 60 * 1000, 20), async (req
       id: `fb-${crypto.randomUUID()}`,
       userId: req.user.id,
       topic: topic.trim(),
-      department: department || 'Food Technology',
+      department: department || '',
       subject: subject || 'General',
       source: source || 'Student',
       rating: rating || 'useful',
@@ -375,14 +375,14 @@ app.post('/api/chat', requireAuth, rateLimit(60 * 1000, 20), async (req, res) =>
       role: 'user',
       content: cleanMessage,
       subject: subject || 'General',
-      department: department || 'Food Technology',
+      department: department || '',
       timestamp: new Date().toISOString()
     });
 
     const reply = await generateChatbotReply({
       message: cleanMessage,
       history: cleanHistory,
-      department: department || 'Food Technology',
+      department: department || '',
       subject: subject || 'Food Microbiology',
       
     });
@@ -394,7 +394,7 @@ app.post('/api/chat', requireAuth, rateLimit(60 * 1000, 20), async (req, res) =>
       role: 'assistant',
       content: reply.content,
       subject: subject || 'General',
-      department: department || 'Food Technology',
+      department: department || '',
       timestamp: new Date().toISOString()
     });
 
@@ -570,7 +570,7 @@ app.post('/api/auth/login', rateLimit(15 * 60 * 1000, 20), async (req, res) => {
 // POST signup — every account is a real persisted student account.
 app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => {
   try {
-    const { name, klId, email, password, department = 'Food Technology' } = req.body || {};
+    const { name, klId, email, password, department = '' } = req.body || {};
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email, and password are required.' });
     }
@@ -1110,7 +1110,7 @@ app.get('/api/admin/stats', requireAdmin, async (req, res) => {
 // No repository files or generated placeholder resources are exposed to students.
 app.post('/api/admin/subjects', requireAdmin, rateLimit(60 * 60 * 1000, 20), async (req, res) => {
   try {
-    const { name, code, description = '', department = 'Food Technology', units = [], topics = [] } = req.body || {};
+    const { name, code, description = '', department = '', units = [], topics = [] } = req.body || {};
     const cleanName = String(name || '').trim();
     const cleanCode = String(code || '').trim();
     const cleanDepartment = String(department || '').trim();
@@ -1278,7 +1278,7 @@ app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), as
 app.delete('/api/admin/subjects/:name', requireAdmin, rateLimit(60 * 60 * 1000, 20), async (req, res) => {
   try {
     const name = String(req.params.name || '').trim();
-    const department = String(req.query.department || 'Food Technology').trim();
+    const department = String(req.query.department || '').trim();
     const subjectId = `${department.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
     const existing = (await getAllSubjects('All')).find(subject => subject.id === subjectId);
     if (!existing) return res.status(404).json({ error: `Subject "${name}" not found.` });
