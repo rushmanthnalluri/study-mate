@@ -122,7 +122,7 @@ async function getAllSubjects(deptFilter = 'All') {
 }
 
 // API: List all departments
-app.get('/api/departments', async (req, res) => {
+app.get('/api/departments', requireAuth, async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   try {
     const subjects = await getAllSubjects('All');
@@ -134,7 +134,7 @@ app.get('/api/departments', async (req, res) => {
 });
 
 // API: List subjects (default: all administrator-managed subjects)
-app.get('/api/subjects', async (req, res) => {
+app.get('/api/subjects', requireAuth, async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   try {
     const { department } = req.query;
@@ -147,7 +147,7 @@ app.get('/api/subjects', async (req, res) => {
 });
 
 // API: Get subject details and administrator-managed resources.
-app.get('/api/subjects/:id', async (req, res) => {
+app.get('/api/subjects/:id', requireAuth, async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   try {
     const id = String(req.params.id || '').trim();
