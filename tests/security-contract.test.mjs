@@ -422,3 +422,12 @@ test('admin templates do not seed invented academic units or grading rules', () 
   assert.match(admin, /Enter only grading guidance published or verified by your institution/);
   assert.doesNotMatch(admin, /20-40 words|120-180 words|350-500 words/);
 });
+
+
+test('generated note unit metadata is constrained to published subject units', () => {
+  const generator = fs.readFileSync(path.join(root, 'server', 'generator.js'), 'utf8');
+  assert.match(generator, /publishedUnits/);
+  assert.match(generator, /matchedUnit/);
+  assert.match(generator, /Not specified in published material/);
+  assert.match(generator, /note\.code = subjectMeta\.code \|\| ''/);
+});
