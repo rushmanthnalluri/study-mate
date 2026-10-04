@@ -43,5 +43,6 @@
   },
   "engines": {
     "node": "20.x"
-  }
+  },
+  "description": "StudyMate private academic workspace"
 }
