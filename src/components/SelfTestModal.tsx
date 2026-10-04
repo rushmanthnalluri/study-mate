@@ -163,7 +163,7 @@ export const SelfTestModal: React.FC<SelfTestModalProps> = ({ note, onClose }) =
                 ? 'Type your crisp 2-3 sentence definition here...'
                 : 'Write your structured answer with headings and points...'
             }
-            className="w-full bg-surface border border-surface-border rounded-xl p-3 text-xs text-surface-dark placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 leading-relaxed font-sans"
+            className="w-full bg-surface border border-surface-border rounded-xl p-3 text-xs text-surface-dark placeholder-surface-muted editorial-focus leading-relaxed font-sans"
           />
         </div>
 
