@@ -161,7 +161,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
         <div className="flex items-center space-x-3">
           <button
             onClick={() => onNavigate('home')}
-            className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] dark:bg-[var(--foreground)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] dark:bg-[var(--foreground)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
@@ -181,7 +181,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
             onClick={() => setActiveTab('flashcards')}
             className={`px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors ${
               activeTab === 'flashcards'
-                ? 'bg-[#ffffff] dark:bg-[var(--foreground)] text-[var(--accent)]  shadow-sm font-bold'
+                ? 'bg-[var(--card)] dark:bg-[var(--foreground)] text-[var(--accent)]  shadow-sm font-bold'
                 : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
             }`}
           >
@@ -192,7 +192,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
             onClick={() => setActiveTab('quiz')}
             className={`px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors ${
               activeTab === 'quiz'
-                ? 'bg-[#ffffff] dark:bg-[var(--foreground)] text-[var(--accent)]  shadow-sm font-bold'
+                ? 'bg-[var(--card)] dark:bg-[var(--foreground)] text-[var(--accent)]  shadow-sm font-bold'
                 : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
             }`}
           >
@@ -222,7 +222,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
               deptFilter === dept
                 ? 'bg-[var(--accent)] text-white shadow-sm'
-                : 'bg-[#ffffff] dark:bg-[var(--foreground)] text-[var(--foreground)] dark:text-[var(--card)] border border-[var(--border)] dark:border-[var(--border)] hover:bg-surface-subtle'
+                : 'bg-[var(--card)] dark:bg-[var(--foreground)] text-[var(--foreground)] dark:text-[var(--card)] border border-[var(--border)] dark:border-[var(--border)] hover:bg-surface-subtle'
             }`}
           >
             {dept === 'All' ? 'All Depts' : dept}
@@ -255,7 +255,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
           {currentCard ? (
             <div
               onClick={() => setIsFlipped(!isFlipped)}
-              className="bg-[#ffffff] dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] rounded-2xl p-6 min-h-[260px] flex flex-col justify-between shadow-card cursor-pointer hover:border-brand-300 transition-all select-none relative group"
+              className="bg-[var(--card)] dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] rounded-2xl p-6 min-h-[260px] flex flex-col justify-between shadow-card cursor-pointer hover:border-brand-300 transition-all select-none relative group"
             >
               <div className="flex items-center justify-between text-xs">
                 <span className="font-mono px-2 py-0.5 rounded bg-[var(--muted)] dark:bg-[var(--foreground)] text-[var(--accent)]  font-bold">
@@ -334,7 +334,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
               </div>
             </div>
           ) : (
-            <div className="text-center py-12 bg-[#ffffff] dark:bg-[var(--foreground)] rounded-2xl border border-[var(--border)] dark:border-[var(--border)] p-6">
+            <div className="text-center py-12 bg-[var(--card)] dark:bg-[var(--foreground)] rounded-2xl border border-[var(--border)] dark:border-[var(--border)] p-6">
               <p className="text-xs text-[var(--muted-foreground)]">No flashcards available for {deptFilter}.</p>
             </div>
           )}
@@ -344,7 +344,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
             <button
               onClick={handlePrevCard}
               disabled={filteredCards.length <= 1}
-              className="px-4 py-2.5 rounded-xl border border-[var(--border)] dark:border-[var(--border)] bg-[#ffffff] dark:bg-[var(--foreground)] text-[var(--foreground)] dark:text-[var(--card)] font-semibold text-xs hover:bg-surface-subtle flex items-center space-x-1 shadow-sm disabled:opacity-40"
+              className="px-4 py-2.5 rounded-xl border border-[var(--border)] dark:border-[var(--border)] bg-[var(--card)] dark:bg-[var(--foreground)] text-[var(--foreground)] dark:text-[var(--card)] font-semibold text-xs hover:bg-surface-subtle flex items-center space-x-1 shadow-sm disabled:opacity-40"
             >
               <ChevronLeft size={16} />
               <span>Previous</span>
@@ -368,7 +368,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
       {activeTab === 'quiz' && (
         <div className="space-y-4">
           {!isQuizFinished && currentQuizItem ? (
-            <div className="bg-[#ffffff] dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] rounded-2xl p-6 shadow-card space-y-4">
+            <div className="bg-[var(--card)] dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] rounded-2xl p-6 shadow-card space-y-4">
               {/* Question Header */}
               <div className="flex items-center justify-between text-xs pb-3 border-b border-surface-subtle dark:border-[var(--border)]">
                 <div className="flex items-center space-x-2">
@@ -422,7 +422,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
                       disabled={hasAnswered}
                       className={`w-full p-3 rounded-xl border text-left text-xs transition-all flex items-start space-x-3 ${optionStyle}`}
                     >
-                      <span className="w-5 h-5 rounded-full bg-[#ffffff] dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">
+                      <span className="w-5 h-5 rounded-full bg-[var(--card)] dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">
                         {String.fromCharCode(65 + idx)}
                       </span>
                       <span className="flex-1 leading-relaxed">{option}</span>
@@ -465,7 +465,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
             </div>
           ) : isQuizFinished ? (
             /* Quiz Completed Score Card */
-            <div className="bg-[#ffffff] dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] rounded-2xl p-8 text-center shadow-card space-y-4 animate-fade-in">
+            <div className="bg-[var(--card)] dark:bg-[var(--foreground)] border border-[var(--border)] dark:border-[var(--border)] rounded-2xl p-8 text-center shadow-card space-y-4 animate-fade-in">
               <div className="w-16 h-16 rounded-2xl bg-[#f0e0cf] dark:bg-[var(--foreground)] text-[var(--accent)]  mx-auto flex items-center justify-center">
                 <Trophy size={36} />
               </div>
@@ -494,14 +494,14 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
                 </button>
                 <button
                   onClick={() => onNavigate('select-subject')}
-                  className="px-4 py-2.5 rounded-xl border border-[var(--border)] dark:border-[var(--border)] bg-[#ffffff] dark:bg-[var(--foreground)] text-[var(--foreground)] dark:text-[var(--card)] font-bold text-xs hover:bg-surface-subtle"
+                  className="px-4 py-2.5 rounded-xl border border-[var(--border)] dark:border-[var(--border)] bg-[var(--card)] dark:bg-[var(--foreground)] text-[var(--foreground)] dark:text-[var(--card)] font-bold text-xs hover:bg-surface-subtle"
                 >
                   <span>Study Notes</span>
                 </button>
               </div>
             </div>
           ) : (
-            <div className="text-center py-12 bg-[#ffffff] dark:bg-[var(--foreground)] rounded-2xl border border-[var(--border)] dark:border-[var(--border)] p-6">
+            <div className="text-center py-12 bg-[var(--card)] dark:bg-[var(--foreground)] rounded-2xl border border-[var(--border)] dark:border-[var(--border)] p-6">
               <p className="text-xs text-[var(--muted-foreground)]">No quiz questions found for {deptFilter}.</p>
             </div>
           )}
