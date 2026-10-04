@@ -136,6 +136,8 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
 
         <form onSubmit={handleAnalyzeText} className="space-y-2.5">
           <textarea
+            id="paper-analyzer-text"
+            name="documentText"
             rows={4}
             value={customText}
             onChange={(e) => setCustomText(e.target.value)}
