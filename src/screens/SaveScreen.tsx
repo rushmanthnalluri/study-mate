@@ -63,7 +63,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
       </div>
 
       <p className="text-xs text-[#64748b]">
-        Notes stay saved on your device for fast offline revision before exams.
+        Your saved notes remain private to your account and are available for revision.
       </p>
 
       {/* Search & Filter Bar */}
@@ -80,7 +80,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
         </div>
 
         <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
-          {['All', 'CSE', 'AIDS', 'ECE', 'EEE', 'Food Technology'].map((dept) => (
+          {['All', ...Array.from(new Set(savedNotes.map(note => note.department).filter(Boolean)))].map((dept) => (
             <button
               key={dept}
               onClick={() => setSelectedDeptFilter(dept as Department)}
