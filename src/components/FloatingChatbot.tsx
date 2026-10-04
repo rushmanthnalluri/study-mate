@@ -34,7 +34,7 @@ export const FloatingChatbot: React.FC<FloatingChatbotProps> = ({
           Ask AI Tutor
         </span>
 
-        <span className="absolute -top-2 -right-1 bg-amber-400 text-brand-950 text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded-full shadow-sm">
+        <span className="absolute -top-2 -right-1 bg-amber-400 text-[var(--accent-950)] text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded-full shadow-sm">
           24/7
         </span>
       </button>
