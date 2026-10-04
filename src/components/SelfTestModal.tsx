@@ -163,7 +163,7 @@ export const SelfTestModal: React.FC<SelfTestModalProps> = ({ note, onClose }) =
                 ? 'Type your crisp 2-3 sentence definition here...'
                 : 'Write your structured answer with headings and points...'
             }
-            className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus leading-relaxed font-sans"
+            className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] editorial-focus leading-relaxed font-sans"
           />
         </div>
 
@@ -180,7 +180,7 @@ export const SelfTestModal: React.FC<SelfTestModalProps> = ({ note, onClose }) =
         ) : (
           <div className="space-y-3 pt-2 border-t border-[var(--border)]/60 animate-fade-in">
             {/* Score Banner */}
-            <div className="bg-gradient-to-r from-stone-900 to-brand-950 text-white p-4 rounded-xl flex items-center justify-between">
+            <div className="bg-gradient-to-r from-stone-900 to-[var(--accent-950)] text-white p-4 rounded-xl flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-wider text-amber-300 font-bold block">
                   Simulated KL Score
