@@ -53,7 +53,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
       <div className="flex items-center space-x-3 pt-1">
         <button
           onClick={() => onNavigate('select-subject')}
-          className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+          className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
@@ -68,7 +68,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
       </div>
 
       {/* Selected Subject Context Card */}
-      <div className="bg-[#ffffff] border border-[#d7b99d] rounded-xl p-3.5 shadow-sm flex items-center justify-between">
+      <div className="bg-[var(--card)] border border-[var(--accent-200)] rounded-xl p-3.5 shadow-sm flex items-center justify-between">
         <div className="space-y-0.5">
           <div className="flex items-center space-x-2">
             <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-surface-subtle text-[var(--muted-foreground)]">
@@ -102,7 +102,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
               value={topicInput}
               onChange={(e) => setTopicInput(e.target.value)}
               placeholder="e.g. Banker's Algorithm safety steps, AVL tree rotations, Nyquist criterion, or paste an exact question..."
-              className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm leading-relaxed"
+              className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm leading-relaxed"
             />
           </div>
           <p className="text-[11px] text-[var(--muted-foreground)] mt-1 italic">
@@ -182,11 +182,11 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
               <div
                 key={q.id}
                 onClick={() => handleSelectQuestion(q)}
-                className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm hover:border-brand-300 transition-all cursor-pointer group text-left"
+                className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 shadow-sm hover:border-brand-300 transition-all cursor-pointer group text-left"
               >
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center space-x-1.5">
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#f0e0cf] text-[var(--accent)] font-mono">
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[var(--accent-100)] text-[var(--accent)] font-mono">
                       {q.marks} Marks
                     </span>
                     <span className="text-[9px] text-[var(--muted-foreground)] font-sans">
