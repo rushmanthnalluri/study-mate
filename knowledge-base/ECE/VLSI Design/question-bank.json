@@ -20,7 +20,7 @@
     "topic": "Setup Time and Hold Time in Flip-Flops",
     "marks": 5,
     "unit": 4,
-    "paperYear": "KL In-Sem Exam 2, 2024",
+    "paperYear": "KL assessment Exam 2, 2024",
     "question": "Define Setup Time (t_setup) and Hold Time (t_hold). Derive the maximum clock frequency condition in a synchronous digital pipeline."
   },
   {
