@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Department, UserProfile } from '../types';
+import { UserProfile } from '../types';
 import { X, GraduationCap, LockKeyhole, Mail, UserRound, ArrowRight, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 
 interface AuthModalProps {
@@ -7,10 +7,9 @@ interface AuthModalProps {
   onClose: () => void;
   currentUser: UserProfile | null;
   onAuthSuccess: (user: UserProfile, token: string) => void;
-  departments: Department[];
 }
 
-export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess, departments }) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess }) => {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [loginIdentifier, setLoginIdentifier] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -18,7 +17,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
   const [signupKlId, setSignupKlId] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
-  const [signupDepartment, setSignupDepartment] = useState<Department>('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -53,8 +51,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
             name: signupName.trim(),
             klId: signupKlId.trim(),
             email: signupEmail.trim(),
-            password: signupPassword,
-            department: signupDepartment
+            password: signupPassword
           }
         : {
             usernameOrEmail: loginIdentifier.trim(),
@@ -148,17 +145,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Full name</label>
                 <input value={signupName} onChange={e => setSignupName(e.target.value)} required autoComplete="name" placeholder="Your full name" className="auth-input" />
               </div>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3">
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">KL ID</label>
                   <input value={signupKlId} onChange={e => setSignupKlId(e.target.value)} required placeholder="Your KL ID" className="auth-input font-mono" />
                 </div>
-                <div>
-                  <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Department</label>
-                  <select value={signupDepartment} onChange={e => setSignupDepartment(e.target.value as Department)} className="auth-input">
-                    {departments.filter(d => d !== 'All').map(dept => <option key={dept} value={dept}>{dept}</option>)}
-                  </select>
-                </div>
+
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">University email</label>
