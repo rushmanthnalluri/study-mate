@@ -71,7 +71,7 @@ export async function generateConfiguredCompletion({ system, user, temperature =
   throw new Error('Unsupported administrator-configured AI provider.');
 }
 
-export async function generateChatbotReply({ message, history = [], department = 'Food Technology', subject = 'Food Microbiology' }) {
+export async function generateChatbotReply({ message, history = [], department = '', subject = 'General' }) {
   const config = await centralConfig();
   const apiKey = config.apiKey;
   const provider = config.provider;
