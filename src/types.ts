@@ -1,4 +1,4 @@
-export type Department = 'All' | 'CSE' | 'AIDS' | 'ECE' | 'EEE' | 'Food Technology';
+export type Department = 'All' | (string & {});
 
 export interface ExamQuestion {
   id: string;
