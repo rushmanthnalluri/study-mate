@@ -171,6 +171,15 @@ test('account dialogs expose modal semantics', () => {
   assert.ok(settings.includes('aria-modal="true"'));
 });
 
+test('signed-out users cannot dismiss the required authentication modal', () => {
+  const auth = fs.readFileSync(path.join(root, 'src', 'components', 'AuthModal.tsx'), 'utf8');
+  const app = fs.readFileSync(path.join(root, 'src', 'App.tsx'), 'utf8');
+  assert.match(auth, /canDismiss\?: boolean/);
+  assert.match(auth, /if \(canDismiss && event\.key === 'Escape'\)/);
+  assert.match(auth, /\{canDismiss && \(/);
+  assert.match(app, /canDismiss=\{Boolean\(currentUser\)\}/);
+});
+
 
 test('MongoDB enforces unique user email and KL ID identity fields', () => {
   assert.match(db, /UserSchema\.index\(\{ email: 1 \}, \{ unique: true/);
