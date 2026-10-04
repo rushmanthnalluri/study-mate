@@ -42,11 +42,29 @@ test('production launcher runs MongoDB migrations before the server when MongoDB
   const launcher = read('server.js');
   assert.match(launcher, /if \(process\.env\.MONGODB_URI\)/);
   assert.match(launcher, /await import\('\.\/scripts\/mongodb-migrate\.mjs'\)/);
-  assert.match(launcher, /await import\('\.\/server\/index\.js'\)/);
+  assert.match(launcher, /await import\('\.\/server\/index\.js'\)/);\n  assert.match(launcher, /await initDatabase\(\)/);\n  assert.match(launcher, /MONGODB_URI.*initialization failed|databaseReady/);
 });
 
 test('Render production service has a deterministic Node start command', () => {
   const packageJson = JSON.parse(read('package.json'));
   assert.equal(packageJson.scripts.start, 'node server.js');
   assert.equal(packageJson.engines.node, '>=22.12.0');
+});
+
+
+test('JSON API routes have a bounded body parser before route handlers', () => {
+  const server = read('server/index.js');
+  assert.match(server, /app\.use\(express\.json\(\{\s*limit:\s*['"]1mb['"]\s*\}\)\);/);
+  assert.match(server, /express\.raw\(\{ type: \[['"]application\/pdf['"]/);
+});
+
+test('configured bootstrap administrator is actually invoked during startup', () => {
+  const server = read('server/index.js');
+  assert.match(server, /const ensureBootstrapAdmin = async/);
+  assert.match(server, /await ensureBootstrapAdmin\(\);/);
+});
+
+test('CI MongoDB integration uses the supported Node runtime', () => {
+  const ci = read('.github/workflows/ci.yml');
+  assert.match(ci, /node-version:\s*22\.12\.0/);
 });
