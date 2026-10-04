@@ -145,7 +145,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
           disabled={!topicInput.trim() || isLoading}
           className={`w-full py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 shadow-md transition-all active:scale-[0.98] ${
             !topicInput.trim() || isLoading
-              ? 'bg-[var(--background)]-border text-[var(--muted-foreground)] cursor-not-allowed'
+              ? 'bg-[var(--border)] text-[var(--muted-foreground)] cursor-not-allowed'
               : 'bg-[var(--accent)] text-white hover:bg-[var(--accent)] editorial-focus'
           }`}
         >
