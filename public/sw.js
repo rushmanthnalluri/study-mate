@@ -48,7 +48,7 @@ self.addEventListener('fetch', (event) => {
         caches.match(request).then((cachedResponse) => {
           if (cachedResponse) return cachedResponse;
           if (request.mode === 'navigate') return caches.match('/index.html');
-          return undefined;
+          return new Response('', { status: 503, statusText: 'Offline' });
         })
       )
   );
