@@ -20,7 +20,7 @@
     "topic": "Process Synchronization and Semaphores",
     "marks": 5,
     "unit": 2,
-    "paperYear": "KL In-Sem Exam 2, 2024",
+    "paperYear": "KL assessment Exam 2, 2024",
     "question": "What is a Semaphore? Explain how counting and binary semaphores solve the critical section problem without busy waiting."
   },
   {
@@ -36,7 +36,7 @@
     "topic": "Context Switching",
     "marks": 2,
     "unit": 1,
-    "paperYear": "KL In-Sem Exam 1, 2024",
+    "paperYear": "KL assessment Exam 1, 2024",
     "question": "What is Context Switching? Mention the state information preserved in PCB."
   }
 ]
