@@ -374,6 +374,7 @@ export const App: React.FC = () => {
         selectedDepartment={selectedDepartment}
         onSelectDepartment={setSelectedDepartment}
         onNavigate={setCurrentScreen}
+        departments={['All', ...Array.from(new Set(subjects.map((subject) => subject.department))).filter(Boolean)] as Department[]}
         currentUser={currentUser}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onOpenSettings={() => setIsSettingsModalOpen(true)}
@@ -584,7 +585,6 @@ export const App: React.FC = () => {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         currentUser={currentUser}
-        departments={['All', ...Array.from(new Set(subjects.map((subject) => subject.department))).filter(Boolean)] as Department[]}
         onAuthSuccess={(user, token) => {
           setCurrentUser(user);
           try {
