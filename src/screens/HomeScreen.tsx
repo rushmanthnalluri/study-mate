@@ -168,7 +168,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {recentNotes.length > 0 && (
         <section>
           <div className="editorial-section-label"><span>Recent revision</span></div>
-          <divlCard className="divide-y divide-[var(--border)] overflow-hidden">
+          <EditorialCard className="divide-y divide-[var(--border)] overflow-hidden">
             {recentNotes.slice(0, 3).map((note, index) => (
               <button
                 key={note.id || index}
@@ -186,7 +186,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <ChevronRight size={15} className="shrink-0 text-[var(--accent)]" />
               </button>
             ))}
-          </div>
+          </EditorialCard>
         </section>
       )}
 
