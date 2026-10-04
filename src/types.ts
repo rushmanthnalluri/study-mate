@@ -9,6 +9,25 @@ export interface ExamQuestion {
   question: string;
 }
 
+export interface SubjectFlashcard {
+  id: string;
+  department?: Department;
+  subject?: string;
+  topic: string;
+  marks?: 2 | 5 | 10;
+  question: string;
+  answer: string;
+  keywords?: string[];
+}
+
+export interface GlossaryTerm {
+  term: string;
+  department?: Department;
+  subject?: string;
+  definition: string;
+  keyRule?: string;
+}
+
 export interface SubjectResourceItem {
   id: string;
   title: string;
@@ -30,6 +49,8 @@ export interface Subject {
   topics: string[];
   questionCount: number;
   questionBank?: ExamQuestion[];
+  flashcards?: SubjectFlashcard[];
+  glossary?: GlossaryTerm[];
   courseMaterials?: string;
   previousPapers?: string;
   marksPattern?: string;
