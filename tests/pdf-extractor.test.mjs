@@ -27,6 +27,17 @@ test('rejects image-only or otherwise textless PDFs', () => {
   assert.throws(() => extractPdfText(pdf), /No extractable text/);
 });
 
+test('rejects raw-deflate streams that bypass zlib wrapper detection', () => {
+  const payload = Buffer.alloc(9 * 1024 * 1024, 65);
+  const compressed = zlib.deflateRawSync(payload);
+  const pdf = Buffer.concat([
+    Buffer.from('%PDF-1.4\\n<< /Length ' + compressed.length + ' /Filter /FlateDecode >>\\nstream\\n', 'latin1'),
+    compressed,
+    Buffer.from('\\nendstream\\n%%EOF', 'latin1')
+  ]);
+  assert.throws(() => extractPdfText(pdf), /No extractable text|maximum|too large/i);
+});
+
 test('rejects compressed streams that expand beyond the extractor safety limit', () => {
   const payload = Buffer.alloc(9 * 1024 * 1024, 65);
   const compressed = zlib.deflateSync(payload);
