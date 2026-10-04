@@ -113,8 +113,15 @@ export const App: React.FC = () => {
       }, []);
 
   const fetchSubjects = async () => {
+    const token = localStorage.getItem('studymate_token');
+    if (!token) {
+      setSubjects([]);
+      setCurrentSubject(null);
+      return;
+    }
+
     try {
-      const res = await fetch('/api/subjects');
+      const res = await fetch('/api/subjects', { headers: authHeaders() });
       if (!res.ok) throw new Error('API offline');
       const data: Subject[] = await res.json();
       setSubjects(Array.isArray(data) ? data : []);
@@ -129,10 +136,10 @@ export const App: React.FC = () => {
     }
   };
 
-  // Sync subjects with backend
+  // Academic catalog is private account-scoped content.
   useEffect(() => {
     fetchSubjects();
-  }, []);
+  }, [currentUser?.id]);
 
   useEffect(() => {
     loadSavedNotes();
