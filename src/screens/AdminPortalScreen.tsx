@@ -802,14 +802,14 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
               <button
                 type="button"
                 onClick={insertQuestionTemplate}
-                className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--background)]-border text-[11px] font-medium"
+                className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--border)] text-[11px] font-medium"
               >
                 + Insert Question Bank Template
               </button>
               <button
                 type="button"
                 onClick={insertRubricTemplate}
-                className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--background)]-border text-[11px] font-medium"
+                className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--border)] text-[11px] font-medium"
               >
                 + Insert Rubric Template
               </button>
