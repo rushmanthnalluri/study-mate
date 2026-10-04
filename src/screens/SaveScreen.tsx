@@ -48,7 +48,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
           type="button"
           aria-label="Back to home"
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+          className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
@@ -75,7 +75,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search saved revision notes..."
-            className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm"
+            className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm"
           />
         </div>
 
@@ -87,7 +87,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                 selectedDeptFilter === dept
                   ? 'bg-[var(--accent)] text-white'
-                  : 'bg-[#ffffff] text-[var(--foreground)] border border-[var(--border)]'
+                  : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)]'
               }`}
             >
               {dept}
@@ -99,7 +99,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
       {/* Notes List */}
       <div className="space-y-2.5 pt-1">
         {filteredNotes.length === 0 ? (
-          <div className="text-center py-14 bg-[#ffffff] border border-dashed border-[var(--border)] rounded-xl p-6 space-y-3">
+          <div className="text-center py-14 bg-[var(--card)] border border-dashed border-[var(--border)] rounded-xl p-6 space-y-3">
             <Bookmark size={36} className="mx-auto text-[var(--muted-foreground)] opacity-40" />
             <h3 className="text-sm font-semibold text-[var(--foreground)]">No revision notes saved yet</h3>
             <p className="text-xs text-[var(--muted-foreground)] max-w-xs mx-auto">
@@ -116,7 +116,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
           filteredNotes.map((note) => (
             <div
               key={note.id || note.topic}
-              className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3.5 shadow-sm hover:border-brand-300 transition-all flex flex-col justify-between space-y-2"
+              className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3.5 shadow-sm hover:border-brand-300 transition-all flex flex-col justify-between space-y-2"
             >
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
@@ -146,7 +146,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
                     className={`p-1.5 rounded-lg border text-xs transition-colors ${
                       note.isReviewed
                         ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                        : 'bg-[#ffffff] text-[var(--muted-foreground)] border-[var(--border)] hover:bg-surface-subtle'
+                        : 'bg-[var(--card)] text-[var(--muted-foreground)] border-[var(--border)] hover:bg-surface-subtle'
                     }`}
                   >
                     <CheckCircle size={15} />
