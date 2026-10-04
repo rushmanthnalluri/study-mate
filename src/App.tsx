@@ -509,8 +509,8 @@ export const App: React.FC = () => {
 
         {currentScreen === 'feedback' && (
           <FeedbackScreen
-            currentTopic={currentNote?.topic || "KL Exam Evaluation"}
-            currentDepartment={currentNote?.department || currentSubject?.department || "CSE"}
+            currentTopic={currentNote?.topic || "Study feedback"}
+            currentDepartment={currentNote?.department || currentSubject?.department || ""}
             currentSubject={currentNote?.subject || currentSubject?.name || "Operating Systems"}
             onNavigate={setCurrentScreen}
             onSubmitFeedback={handleSubmitFeedback}
