@@ -220,7 +220,25 @@ app.post('/api/generate', requireAuth, rateLimit(60 * 1000, 10), async (req, res
       resourcesUsed
     });
   } catch (err) {
-    res.status(500).json({ error: 'Request could not be completed.' });
+    console.error('Note generation failed:', err instanceof Error ? err.message : err);
+    const message = err instanceof Error ? err.message : 'Note generation failed.';
+    if (message.includes('No administrator-configured AI provider')) {
+      return res.status(503).json({
+        error: 'AI note generation is not configured. An administrator must configure a supported AI provider in Admin → AI Control.'
+      });
+    }
+    if (message.includes('provider rejected the request')) {
+      return res.status(502).json({
+        error: 'The configured AI provider rejected the note-generation request. Check the provider, API key, and model in Admin → AI Control.'
+      });
+    }
+    if (message.includes('empty response')) {
+      return res.status(502).json({ error: 'The configured AI provider returned an empty response. Try again or check the AI configuration.' });
+    }
+    if (message.includes('invalid note') || message.includes('missing note field') || message.includes('invalid keywords')) {
+      return res.status(502).json({ error: 'The AI provider returned an invalid note format. Try again or use a different supported model.' });
+    }
+    res.status(500).json({ error: 'Note generation failed on the server. Check the server logs for the underlying error.' });
   }
 });
 
@@ -702,7 +720,7 @@ const loadCentralAiConfig = async () => {
     const key = decryptApiKey(stored.encryptedApiKey);
     if (key) return { provider: stored.provider, model: stored.model || '', apiKey: key };
   }
-  if (process.env.GEMINI_API_KEY) return { provider: 'gemini', model: process.env.GEMINI_MODEL || 'gemini-1.5-flash', apiKey: process.env.GEMINI_API_KEY };
+  if (process.env.GEMINI_API_KEY) return { provider: 'gemini', model: process.env.GEMINI_MODEL || 'gemini-3.8-flash', apiKey: process.env.GEMINI_API_KEY };
   if (process.env.GROQ_API_KEY) return { provider: 'groq', model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile', apiKey: process.env.GROQ_API_KEY };
   return { provider: 'offline', model: '', apiKey: '' };
 };
