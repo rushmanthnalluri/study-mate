@@ -88,21 +88,6 @@ export const glossaryTerms: GlossaryTerm[] = [
     keyRule: "The number of right-half plane poles equals the number of sign changes in the first column."
   },
 
-  // Food Tech
-  {
-    term: "12D Botulinum Cook",
-    department: "Food Technology",
-    subject: "Food Microbiology",
-    definition: "The thermal sterilization standard applied to low-acid canned foods (pH > 4.6) delivering sufficient heat lethality to reduce Clostridium botulinum spores by 12 decimal cycles (10^12 reduction).",
-    keyRule: "Target Fo = 12 x 0.21 = 2.52 minutes at 121.1°C."
-  },
-  {
-    term: "Flow Diversion Valve (FDV)",
-    department: "Food Technology",
-    subject: "Dairy Technology",
-    definition: "A 3-way sanitary pneumatic valve situated at the holding tube discharge of an HTST milk pasteurization plant that diverts under-pasteurized milk back to the balance tank.",
-    keyRule: "Fail-safe action: Springs divert forward flow if temperature sensor reads < 71.7°C."
-  }
 ];
 
 export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
