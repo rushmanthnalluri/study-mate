@@ -32,7 +32,7 @@ import {
   getKnowledgeBaseOverrides,
   saveKnowledgeBaseOverride
 } from './db.js';
-import { generateChatbotReply, normalizeGeminiModel } from './chatbot.js';
+import { generateChatbotReply, normalizeGeminiModel, AI_PROVIDERS, supportedAiProviders, generateConfiguredCompletion } from './chatbot.js';
 import { extractPdfText } from './pdf-extractor.js';
 
 const app = express();
@@ -718,11 +718,17 @@ const loadCentralAiConfig = async () => {
   const stored = await getAiConfig();
   if (stored?.provider && stored.provider !== 'offline' && stored.encryptedApiKey) {
     const key = decryptApiKey(stored.encryptedApiKey);
-    if (key) return { provider: stored.provider, model: stored.model || '', apiKey: key };
+    if (key) {
+      const meta = AI_PROVIDERS[stored.provider] || AI_PROVIDERS.custom;
+      return { provider: stored.provider, model: stored.model || meta.defaultModel || '', apiKey: key, endpoint: stored.endpoint || meta.baseUrl || '' };
+    }
   }
-  if (process.env.GEMINI_API_KEY) return { provider: 'gemini', model: process.env.GEMINI_MODEL || 'gemini-3.8-flash', apiKey: process.env.GEMINI_API_KEY };
-  if (process.env.GROQ_API_KEY) return { provider: 'groq', model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile', apiKey: process.env.GROQ_API_KEY };
-  return { provider: 'offline', model: '', apiKey: '' };
+  for (const [provider, meta] of Object.entries(AI_PROVIDERS)) {
+    if (!meta.envKey) continue;
+    const apiKey = process.env[meta.envKey];
+    if (apiKey) return { provider, model: meta.envModel && process.env[meta.envModel] ? process.env[meta.envModel] : meta.defaultModel, apiKey, endpoint: meta.baseUrl || '' };
+  }
+  return { provider: 'offline', model: '', apiKey: '', endpoint: '' };
 };
 
 app.get('/api/admin/ai-config', requireAdmin, async (req, res) => {
@@ -731,30 +737,41 @@ app.get('/api/admin/ai-config', requireAdmin, async (req, res) => {
   res.json({
     provider: runtime.provider,
     model: runtime.model,
+    endpoint: runtime.endpoint || '',
     configured: Boolean(runtime.apiKey),
     updatedAt: stored?.updatedAt || null,
-    secretConfigured: hasStrongConfigSecret()
+    secretConfigured: hasStrongConfigSecret(),
+    providers: supportedAiProviders()
   });
 });
 
 app.put('/api/admin/ai-config', requireAdmin, async (req, res) => {
   try {
-    const { provider = 'offline', model = '', apiKey = '' } = req.body || {};
-    if (!['offline', 'groq', 'gemini'].includes(provider)) {
+    const { provider = 'offline', model = '', apiKey = '', endpoint = '' } = req.body || {};
+    if (!Object.prototype.hasOwnProperty.call(AI_PROVIDERS, provider)) {
       return res.status(400).json({ error: 'Unsupported AI provider.' });
     }
-    if (provider !== 'offline' && !apiKey.trim()) {
+    if (provider !== 'offline' && !String(apiKey).trim()) {
       return res.status(400).json({ error: 'An API key is required for the selected provider.' });
+    }
+    if (provider === 'custom' && !String(endpoint).trim()) {
+      return res.status(400).json({ error: 'A secure HTTPS endpoint is required for a custom provider.' });
+    }
+    if (endpoint && !String(endpoint).startsWith('https://')) {
+      return res.status(400).json({ error: 'AI endpoints must use HTTPS.' });
     }
     if (!hasStrongConfigSecret()) {
       return res.status(503).json({ error: 'STUDYMATE_CONFIG_SECRET must be configured with at least 32 characters.' });
     }
+    const meta = AI_PROVIDERS[provider];
+    const selectedModel = String(model).trim() || meta.defaultModel || '';
     await saveAiConfig({
       provider,
-      model: model.trim() || (provider === 'groq' ? 'llama-3.3-70b-versatile' : provider === 'gemini' ? 'gemini-1.5-flash' : ''),
-      encryptedApiKey: provider === 'offline' ? '' : encryptApiKey(apiKey.trim())
+      model: selectedModel,
+      endpoint: String(endpoint).trim() || meta.baseUrl || '',
+      encryptedApiKey: provider === 'offline' ? '' : encryptApiKey(String(apiKey).trim())
     });
-    res.json({ success: true, provider, model: model.trim(), configured: provider === 'offline' || Boolean(apiKey.trim()) });
+    res.json({ success: true, provider, model: selectedModel, endpoint: String(endpoint).trim() || meta.baseUrl || '', configured: provider === 'offline' || Boolean(String(apiKey).trim()) });
   } catch {
     res.status(500).json({ error: 'AI configuration could not be saved.' });
   }
@@ -841,68 +858,25 @@ app.post('/api/quiz/generate', requireAuth, rateLimit(60 * 1000, 8), async (req,
     const config = await loadCentralAiConfig();
     let questions = [];
 
-    if (config.provider === 'groq' && config.apiKey) {
+    if (config.provider !== 'offline' && config.apiKey) {
       try {
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${config.apiKey}` },
-          signal: AbortSignal.timeout(15000),
-          body: JSON.stringify({
-            model: config.model || 'llama-3.3-70b-versatile',
-            temperature: 0.2,
-            messages: [
-              {
-                role: 'system',
-                content: 'You are an academic assessment generator. Return ONLY valid JSON: an array of objects with question, options (exactly 4 strings), answer (0-3), explanation, and topic. Do not use markdown fences. Questions must be objectively answerable and grounded in the supplied question bank. Avoid duplicate questions.'
-              },
-              {
-                role: 'user',
-                content: JSON.stringify({
-                  subject: subjectMeta.name,
-                  department: subjectMeta.department,
-                  mode,
-                  count: requestedCount,
-                  questionBank: subjectMeta.questionBank
-                })
-              }
-            ]
-          })
+        const result = await generateConfiguredCompletion({
+          system: 'You are an academic assessment generator. Return ONLY valid JSON: an array of objects with question, options (exactly 4 strings), answer (0-3), explanation, and topic. Questions must be objectively answerable and grounded in the supplied question bank. Avoid duplicate questions.',
+          user: JSON.stringify({
+            subject: subjectMeta.name,
+            department: subjectMeta.department,
+            mode,
+            count: requestedCount,
+            questionBank: subjectMeta.questionBank
+          }),
+          temperature: 0.2,
+          json: true
         });
-        if (response.ok) {
-          const data = await response.json();
-          questions = validateQuizQuestions(data?.choices?.[0]?.message?.content, requestedCount);
-        }
+        questions = validateQuizQuestions(result.text, requestedCount);
       } catch (err) {
-        console.warn('Groq quiz generation failed; using structured question-bank fallback:', err.message);
+        console.warn('Central AI quiz generation failed; using structured question-bank fallback:', err.message);
       }
     }
-
-    if (!questions.length && config.provider === 'gemini' && config.apiKey) {
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${config.model || 'gemini-1.5-flash'}:generateContent?key=${config.apiKey}`;
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: 'You are an academic assessment generator. Return ONLY valid JSON: an array of objects with question, options (exactly 4 strings), answer (0-3), explanation, and topic. No markdown fences. Questions must be objectively answerable and grounded in the supplied question bank.' }]
-            },
-            contents: [{
-              role: 'user',
-              parts: [{ text: JSON.stringify({ subject: subjectMeta.name, department: subjectMeta.department, mode, count: requestedCount, questionBank: subjectMeta.questionBank }) }]
-            }],
-            generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
-          })
-        });
-        if (response.ok) {
-          const data = await response.json();
-          questions = validateQuizQuestions(data?.candidates?.[0]?.content?.parts?.[0]?.text, requestedCount);
-        }
-      } catch (err) {
-        console.warn('Gemini quiz generation failed; using structured question-bank fallback:', err.message);
-      }
-    }
-
     if (!questions.length) {
       questions = buildOfflineQuiz(subjectMeta, requestedCount);
     }
