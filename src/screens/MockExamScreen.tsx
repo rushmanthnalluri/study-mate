@@ -143,7 +143,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
         <div className="flex items-center space-x-2">
           <button
             onClick={() => onNavigate('home')}
-            className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
@@ -159,7 +159,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
 
         <button
           onClick={handlePrint}
-          className="flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--foreground)] hover:bg-surface-subtle transition-colors shadow-2xs"
+          className="flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-surface-subtle transition-colors shadow-2xs"
         >
           <Printer size={15} />
           <span>Print / PDF</span>
@@ -167,7 +167,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
       </div>
 
       {/* Subject Selector Bar */}
-      <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm space-y-2 print:hidden">
+      <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 shadow-sm space-y-2 print:hidden">
         <div className="flex items-center justify-between">
           <label className="text-xs font-semibold text-[var(--foreground)] flex items-center space-x-1.5">
             <BookOpen size={14} className="text-[var(--accent)]" />
@@ -191,7 +191,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
       </div>
 
       {/* The Official KL University Exam Paper Sheet */}
-      <div className="bg-[#ffffff] border border-[var(--border)] rounded-2xl p-5 sm:p-7 shadow-elevated space-y-5 print:border-none print:shadow-none print:p-0">
+      <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 sm:p-7 shadow-elevated space-y-5 print:border-none print:shadow-none print:p-0">
         {/* Official KL Header */}
         <div className="text-center border-b-2 border-[var(--border)] pb-4 space-y-1">
           <h2 className="text-sm sm:text-base font-sans font-extrabold uppercase tracking-wide text-stone-900">
