@@ -98,6 +98,8 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
           </label>
           <div className="relative">
             <textarea
+              id="topic-input"
+              name="topic"
               rows={3}
               value={topicInput}
               onChange={(e) => setTopicInput(e.target.value)}
