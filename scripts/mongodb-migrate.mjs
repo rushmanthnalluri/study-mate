@@ -97,7 +97,16 @@ try {
     console.log('Applied MongoDB schema migration v4.');
   }
 
-  console.log('MongoDB schema migrations verified through v4.');
+  if (!(await hasMigration(db, 5))) {
+    await db.collection('users').createIndex(
+      { authTokenHash: 1 },
+      { sparse: true, name: 'users_auth_token_hash' }
+    );
+    await recordMigration(db, 5, 'Index opaque bearer session hashes for constant-time user lookup.');
+    console.log('Applied MongoDB schema migration v5.');
+  }
+
+  console.log('MongoDB schema migrations verified through v5.');
 } finally {
   await mongoose.disconnect();
 }
