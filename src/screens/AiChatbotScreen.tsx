@@ -135,7 +135,7 @@ export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
       const botMsg: ChatMessage = {
         id: `bot-${Date.now()}`,
         role: 'assistant',
-        content: data.reply?.content || data.reply || 'Here is the academic explanation for your query.',
+        content: data.reply?.content || data.reply || 'The AI tutor returned an empty response. Please try again.',
         timestamp: new Date().toISOString(),
         suggestedActions: data.reply?.suggestedActions || []
       };
