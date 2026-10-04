@@ -411,7 +411,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
-                      <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-surface-subtle border border-[var(--border)] text-[var(--foreground)]">
+                      <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground)]">
                         {subj.code}
                       </span>
                       <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[var(--accent-50)] text-[var(--accent)]">
@@ -445,7 +445,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 </div>
 
                 {/* Subject Description */}
-                <div className="bg-surface-subtle border border-[var(--border)]/70 rounded-lg p-2.5 text-xs text-[var(--foreground)] leading-relaxed">
+                <div className="bg-[var(--surface)] border border-[var(--border)]/70 rounded-lg p-2.5 text-xs text-[var(--foreground)] leading-relaxed">
                   <span className="font-semibold text-[var(--foreground)] block text-[10px] mb-0.5 uppercase tracking-wider font-sans">
                     Subject Description & Academic Scope:
                   </span>
@@ -482,7 +482,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                                   <span className="text-xs font-bold text-[var(--foreground)]">
                                     {res.title}
                                   </span>
-                                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-surface-subtle text-[var(--muted-foreground)] border border-[var(--border)]">
+                                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface)] text-[var(--muted-foreground)] border border-[var(--border)]">
                                     {res.fileName}
                                   </span>
                                 </div>
@@ -575,7 +575,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={newSubjName}
                   onChange={(e) => setNewSubjName(e.target.value)}
                   placeholder="e.g. Beverage Technology"
-                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
                 />
               </div>
 
@@ -589,7 +589,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={newSubjDepartment}
                   onChange={(e) => setNewSubjDepartment(e.target.value)}
                   placeholder="e.g. CSE"
-                  className="w-full bg-surface border border-[var(--border)] rounded-md p-2.5 text-xs text-[var(--foreground)] editorial-focus"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-md p-2.5 text-xs text-[var(--foreground)] editorial-focus"
                 />
               </div>
               <div>
@@ -602,7 +602,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={newSubjCode}
                   onChange={(e) => setNewSubjCode(e.target.value)}
                   placeholder="e.g. 21BT3230"
-                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] font-mono editorial-focus"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] font-mono editorial-focus"
                 />
               </div>
             </div>
@@ -618,7 +618,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 value={newSubjDescription}
                 onChange={(e) => setNewSubjDescription(e.target.value)}
                 placeholder="e.g. Comprehensive curriculum on beverage chemistry, carbonation kinetics, brewing technology, fruit juice processing, packaging integrity, and quality control under KL University..."
-                className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus leading-relaxed"
+                className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] editorial-focus leading-relaxed"
               />
             </div>
 
@@ -631,7 +631,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 value={newSubjTopics}
                 onChange={(e) => setNewSubjTopics(e.target.value)}
                 placeholder="e.g. Carbonation Dynamics, Beer Brewing Kinetics, Fruit Juice Clarification"
-                className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
+                className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
               />
             </div>
 
@@ -651,7 +651,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                       updated[i] = e.target.value;
                       setNewSubjUnits(updated);
                     }}
-                    className="w-full bg-surface border border-[var(--border)] rounded-lg p-2 text-xs text-[var(--foreground)] focus:outline-none focus:ring-1 focus:ring-brand-800"
+                    className="w-full bg-[var(--background)] border border-[var(--border)] rounded-lg p-2 text-xs text-[var(--foreground)] focus:outline-none focus:ring-1 focus:ring-[var(--accent-800)]"
                   />
                 ))}
               </div>
@@ -660,7 +660,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
             <button
               type="submit"
               disabled={isSubmittingSubj}
-              className="w-full py-3 px-4 rounded-xl font-bold text-xs bg-brand-800 text-white hover:bg-brand-900 transition-all flex items-center justify-center space-x-1.5 shadow-sm disabled:opacity-50"
+              className="w-full py-3 px-4 rounded-xl font-bold text-xs bg-[var(--accent-800)] text-white hover:bg-[var(--accent-900)] transition-all flex items-center justify-center space-x-1.5 shadow-sm disabled:opacity-50"
             >
               {isSubmittingSubj ? (
                 <span>Initializing Subject Files in Knowledge Base...</span>
@@ -703,7 +703,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 <select
                   value={selectedSubjName}
                   onChange={(e) => setSelectedSubjName(e.target.value)}
-                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
                 >
                   {subjects.map((s) => (
                     <option key={s.id} value={s.name}>
@@ -720,7 +720,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 <select
                   value={resourceType}
                   onChange={(e) => setResourceType(e.target.value as any)}
-                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
                 >
                   <option value="course-materials">📘 Course Materials (course-materials.md)</option>
                   <option value="previous-papers">📜 Previous Exam Papers (previous-papers.md)</option>
@@ -733,7 +733,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
             </div>
 
             {/* Resource Details: Title, Description, Unit, Author */}
-            <div className="space-y-3 bg-surface-subtle/80 border border-[var(--border)] rounded-xl p-3.5">
+            <div className="space-y-3 bg-[var(--surface)]/80 border border-[var(--border)] rounded-xl p-3.5">
               <div className="text-[11px] font-sans font-bold uppercase tracking-wider text-[var(--accent)] flex items-center space-x-1.5">
                 <FileText size={13} className="text-[var(--accent)]" />
                 <span>Resource Details & Grounding Metadata</span>
@@ -778,7 +778,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={resourceDescription}
                   onChange={(e) => setResourceDescription(e.target.value)}
                   placeholder="Explain what concepts, equations, previous questions, or rubrics this resource provides..."
-                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus"
+                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] editorial-focus"
                 />
               </div>
 
@@ -802,14 +802,14 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
               <button
                 type="button"
                 onClick={insertQuestionTemplate}
-                className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-surface-subtle hover:bg-surface-border text-[11px] font-medium"
+                className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--background)]-border text-[11px] font-medium"
               >
                 + Insert Question Bank Template
               </button>
               <button
                 type="button"
                 onClick={insertRubricTemplate}
-                className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-surface-subtle hover:bg-surface-border text-[11px] font-medium"
+                className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--background)]-border text-[11px] font-medium"
               >
                 + Insert Rubric Template
               </button>
@@ -825,14 +825,14 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 value={resourceContent}
                 onChange={(e) => setResourceContent(e.target.value)}
                 placeholder="Enter markdown or JSON content..."
-                className="w-full bg-surface border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] font-mono placeholder-surface-muted editorial-focus leading-relaxed"
+                className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] font-mono placeholder:text-[var(--muted-foreground)] editorial-focus leading-relaxed"
               />
             </div>
 
             <button
               type="submit"
               disabled={isSavingResource}
-              className="w-full py-3 px-4 rounded-xl font-bold text-xs bg-brand-800 text-white hover:bg-brand-900 transition-all flex items-center justify-center space-x-1.5 shadow-sm disabled:opacity-50"
+              className="w-full py-3 px-4 rounded-xl font-bold text-xs bg-[var(--accent-800)] text-white hover:bg-[var(--accent-900)] transition-all flex items-center justify-center space-x-1.5 shadow-sm disabled:opacity-50"
             >
               {isSavingResource ? (
                 <span>Writing to Knowledge Base Storage...</span>
