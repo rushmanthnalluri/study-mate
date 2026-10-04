@@ -71,8 +71,10 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({ onNavigate, subjec
         <SectionLabel>Plan setup</SectionLabel>
         <div className="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end">
           <label className="space-y-2">
-            <span className="small-caps text-[var(--muted-foreground)]">Published subject</span>
+            <span id="planner-subject-label" className="small-caps text-[var(--muted-foreground)]">Published subject</span>
             <select
+              id="planner-subject"
+              name="subject"
               value={selectedSubjectId}
               onChange={(event) => {
                 setSelectedSubjectId(event.target.value);
@@ -88,8 +90,10 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({ onNavigate, subjec
           </label>
 
           <label className="space-y-2">
-            <span className="small-caps text-[var(--muted-foreground)]">Exam date</span>
+            <span id="planner-exam-date-label" className="small-caps text-[var(--muted-foreground)]">Exam date</span>
             <input
+              id="planner-exam-date"
+              name="examDate"
               type="date"
               value={examDate}
               min={new Date().toISOString().slice(0, 10)}
