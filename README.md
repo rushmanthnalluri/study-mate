@@ -5,56 +5,36 @@
 
 ---
 
-## 🎯 Departments Supported
+## Administrator-published academic library
 
-In accordance with KL University's engineering curriculum, StudyMate AI provides dedicated knowledge bases across:
+StudyMate does not ship a student-facing catalog of departments, subjects or exam schedules. The student experience reads its academic content from administrator-managed MongoDB subject records.
 
-1. **CSE (Computer Science & Engineering)**
-   - Operating Systems (`21CS2104`)
-   - Data Structures and Algorithms (`21CS1202`)
-   - Database Management Systems (`21CS2205`)
-2. **AI & DS (Artificial Intelligence & Data Science)**
-   - Machine Learning (`21AD2201`)
-   - Deep Learning and Neural Networks (`21AD3103`)
-3. **ECE (Electronics & Communication Engineering)**
-   - Digital Signal Processing (`21EC2208`)
-   - VLSI Design (`21EC3109`)
-4. **EEE (Electrical & Electronics Engineering)**
-   - Power Systems (`21EE2207`)
-   - Control Systems (`21EE2105`)
+Each published subject can contain:
+- subject metadata and units
+- administrator-published resources
+- question-bank entries
+- assessment metadata where explicitly provided by the administrator
 
+The repository `knowledge-base/` and seed script are development/operations assets only; they are not a production fallback for student content.
 
 ---
 
-## 🏛️ The KL Knowledge Base Architecture
+## Product surface
 
-The knowledge base is structured as a shared academic library (`knowledge-base/[Department]/[Subject]/`) with the exact 6 standard items per subject:
+The current workspace includes:
+- Home and published subject selection
+- Topic-based note generation grounded in the selected subject
+- Dashboard and revision planner
+- Flashcards and assessment practice
+- Saved notes and feedback
+- Past-paper analysis
+- Study Studio
+- Glossary
+- Knowledge Base resource viewer
+- AI Tutor
+- Administrator portal
 
-1. `course-materials.md` — Course units, Bloom's Taxonomy mapping, and textbook summaries.
-2. `previous-papers.md` — KL semester papers (End-Sem May/Dec, In-Sem Midterms).
-3. `question-bank.json` — High-frequency past questions categorized by marks and units.
-4. `marks-pattern.md` — KL marks breakdown (2 Marks, 5 Marks, 10 Marks).
-5. `answer-style.md` — What KL evaluators look for to award maximum marks.
-6. `syllabus.json` — Subject metadata and course unit codes.
-
----
-
-## 📱 The 6-Screen User Journey (Matching System Blueprint)
-
-The web application is designed mobile-first and installable as a PWA:
-
-- **Screen 01 — Home**: Recent subjects, department filters, and the single primary action.
-- **Screen 02 — Select Subject**: Search and pick from the knowledge base by department.
-- **Screen 03 — Enter Topic**: Topic or past exam question input with quick chips from previous papers.
-- **Screen 04 — Generate Notes**:
-  - 🔑 **Key Words**: Essential scoring vocabulary
-  - 📌 **2 Marks Answer**: Crisp 20–40 words definition/formula
-  - 📝 **5 Marks Answer**: Structured points & mini-flowchart (~150 words)
-  - 📚 **10 Marks Answer**: Comprehensive KL exam essay format (350–500 words)
-  - 📊 **Process / Diagram**: Rendered Mermaid.js flowcharts and system diagrams
-- **Screen 07 — AI Academic Tutor Chatbot**: 24/7 interactive tutor answering kinetics doubts, formula derivations, and 2M/5M/10M tips.
-- **Screen 08 — Interactive Quiz & Flashcards**: Rapid 2-mark recall cards and live multiple-choice quiz with immediate evaluator explanations and scoring.
-- **Screen 10 — Admin Portal & Resource Scaffold**: Department-wide curriculum management, subject provisioning, and grounded study material uploads.
+LMS synchronization, attendance, marks scraping, hall-ticket workflows and LMS connection state are not part of the product.
 
 ---
 
@@ -66,8 +46,7 @@ StudyMate AI natively supports **Render** deployment with **MongoDB** (Atlas or 
    - `MONGODB_URI`: MongoDB connection string (e.g. `mongodb+srv://<user>:<password>@cluster0.mongodb.net/studymate?retryWrites=true&w=majority`).
    - `NODE_ENV`: `production`
    - `PORT`: `10000` (Render default)
-   - `GROQ_API_KEY` (Optional): For high-speed online LLaMA 3.3 70B inference.
-   - `GEMINI_API_KEY` (Optional): For Google Gemini 1.5 Flash inference.
+   - AI provider configuration is managed centrally by an administrator and stored encrypted server-side.
 
 2. **1-Click Render Deployment**:
    The repository includes a root [`render.yaml`](render.yaml) blueprint:
@@ -105,7 +84,7 @@ node scripts/seedKnowledgeBase.js
 
 # 3. Start development server
 # Terminal 1: Backend API
-npm run server
+npm start
 
 # Terminal 2: Vite Frontend
 npm run dev
