@@ -141,7 +141,7 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search glossary terms (e.g. Belady, Ferranti, 12D, Kernel)..."
-          className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[var(--foreground)] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm"
+          className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm"
         />
       </div>
 
