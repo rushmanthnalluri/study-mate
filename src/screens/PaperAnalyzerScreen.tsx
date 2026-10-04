@@ -66,7 +66,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
           let marks: 2 | 5 | 10 = 5;
           if (/define|what is|state|list/i.test(line)) marks = 2;
           else if (/explain in detail|derive|demonstrate|discuss in detail|comprehensive/i.test(line)) marks = 10;
-          return { text: line.replace(/^(?:Q(?:uestion)?\s*)?\d*[\.\)]?\s*/i, ''), marks, unit: (idx % 5) + 1 };
+          return { text: line.replace(/^(?:Q(?:uestion)?\s*)?\d*[\.\)]?\s*/i, ''), marks, unit: 0 };
         });
 
       const keyDefinitions = lines
@@ -234,7 +234,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
         <div className="flex items-center justify-between">
           <h3 className="text-xs font-sans font-bold text-[var(--foreground)] flex items-center space-x-1.5">
             <BookOpen size={16} className="text-[var(--accent)] " />
-            <span>Official KL Previous Papers Archive</span>
+            <span>Published Question Bank</span>
           </h3>
           <span className="text-[10px] text-[var(--muted-foreground)]">
             {filteredQuestions.length} Questions
