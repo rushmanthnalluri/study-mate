@@ -359,6 +359,32 @@ export async function deleteSavedNote(id, userId = null) {
   return true;
 }
 
+export async function updateSavedNoteReview(id, userId, isReviewed) {
+  assertStorageReady();
+  const ownerId = String(userId || '');
+  if (!ownerId) throw new Error('Saved notes require an authenticated user.');
+  const reviewed = Boolean(isReviewed);
+
+  if (isMongoConnected && SavedNoteModel) {
+    const updated = await SavedNoteModel.findOneAndUpdate(
+      { id, userId: ownerId },
+      { $set: { isReviewed: reviewed } },
+      { new: true }
+    ).lean();
+    return updated || null;
+  }
+
+  let notes = [];
+  if (fs.existsSync(savedNotesFile)) {
+    try { notes = JSON.parse(fs.readFileSync(savedNotesFile, 'utf8')); } catch { notes = []; }
+  }
+  const index = notes.findIndex(n => n.id === id && n.userId === ownerId);
+  if (index < 0) return null;
+  notes[index] = { ...notes[index], isReviewed: reviewed };
+  atomicWriteJson(savedNotesFile, notes);
+  return notes[index];
+}
+
 // -------------------------------------------------------------
 // FEEDBACK OPERATIONS
 // -------------------------------------------------------------
