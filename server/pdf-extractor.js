@@ -2,6 +2,7 @@ import zlib from 'zlib';
 
 const MAX_OUTPUT_CHARS = 100000;
 const MAX_STREAM_BYTES = 8 * 1024 * 1024;
+const MAX_TOTAL_DECOMPRESSED_BYTES = 16 * 1024 * 1024;
 
 function decodePdfString(raw) {
   if (raw.startsWith('<') && raw.endsWith('>')) {
@@ -42,20 +43,26 @@ function extractTextOperators(stream) {
   return pieces;
 }
 
-function inflateStream(bytes, dictionary) {
+function inflateStream(bytes, dictionary, maxOutputLength) {
   if (!/\/FlateDecode(?:\s|\/|$)/.test(dictionary)) return bytes;
   try {
-    return zlib.inflateSync(bytes, { maxOutputLength: MAX_STREAM_BYTES });
+    return zlib.inflateSync(bytes, { maxOutputLength });
   } catch {
-    try { return zlib.inflateRawSync(bytes, { maxOutputLength: MAX_STREAM_BYTES }); } catch { return Buffer.alloc(0); }
+    try { return zlib.inflateRawSync(bytes, { maxOutputLength }); } catch { return Buffer.alloc(0); }
   }
 }
 
-function extractFromStream(streamBytes, dictionary) {
-  if (streamBytes.length > MAX_STREAM_BYTES) return '';
-  const decoded = inflateStream(streamBytes, dictionary);
-  if (!decoded.length) return '';
-  return extractTextOperators(decoded.toString('latin1')).join(' ');
+function extractFromStream(streamBytes, dictionary, remainingBudget) {
+  if (streamBytes.length > MAX_STREAM_BYTES || streamBytes.length > remainingBudget) {
+    throw new Error('PDF decompression limit exceeded.');
+  }
+  const maxOutputLength = Math.min(MAX_STREAM_BYTES, remainingBudget);
+  const decoded = inflateStream(streamBytes, dictionary, maxOutputLength);
+  if (!decoded.length) return { text: '', bytesUsed: 0 };
+  return {
+    text: extractTextOperators(decoded.toString('latin1')).join(' '),
+    bytesUsed: decoded.length
+  };
 }
 
 export function extractPdfText(buffer) {
@@ -65,14 +72,16 @@ export function extractPdfText(buffer) {
 
   const source = buffer.toString('latin1');
   const chunks = [];
+  let remainingBudget = MAX_TOTAL_DECOMPRESSED_BYTES;
   const streamPattern = /((?:<<[\s\S]*?>>))\s*stream\r?\n([\s\S]*?)\r?\nendstream/g;
   let match;
   while ((match = streamPattern.exec(source))) {
     const dictionary = match[1];
     const rawStart = match.index + match[0].indexOf(match[2]);
     const rawEnd = rawStart + match[2].length;
-    const text = extractFromStream(buffer.subarray(rawStart, rawEnd), dictionary);
-    if (text) chunks.push(text);
+    const extracted = extractFromStream(buffer.subarray(rawStart, rawEnd), dictionary, remainingBudget);
+    remainingBudget -= extracted.bytesUsed;
+    if (extracted.text) chunks.push(extracted.text);
     if (chunks.join(' ').length >= MAX_OUTPUT_CHARS) break;
   }
 
