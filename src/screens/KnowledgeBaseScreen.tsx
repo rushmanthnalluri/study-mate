@@ -148,7 +148,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
 
       {/* Department Tabs */}
       <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
-        {['All', 'CSE', 'AIDS', 'ECE', 'EEE', 'Food Technology'].map((dept) => (
+        {['All', ...Array.from(new Set(subjects.map(subject => subject.department).filter(Boolean)))].map((dept) => (
           <button
             key={dept}
             onClick={() => setDeptFilter(dept as Department)}
