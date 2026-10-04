@@ -90,7 +90,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           </div>
 
           <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[var(--accent)] font-mono text-sm font-medium text-[var(--accent)]">
-            {readinessPercent}%
+            {readinessPercent === null ? '—' : `${readinessPercent}%`}
           </div>
         </div>
 
