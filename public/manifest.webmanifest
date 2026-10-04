@@ -4,8 +4,8 @@
   "description": "Private academic workspace for administrator-published subjects",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fbfaf8",
-  "theme_color": "#831d32",
+  "background_color": "#FAFAF8",
+  "theme_color": "#B8860B",
   "orientation": "portrait-primary",
   "icons": [
     {
