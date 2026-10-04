@@ -302,20 +302,20 @@ Subject: ${selectedSubjName} | Department: Food Technology
         <div className="flex items-center space-x-3">
           <button
             onClick={() => onNavigate('home')}
-            className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#64748b] hover:text-[#172554] transition-colors"
+            className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
+              <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[var(--accent)]">
                 Knowledge Base Management
               </span>
               <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
                 Admin Mode
               </span>
             </div>
-            <h1 className="text-xl font-serif font-bold text-[#172554] leading-tight">
+            <h1 className="text-xl font-serif font-bold text-[var(--foreground)] leading-tight">
               Food Technology Admin Portal
             </h1>
           </div>
@@ -323,56 +323,56 @@ Subject: ${selectedSubjName} | Department: Food Technology
 
         <button
           onClick={() => onNavigate('knowledge-base')}
-          className="text-xs font-semibold text-[#2563eb] hover:underline flex items-center space-x-1"
+          className="text-xs font-semibold text-[var(--accent)] hover:underline flex items-center space-x-1"
         >
           <BookOpen size={14} />
           <span>View Drive Library</span>
         </button>
       </div>
 
-      <p className="text-xs text-[#64748b]">
+      <p className="text-xs text-[var(--muted-foreground)]">
         Manage subjects and add resource files (materials, past papers, question banks, rubrics) directly to the KL Knowledge Base library.
       </p>
 
       {/* Admin Stats Cards */}
       <div className="grid grid-cols-3 gap-2.5">
-        <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
-          <span className="text-[10px] text-[#64748b] block font-sans uppercase tracking-wider">
+        <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm text-center space-y-0.5">
+          <span className="text-[10px] text-[var(--muted-foreground)] block font-sans uppercase tracking-wider">
             Total Subjects
           </span>
-          <span className="text-xl font-mono font-bold text-[#2563eb]">
+          <span className="text-xl font-mono font-bold text-[var(--accent)]">
             {stats.totalSubjects}
           </span>
           <span className="text-[10px] text-emerald-700 block">administrator-managed data</span>
         </div>
 
-        <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
-          <span className="text-[10px] text-[#64748b] block font-sans uppercase tracking-wider">
+        <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm text-center space-y-0.5">
+          <span className="text-[10px] text-[var(--muted-foreground)] block font-sans uppercase tracking-wider">
             Active Files
           </span>
-          <span className="text-xl font-mono font-bold text-[#2563eb]">
+          <span className="text-xl font-mono font-bold text-[var(--accent)]">
             {stats.totalFiles}
           </span>
-          <span className="text-[10px] text-[#64748b] block">resources stored in MongoDB</span>
+          <span className="text-[10px] text-[var(--muted-foreground)] block">resources stored in MongoDB</span>
         </div>
 
-        <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-center space-y-0.5">
-          <span className="text-[10px] text-[#64748b] block font-sans uppercase tracking-wider">
+        <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm text-center space-y-0.5">
+          <span className="text-[10px] text-[var(--muted-foreground)] block font-sans uppercase tracking-wider">
             Question Bank
           </span>
           <span className="text-xl font-mono font-bold text-emerald-700">
             {stats.totalQuestions}
           </span>
-          <span className="text-[10px] text-[#64748b] block">KL Past Questions</span>
+          <span className="text-[10px] text-[var(--muted-foreground)] block">KL Past Questions</span>
         </div>
       </div>
 
       {/* Tab Switcher */}
-      <div className="flex items-center space-x-2 border-b border-[#e3d6cb] pb-1">
+      <div className="flex items-center space-x-2 border-b border-[var(--border)] pb-1">
                   <button
             type="button"
             onClick={() => setActiveTab('ai-config')}
-            className={`px-3 py-2 rounded-xl text-xs font-bold ${activeTab === 'ai-config' ? 'bg-[#172554] text-white' : 'bg-[#f1f5f9] text-[#5f4939] hover:bg-[#dbeafe]'}`}
+            className={`px-3 py-2 rounded-xl text-xs font-bold ${activeTab === 'ai-config' ? 'bg-[var(--foreground)] text-white' : 'bg-[#f1f5f9] text-[#5f4939] hover:bg-[#dbeafe]'}`}
           >
             AI Control
           </button>
@@ -380,8 +380,8 @@ Subject: ${selectedSubjName} | Department: Food Technology
           onClick={() => setActiveTab('manage')}
           className={`pb-2 px-3 text-xs font-bold border-b-2 transition-all ${
             activeTab === 'manage'
-              ? 'border-brand-800 text-[#2563eb]'
-              : 'border-transparent text-[#64748b] hover:text-[#172554]'
+              ? 'border-brand-800 text-[var(--accent)]'
+              : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
           }`}
         >
           Subject Catalog ({subjects.length})
@@ -390,8 +390,8 @@ Subject: ${selectedSubjName} | Department: Food Technology
           onClick={() => setActiveTab('add-subject')}
           className={`pb-2 px-3 text-xs font-bold border-b-2 transition-all flex items-center space-x-1 ${
             activeTab === 'add-subject'
-              ? 'border-brand-800 text-[#2563eb]'
-              : 'border-transparent text-[#64748b] hover:text-[#172554]'
+              ? 'border-brand-800 text-[var(--accent)]'
+              : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
           }`}
         >
           <FolderPlus size={14} />
@@ -401,8 +401,8 @@ Subject: ${selectedSubjName} | Department: Food Technology
           onClick={() => setActiveTab('add-resource')}
           className={`pb-2 px-3 text-xs font-bold border-b-2 transition-all flex items-center space-x-1 ${
             activeTab === 'add-resource'
-              ? 'border-brand-800 text-[#2563eb]'
-              : 'border-transparent text-[#64748b] hover:text-[#172554]'
+              ? 'border-brand-800 text-[var(--accent)]'
+              : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
           }`}
         >
           <Upload size={14} />
@@ -415,8 +415,8 @@ Subject: ${selectedSubjName} | Department: Food Technology
           <div className="mb-5 flex items-start gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ead4bd] text-[#714628]"><ShieldCheck size={20} /></div>
             <div>
-              <h3 className="text-base font-black text-[#172554]">Central AI control</h3>
-              <p className="mt-1 text-xs leading-5 text-[#64748b]">This is the only place where an application-wide Groq or Gemini API key can be configured. The key is encrypted server-side and is never sent back to students.</p>
+              <h3 className="text-base font-black text-[var(--foreground)]">Central AI control</h3>
+              <p className="mt-1 text-xs leading-5 text-[var(--muted-foreground)]">This is the only place where an application-wide Groq or Gemini API key can be configured. The key is encrypted server-side and is never sent back to students.</p>
             </div>
           </div>
           <form onSubmit={handleSaveAiConfig} className="space-y-4">
@@ -440,10 +440,10 @@ Subject: ${selectedSubjName} | Department: Food Technology
               </label>
             )}
             <div className="flex items-center justify-between rounded-2xl border border-[#e4d5c6] bg-[#f8fafc] p-4">
-              <div><p className="text-xs font-extrabold text-[#334155]">Current status</p><p className="mt-1 text-[11px] text-[#64748b]">{aiConfigured ? 'A central provider is configured.' : 'No cloud provider is configured; offline mode is available.'}</p></div>
-              <span className={`rounded-full px-3 py-1 text-[10px] font-black ${aiConfigured ? 'bg-[#dcebd5] text-[#4f6d45]' : 'bg-[#eee2d8] text-[#64748b]'}`}>{aiConfigured ? 'CONFIGURED' : 'OFFLINE'}</span>
+              <div><p className="text-xs font-extrabold text-[#334155]">Current status</p><p className="mt-1 text-[11px] text-[var(--muted-foreground)]">{aiConfigured ? 'A central provider is configured.' : 'No cloud provider is configured; offline mode is available.'}</p></div>
+              <span className={`rounded-full px-3 py-1 text-[10px] font-black ${aiConfigured ? 'bg-[#dcebd5] text-[#4f6d45]' : 'bg-[#eee2d8] text-[var(--muted-foreground)]'}`}>{aiConfigured ? 'CONFIGURED' : 'OFFLINE'}</span>
             </div>
-            <button disabled={isSavingAiConfig || !aiSecretReady} className="w-full rounded-2xl bg-[#2563eb] px-4 py-3 text-xs font-extrabold text-white shadow-sm hover:bg-[#1d4ed8] disabled:opacity-50">{isSavingAiConfig ? 'Saving securely…' : 'Save central AI configuration'}</button>
+            <button disabled={isSavingAiConfig || !aiSecretReady} className="w-full rounded-2xl bg-[var(--accent)] px-4 py-3 text-xs font-extrabold text-white shadow-sm hover:bg-[#1d4ed8] disabled:opacity-50">{isSavingAiConfig ? 'Saving securely…' : 'Save central AI configuration'}</button>
           </form>
         </div>
       )}
@@ -452,10 +452,10 @@ Subject: ${selectedSubjName} | Department: Food Technology
       {activeTab === 'manage' && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-sans uppercase tracking-wider font-bold text-[#64748b]">
+            <span className="text-xs font-sans uppercase tracking-wider font-bold text-[var(--muted-foreground)]">
               Active Food Technology Subjects
             </span>
-            <span className="text-[10px] text-[#64748b]">
+            <span className="text-[10px] text-[var(--muted-foreground)]">
               Source: administrator-managed MongoDB
             </span>
           </div>
@@ -464,19 +464,19 @@ Subject: ${selectedSubjName} | Department: Food Technology
             {subjects.map((subj) => (
               <div
                 key={subj.id}
-                className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-4 shadow-sm space-y-3 hover:border-brand-300 transition-all"
+                className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-3 hover:border-brand-300 transition-all"
               >
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
-                      <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-surface-subtle border border-[#e3d6cb] text-[#172554]">
+                      <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-surface-subtle border border-[var(--border)] text-[var(--foreground)]">
                         {subj.code}
                       </span>
-                      <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-brand-50 text-[#2563eb]">
+                      <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-brand-50 text-[var(--accent)]">
                         {subj.department}
                       </span>
                     </div>
-                    <h3 className="text-base font-bold text-[#172554] font-serif">
+                    <h3 className="text-base font-bold text-[var(--foreground)] font-serif">
                       {subj.name}
                     </h3>
                   </div>
@@ -487,14 +487,14 @@ Subject: ${selectedSubjName} | Department: Food Technology
                         setSelectedSubjName(subj.name);
                         setActiveTab('add-resource');
                       }}
-                      className="px-2.5 py-1.5 rounded-lg border border-brand-200 bg-brand-50 hover:bg-brand-100 text-[#2563eb] text-xs font-semibold flex items-center space-x-1 transition-colors"
+                      className="px-2.5 py-1.5 rounded-lg border border-brand-200 bg-brand-50 hover:bg-brand-100 text-[var(--accent)] text-xs font-semibold flex items-center space-x-1 transition-colors"
                     >
-                      <Edit3 size={13} className="text-[#2563eb]" />
+                      <Edit3 size={13} className="text-[var(--accent)]" />
                       <span>Manage Resources</span>
                     </button>
                     <button
                       onClick={() => handleDeleteSubject(subj.name)}
-                      className="p-1.5 rounded-lg text-[#64748b] hover:text-red-700 hover:bg-red-50 transition-colors"
+                      className="p-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-red-700 hover:bg-red-50 transition-colors"
                       title="Delete Subject"
                     >
                       <Trash2 size={15} />
@@ -503,24 +503,24 @@ Subject: ${selectedSubjName} | Department: Food Technology
                 </div>
 
                 {/* Subject Description */}
-                <div className="bg-surface-subtle border border-[#e3d6cb]/70 rounded-lg p-2.5 text-xs text-stone-700 leading-relaxed">
-                  <span className="font-semibold text-[#172554] block text-[10px] mb-0.5 uppercase tracking-wider font-sans">
+                <div className="bg-surface-subtle border border-[var(--border)]/70 rounded-lg p-2.5 text-xs text-stone-700 leading-relaxed">
+                  <span className="font-semibold text-[var(--foreground)] block text-[10px] mb-0.5 uppercase tracking-wider font-sans">
                     Subject Description & Academic Scope:
                   </span>
                   <p>{subj.description || 'No description has been added yet.'}</p>
                 </div>
 
                 {/* Expandable Resources Inventory */}
-                <div className="border-t border-[#e3d6cb]/60 pt-2 space-y-2">
+                <div className="border-t border-[var(--border)]/60 pt-2 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-sans uppercase tracking-wider font-bold text-[#172554] flex items-center space-x-1">
-                      <Layers size={13} className="text-[#2563eb]" />
+                    <span className="text-xs font-sans uppercase tracking-wider font-bold text-[var(--foreground)] flex items-center space-x-1">
+                      <Layers size={13} className="text-[var(--accent)]" />
                       <span>Subject Resources ({subj.resources?.length || 0})</span>
                     </span>
                     <button
                       type="button"
                       onClick={() => setExpandedSubjectId(expandedSubjectId === subj.id ? null : subj.id)}
-                      className="text-[11px] font-semibold text-[#2563eb] hover:underline flex items-center space-x-1"
+                      className="text-[11px] font-semibold text-[var(--accent)] hover:underline flex items-center space-x-1"
                     >
                       <span>{expandedSubjectId === subj.id ? 'Hide Resource Details' : 'View Resource Details'}</span>
                     </button>
@@ -532,19 +532,19 @@ Subject: ${selectedSubjName} | Department: Food Technology
                         subj.resources.map((res) => (
                           <div
                             key={res.id}
-                            className="p-2.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] space-y-1 hover:border-brand-200 transition-colors"
+                            className="p-2.5 rounded-lg border border-[var(--border)] bg-[#ffffff] space-y-1 hover:border-brand-200 transition-colors"
                           >
                             <div className="flex items-start justify-between">
                               <div className="space-y-0.5">
                                 <div className="flex items-center space-x-2">
-                                  <span className="text-xs font-bold text-[#172554]">
+                                  <span className="text-xs font-bold text-[var(--foreground)]">
                                     {res.title}
                                   </span>
-                                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-surface-subtle text-[#64748b] border border-[#e3d6cb]">
+                                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-surface-subtle text-[var(--muted-foreground)] border border-[var(--border)]">
                                     {res.fileName}
                                   </span>
                                 </div>
-                                <span className="text-[10px] text-[#2563eb] font-semibold block">
+                                <span className="text-[10px] text-[var(--accent)] font-semibold block">
                                   Scope: {res.unit || 'All Units'} • Author: {res.author || 'KL Department Faculty'}
                                 </span>
                               </div>
@@ -555,7 +555,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
                                   setResourceType(res.resourceType as any);
                                   setActiveTab('add-resource');
                                 }}
-                                className="text-[11px] text-[#2563eb] font-semibold hover:underline shrink-0 ml-2"
+                                className="text-[11px] text-[var(--accent)] font-semibold hover:underline shrink-0 ml-2"
                               >
                                 Edit &rarr;
                               </button>
@@ -566,7 +566,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
                           </div>
                         ))
                       ) : (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-[11px] text-[#64748b]">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-[11px] text-[var(--muted-foreground)]">
                           <div className="flex items-center space-x-1 text-emerald-800 font-medium">
                             <CheckCircle2 size={13} />
                             <span>course-materials.md</span>
@@ -604,12 +604,12 @@ Subject: ${selectedSubjName} | Department: Food Technology
 
       {/* TAB 2: ADD NEW SUBJECT */}
       {activeTab === 'add-subject' && (
-        <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-5 shadow-sm space-y-4">
+        <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-5 shadow-sm space-y-4">
           <div>
-            <h3 className="text-sm font-bold text-[#172554] font-serif">
+            <h3 className="text-sm font-bold text-[var(--foreground)] font-serif">
               Add New Food Technology Subject
             </h3>
-            <p className="text-xs text-[#64748b]">
+            <p className="text-xs text-[var(--muted-foreground)]">
               Creates a dedicated subject folder with all 6 standard files pre-initialized.
             </p>
           </div>
@@ -624,7 +624,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
           <form onSubmit={handleCreateSubject} className="space-y-3.5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-[#172554] mb-1">
+                <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                   Subject Name *
                 </label>
                 <input
@@ -633,12 +633,12 @@ Subject: ${selectedSubjName} | Department: Food Technology
                   value={newSubjName}
                   onChange={(e) => setNewSubjName(e.target.value)}
                   placeholder="e.g. Beverage Technology"
-                  className="w-full bg-surface border border-[#e3d6cb] rounded-xl p-2.5 text-xs text-[#172554] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#172554] mb-1">
+                <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                   KL Course Code *
                 </label>
                 <input
@@ -647,14 +647,14 @@ Subject: ${selectedSubjName} | Department: Food Technology
                   value={newSubjCode}
                   onChange={(e) => setNewSubjCode(e.target.value)}
                   placeholder="e.g. 21BT3230"
-                  className="w-full bg-surface border border-[#e3d6cb] rounded-xl p-2.5 text-xs text-[#172554] font-mono focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] font-mono focus:outline-none focus:ring-2 focus:ring-brand-800/30"
                 />
               </div>
             </div>
 
             {/* Subject Description */}
             <div>
-              <label className="block text-xs font-semibold text-[#172554] mb-1">
+              <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                 Subject Description & Academic Scope *
               </label>
               <textarea
@@ -663,12 +663,12 @@ Subject: ${selectedSubjName} | Department: Food Technology
                 value={newSubjDescription}
                 onChange={(e) => setNewSubjDescription(e.target.value)}
                 placeholder="e.g. Comprehensive curriculum on beverage chemistry, carbonation kinetics, brewing technology, fruit juice processing, packaging integrity, and quality control under KL University..."
-                className="w-full bg-surface border border-[#e3d6cb] rounded-xl p-2.5 text-xs text-[#172554] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 leading-relaxed"
+                className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 leading-relaxed"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#172554] mb-1">
+              <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                 Sample Examination Topics (Comma separated)
               </label>
               <input
@@ -676,13 +676,13 @@ Subject: ${selectedSubjName} | Department: Food Technology
                 value={newSubjTopics}
                 onChange={(e) => setNewSubjTopics(e.target.value)}
                 placeholder="e.g. Carbonation Dynamics, Beer Brewing Kinetics, Fruit Juice Clarification"
-                className="w-full bg-surface border border-[#e3d6cb] rounded-xl p-2.5 text-xs text-[#172554] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
               />
             </div>
 
             {/* Units list */}
             <div>
-              <label className="block text-xs font-semibold text-[#172554] mb-1">
+              <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                 Course Units (Unit I to V)
               </label>
               <div className="space-y-1.5">
@@ -696,7 +696,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
                       updated[i] = e.target.value;
                       setNewSubjUnits(updated);
                     }}
-                    className="w-full bg-surface border border-[#e3d6cb] rounded-lg p-2 text-xs text-[#172554] focus:outline-none focus:ring-1 focus:ring-brand-800"
+                    className="w-full bg-surface border border-[var(--border)] rounded-lg p-2 text-xs text-[var(--foreground)] focus:outline-none focus:ring-1 focus:ring-brand-800"
                   />
                 ))}
               </div>
@@ -722,12 +722,12 @@ Subject: ${selectedSubjName} | Department: Food Technology
 
       {/* TAB 3: ADD / EDIT RESOURCES */}
       {activeTab === 'add-resource' && (
-        <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-5 shadow-sm space-y-4">
+        <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-5 shadow-sm space-y-4">
           <div>
-            <h3 className="text-sm font-bold text-[#172554] font-serif">
+            <h3 className="text-sm font-bold text-[var(--foreground)] font-serif">
               Add / Update Subject Resources & Materials
             </h3>
-            <p className="text-xs text-[#64748b]">
+            <p className="text-xs text-[var(--muted-foreground)]">
               Configure resource details, descriptions, unit alignment, and file content saved directly to the Knowledge Base.
             </p>
           </div>
@@ -742,13 +742,13 @@ Subject: ${selectedSubjName} | Department: Food Technology
           <form onSubmit={handleSaveResource} className="space-y-3.5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-[#172554] mb-1">
+                <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                   Target Subject:
                 </label>
                 <select
                   value={selectedSubjName}
                   onChange={(e) => setSelectedSubjName(e.target.value)}
-                  className="w-full bg-surface border border-[#e3d6cb] rounded-xl p-2.5 text-xs text-[#172554] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
                 >
                   {subjects.map((s) => (
                     <option key={s.id} value={s.name}>
@@ -759,13 +759,13 @@ Subject: ${selectedSubjName} | Department: Food Technology
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#172554] mb-1">
+                <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                   Select Resource Category:
                 </label>
                 <select
                   value={resourceType}
                   onChange={(e) => setResourceType(e.target.value as any)}
-                  className="w-full bg-surface border border-[#e3d6cb] rounded-xl p-2.5 text-xs text-[#172554] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
                 >
                   <option value="course-materials">📘 Course Materials (course-materials.md)</option>
                   <option value="previous-papers">📜 Previous Exam Papers (previous-papers.md)</option>
@@ -778,15 +778,15 @@ Subject: ${selectedSubjName} | Department: Food Technology
             </div>
 
             {/* Resource Details: Title, Description, Unit, Author */}
-            <div className="space-y-3 bg-surface-subtle/80 border border-[#e3d6cb] rounded-xl p-3.5">
-              <div className="text-[11px] font-sans font-bold uppercase tracking-wider text-[#2563eb] flex items-center space-x-1.5">
-                <FileText size={13} className="text-[#2563eb]" />
+            <div className="space-y-3 bg-surface-subtle/80 border border-[var(--border)] rounded-xl p-3.5">
+              <div className="text-[11px] font-sans font-bold uppercase tracking-wider text-[var(--accent)] flex items-center space-x-1.5">
+                <FileText size={13} className="text-[var(--accent)]" />
                 <span>Resource Details & Grounding Metadata</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#172554] mb-1">
+                  <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                     Resource Title / Document Name *
                   </label>
                   <input
@@ -795,12 +795,12 @@ Subject: ${selectedSubjName} | Department: Food Technology
                     value={resourceTitle}
                     onChange={(e) => setResourceTitle(e.target.value)}
                     placeholder="e.g. Unit IV Thermal Death Kinetics Master Lecture Handout"
-                    className="w-full bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-2 text-xs text-[#172554] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                    className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#172554] mb-1">
+                  <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                     Target Unit / Coverage Scope
                   </label>
                   <input
@@ -808,13 +808,13 @@ Subject: ${selectedSubjName} | Department: Food Technology
                     value={resourceUnit}
                     onChange={(e) => setResourceUnit(e.target.value)}
                     placeholder="e.g. Unit IV: Thermal Death Kinetics or Units I - V"
-                    className="w-full bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-2 text-xs text-[#172554] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                    className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#172554] mb-1">
+                <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                   Resource Description & Coverage Details *
                 </label>
                 <textarea
@@ -823,12 +823,12 @@ Subject: ${selectedSubjName} | Department: Food Technology
                   value={resourceDescription}
                   onChange={(e) => setResourceDescription(e.target.value)}
                   placeholder="Explain what concepts, equations, previous questions, or rubrics this resource provides..."
-                  className="w-full bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-2 text-xs text-[#172554] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#172554] mb-1">
+                <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                   Author / Faculty Contributor
                 </label>
                 <input
@@ -836,25 +836,25 @@ Subject: ${selectedSubjName} | Department: Food Technology
                   value={resourceAuthor}
                   onChange={(e) => setResourceAuthor(e.target.value)}
                   placeholder="e.g. KL Department Faculty / Course Coordinator"
-                  className="w-full bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-2 text-xs text-[#172554] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
                 />
               </div>
             </div>
 
             {/* Quick Templates Buttons */}
             <div className="flex items-center space-x-2 text-xs">
-              <span className="text-[#64748b]">Templates:</span>
+              <span className="text-[var(--muted-foreground)]">Templates:</span>
               <button
                 type="button"
                 onClick={insertQuestionTemplate}
-                className="px-2.5 py-1 rounded-lg border border-[#e3d6cb] bg-surface-subtle hover:bg-surface-border text-[11px] font-medium"
+                className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-surface-subtle hover:bg-surface-border text-[11px] font-medium"
               >
                 + Insert Question Bank Template
               </button>
               <button
                 type="button"
                 onClick={insertRubricTemplate}
-                className="px-2.5 py-1 rounded-lg border border-[#e3d6cb] bg-surface-subtle hover:bg-surface-border text-[11px] font-medium"
+                className="px-2.5 py-1 rounded-lg border border-[var(--border)] bg-surface-subtle hover:bg-surface-border text-[11px] font-medium"
               >
                 + Insert Rubric Template
               </button>
@@ -862,7 +862,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
 
             {/* Resource Content Editor */}
             <div>
-              <label className="block text-xs font-semibold text-[#172554] mb-1">
+              <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                 Resource Document Content ({resourceType.endsWith('json') ? 'JSON' : 'Markdown'})
               </label>
               <textarea
@@ -870,7 +870,7 @@ Subject: ${selectedSubjName} | Department: Food Technology
                 value={resourceContent}
                 onChange={(e) => setResourceContent(e.target.value)}
                 placeholder="Enter markdown or JSON content..."
-                className="w-full bg-surface border border-[#e3d6cb] rounded-xl p-3 text-xs text-[#172554] font-mono placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 leading-relaxed"
+                className="w-full bg-surface border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] font-mono placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 leading-relaxed"
               />
             </div>
 
