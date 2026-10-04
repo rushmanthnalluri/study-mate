@@ -45,7 +45,7 @@ function extractTextOperators(stream) {
 function inflateStream(bytes, dictionary) {
   if (!/\/FlateDecode(?:\s|\/|$)/.test(dictionary)) return bytes;
   try {
-    return zlib.inflateSync(bytes);
+    return zlib.inflateSync(bytes, { maxOutputLength: MAX_STREAM_BYTES });
   } catch {
     try { return zlib.inflateRawSync(bytes); } catch { return Buffer.alloc(0); }
   }
