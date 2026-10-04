@@ -59,7 +59,7 @@ const FeedbackSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   userId: { type: String, required: true, index: true },
   topic: { type: String, required: true },
-  department: { type: String, default: 'Food Technology' },
+  department: { type: String },
   subject: { type: String, default: 'General' },
   source: { type: String, default: 'Student' },
   rating: { type: String, enum: ['useful', 'not_useful'], default: 'useful' },
