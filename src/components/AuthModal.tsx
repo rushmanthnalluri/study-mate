@@ -122,17 +122,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
           {mode === 'login' ? (
             <>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">KL ID or university email</label>
+                <label htmlFor="login-identifier" className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">KL ID or university email</label>
                 <div className="relative">
                   <UserRound className="absolute left-3.5 top-3.5 text-[var(--muted-foreground)]" size={16} />
-                  <input value={loginIdentifier} onChange={e => setLoginIdentifier(e.target.value)} required autoComplete="username" placeholder="e.g. your KL ID or you@kluniversity.in" className="auth-input pl-10" />
+                  <input id="login-identifier" name="identifier" value={loginIdentifier} onChange={e => setLoginIdentifier(e.target.value)} required autoComplete="username" placeholder="e.g. your KL ID or you@kluniversity.in" className="auth-input pl-10" />
                 </div>
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Password</label>
+                <label htmlFor="login-password" className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Password</label>
                 <div className="relative">
                   <LockKeyhole className="absolute left-3.5 top-3.5 text-[var(--muted-foreground)]" size={16} />
-                  <input type={showPassword ? 'text' : 'password'} value={loginPassword} onChange={e => setLoginPassword(e.target.value)} required autoComplete="current-password" placeholder="Your password" className="auth-input pl-10 pr-10" />
+                  <input id="login-password" name="password" type={showPassword ? 'text' : 'password'} value={loginPassword} onChange={e => setLoginPassword(e.target.value)} required autoComplete="current-password" placeholder="Your password" className="auth-input pl-10 pr-10" />
                   <button type="button" onClick={() => setShowPassword(v => !v)} aria-label={showPassword ? 'Hide password' : 'Show password'} className="absolute right-2.5 top-2.5 rounded-lg p-1.5 text-[var(--muted-foreground)] hover:bg-[var(--border)]">{showPassword ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                 </div>
               </div>
@@ -144,26 +144,26 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
           ) : (
             <>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Full name</label>
-                <input value={signupName} onChange={e => setSignupName(e.target.value)} required autoComplete="name" placeholder="Your full name" className="auth-input" />
+                <label htmlFor="signup-name" className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Full name</label>
+                <input id="signup-name" name="name" value={signupName} onChange={e => setSignupName(e.target.value)} required autoComplete="name" placeholder="Your full name" className="auth-input" />
               </div>
               <div className="grid grid-cols-1 gap-3">
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">KL ID</label>
-                  <input value={signupKlId} onChange={e => setSignupKlId(e.target.value)} required placeholder="Your KL ID" className="auth-input font-mono" />
+                  <label htmlFor="signup-kl-id" className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">KL ID</label>
+                  <input id="signup-kl-id" name="klId" value={signupKlId} onChange={e => setSignupKlId(e.target.value)} required placeholder="Your KL ID" className="auth-input font-mono" />
                 </div>
 
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">University email</label>
+                <label htmlFor="signup-email" className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">University email</label>
                 <div className="relative">
                   <Mail className="absolute left-3.5 top-3.5 text-[var(--muted-foreground)]" size={16} />
-                  <input value={signupEmail} onChange={e => setSignupEmail(e.target.value)} required type="email" autoComplete="email" placeholder="you@kluniversity.in" className="auth-input pl-10" />
+                  <input id="signup-email" name="email" value={signupEmail} onChange={e => setSignupEmail(e.target.value)} required type="email" autoComplete="email" placeholder="you@kluniversity.in" className="auth-input pl-10" />
                 </div>
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Password</label>
-                <input value={signupPassword} onChange={e => setSignupPassword(e.target.value)} required minLength={8} type="password" autoComplete="new-password" placeholder="At least 8 characters" className="auth-input" />
+                <label htmlFor="signup-password" className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Password</label>
+                <input id="signup-password" name="new-password" value={signupPassword} onChange={e => setSignupPassword(e.target.value)} required minLength={8} type="password" autoComplete="new-password" placeholder="At least 8 characters" className="auth-input" />
               </div>
               <button disabled={busy} className="auth-primary" type="submit">
                 {busy ? 'Creating account…' : <>Create my account <ArrowRight size={16} /></>}
