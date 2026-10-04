@@ -142,48 +142,15 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
   };
 
   const groundingResources = (note.resourcesUsed && note.resourcesUsed.length > 0)
-    ? note.resourcesUsed.map((r, i) => ({
-        id: `res-${i}`,
-        title: r.title,
-        file: r.file,
-        tag: 'Grounded Material',
-        icon: iconMap[r.type] || BookOpen,
-        excerpt: r.excerpt
+    ? note.resourcesUsed.map((resource, index) => ({
+        id: `res-${index}`,
+        title: resource.title,
+        file: resource.file,
+        tag: 'Administrator-published material',
+        icon: iconMap[resource.type] || BookOpen,
+        excerpt: resource.excerpt
       }))
-    : [
-        {
-          id: 'res-cm',
-          title: `${note.subject} Course Handout`,
-          file: 'course-materials.md',
-          tag: 'Curriculum & Units',
-          icon: BookOpen,
-          excerpt: `KL Course Unit mapped: "${note.unit}". Defines core principles, kinetic parameters, and Bloom's Taxonomy Level 1-4 expectations.`
-        },
-        {
-          id: 'res-pp',
-          title: `KL Previous Semester Exam Papers`,
-          file: 'previous-papers.md',
-          tag: 'Exam Evaluation Papers',
-          icon: FileText,
-          excerpt: `Correlated with KL End-Semester May 2024 & Dec 2023 questions. Evaluated for specific technical keywords.`
-        },
-        {
-          id: 'res-mp',
-          title: `KL Marks Evaluation Rubric`,
-          file: 'marks-pattern.md',
-          tag: 'Grading Criteria',
-          icon: Award,
-          excerpt: `2M: 20-40 words direct definition; 5M: 120-180 words structured points; 10M: 350-500 words essay with flowchart.`
-        },
-        {
-          id: 'res-as',
-          title: `Examiner Answer Style Guide`,
-          file: 'answer-style.md',
-          tag: 'Scoring Rules',
-          icon: ShieldCheck,
-          excerpt: `Examiners scan keywords in opening sentence. Boxed equations and labeled flowcharts are mandatory for full marks.`
-        }
-      ];
+    : [];
 
   return (
     <div className="space-y-4 pb-28 animate-fade-in print:p-0 print:m-0 max-w-5xl mx-auto">
@@ -467,12 +434,12 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                 <span>Grounded Resources (Laptop View)</span>
               </span>
               <span className="text-[10px] bg-[var(--muted)] text-[var(--accent)] font-bold px-1.5 py-0.5 rounded">
-                KL Drive KB
+                Published Subject Material
               </span>
             </div>
 
             <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">
-              These answers are directly synthesized and verified from the official subject resources in the knowledge base library:
+              These answers are generated from the administrator-published subject material available for this account:
             </p>
 
             <div className="space-y-2">
