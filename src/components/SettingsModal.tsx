@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Department, UserProfile } from '../types';
+import { UserProfile } from '../types';
 import { X, UserRound, ShieldCheck, Save, Trash2, KeyRound } from 'lucide-react';
 
 interface SettingsModalProps {
@@ -9,12 +9,10 @@ interface SettingsModalProps {
   onSaveProfile: (profile: UserProfile) => void;
   onResetData: () => void;
   onChangePassword: (currentPassword:string,newPassword:string) => Promise<void>;
-  departments: Department[];
 }
 
-export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser, onSaveProfile, onResetData, onChangePassword, departments }) => {
+export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser, onSaveProfile, onResetData, onChangePassword }) => {
   const [name, setName] = useState('');
-  const [department, setDepartment] = useState<Department>('');
   const [klId, setKlId] = useState('');
   const [currentPassword,setCurrentPassword]=useState('');
   const [newPassword,setNewPassword]=useState('');
@@ -24,7 +22,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
   useEffect(() => {
     if (currentUser) {
       setName(currentUser.name);
-      setDepartment(currentUser.department);
       setKlId(currentUser.klId);
     }
   }, [currentUser, isOpen]);
@@ -42,7 +39,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
 
   const save = (e: React.FormEvent) => {
     e.preventDefault();
-    onSaveProfile({ ...currentUser, name: name.trim(), department, klId: klId.trim() });
+    onSaveProfile({ ...currentUser, name: name.trim(), klId: klId.trim() });
     onClose();
   };
 
