@@ -32,7 +32,7 @@ import {
   getKnowledgeBaseOverrides,
   saveKnowledgeBaseOverride
 } from './db.js';
-import { generateChatbotReply } from './chatbot.js';
+import { generateChatbotReply, normalizeGeminiModel } from './chatbot.js';
 import { extractPdfText } from './pdf-extractor.js';
 
 const app = express();
