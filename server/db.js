@@ -540,7 +540,9 @@ export async function getChatMessages(userId, limit = 100) {
     try {
       const docs = await ChatMessageModel.find({ userId }).sort({ createdAt: -1 }).limit(Math.min(200, Math.max(1, Number(limit) || 100))).lean();
       return docs.reverse();
-    } catch (e) {}
+    } catch (e) {
+      throw new Error('Database unavailable.');
+    }
   }
   if (!fs.existsSync(chatHistoryFile)) return [];
   try {
