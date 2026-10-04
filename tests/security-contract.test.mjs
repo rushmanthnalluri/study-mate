@@ -18,8 +18,6 @@ test('all personalized API routes require authentication', () => {
     "app.post('/api/chat', requireAuth",
     "app.get('/api/chat/history', requireAuth",
     "app.put('/api/auth/profile', requireAuth",
-    "app.post('/api/auth/kl-lms/connect', requireAuth",
-    "app.post('/api/auth/kl-lms/sync', requireAuth",
     "app.post('/api/quiz/generate', requireAuth",
     "app.post('/api/quiz/attempts', requireAuth",
     "app.get('/api/quiz/attempts', requireAuth",
@@ -197,7 +195,6 @@ test('production browser security headers and mutation rate limits are enforced'
   assert.match(server, /Content-Security-Policy/);
   assert.match(server, /Strict-Transport-Security/);
   assert.match(server, /app\.put\('\/api\/auth\/profile', requireAuth, rateLimit/);
-  assert.match(server, /app\.post\('\/api\/auth\/kl-lms\/sync', requireAuth, rateLimit/);
   assert.match(server, /app\.post\('\/api\/admin\/subjects', requireAdmin, rateLimit/);
   assert.match(server, /app\.post\('\/api\/admin\/resources', requireAdmin, rateLimit/);
   assert.match(server, /app\.delete\('\/api\/admin\/subjects\/:name', requireAdmin, rateLimit/);
@@ -230,6 +227,6 @@ test('LMS is completely removed from the application surface', () => {
   assert.doesNotMatch(types, /isLmsConnected|lmsUsername|lmsLastSynced|lms-sync/);
   assert.doesNotMatch(header, /LMS|lms-sync|RefreshCw/);
   assert.doesNotMatch(home, /KL LMS|lms-sync/);
-  assert.doesNotMatch(server, /\/api\/auth\/kl-lms|lmsUsername/);
+  assert.doesNotMatch(server, /\/api\/auth\/kl-lms|lmsUsername|isLmsConnected|lmsLastSynced|enrolledCourses/);
   assert.doesNotMatch(db, /isLmsConnected|lmsUsername|lmsLastSynced|enrolledCourses/);
 });
