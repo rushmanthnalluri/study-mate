@@ -34,7 +34,7 @@ The current workspace includes:
 - AI Tutor
 - Administrator portal
 
-LMS synchronization, attendance, marks scraping, hall-ticket workflows and LMS connection state are not part of the product.
+The product does not include institutional synchronization or scraping workflows.
 
 ---
 
