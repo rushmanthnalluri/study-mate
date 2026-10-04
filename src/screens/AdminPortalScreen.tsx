@@ -54,7 +54,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
 
   // Add Resource Form State
   const [selectedSubjName, setSelectedSubjName] = useState(subjects[0]?.name || '');
-  const [resourceType, setResourceType] = useState<'course-materials' | 'previous-papers' | 'question-bank' | 'marks-pattern' | 'answer-style' | 'syllabus'>('course-materials');
+  const [resourceType, setResourceType] = useState<'course-materials' | 'previous-papers' | 'question-bank' | 'marks-pattern' | 'answer-style' | 'syllabus' | 'flashcards' | 'glossary'>('course-materials');
   const [resourceTitle, setResourceTitle] = useState('');
   const [resourceDescription, setResourceDescription] = useState('');
   const [resourceUnit, setResourceUnit] = useState('All Units');
@@ -728,6 +728,8 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   <option value="marks-pattern">🎯 Marks Pattern & Rubric (marks-pattern.md)</option>
                   <option value="answer-style">✍️ Answer Style Guide (answer-style.md)</option>
                   <option value="syllabus">🗺️ Syllabus & Units (syllabus.json)</option>
+                  <option value="flashcards">🧠 Flashcards (flashcards.json)</option>
+                  <option value="glossary">📖 Glossary (glossary.json)</option>
                 </select>
               </div>
             </div>
