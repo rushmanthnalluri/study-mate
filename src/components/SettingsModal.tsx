@@ -11,9 +11,9 @@ interface SettingsModalProps {
   onChangePassword: (currentPassword:string,newPassword:string) => Promise<void>;
 }
 
-export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser, onSaveProfile, onResetData, onChangePassword }) => {
+export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser, onSaveProfile, onResetData, onChangePassword, departments }) => {
   const [name, setName] = useState('');
-  const [department, setDepartment] = useState<Department>('Food Technology');
+  const [department, setDepartment] = useState<Department>('');
   const [klId, setKlId] = useState('');
   const [currentPassword,setCurrentPassword]=useState('');
   const [newPassword,setNewPassword]=useState('');
@@ -47,7 +47,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#0f172a]/60 p-4 backdrop-blur-md" role="presentation">
-      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="settings-modal-title" tabIndex={-1} className="w-full max-w-lg overflow-hidden rounded-[28px] border border-[#dbe3ee] bg-[#ffffff] shadow-2xl">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="settings-modal-title" tabIndex={-1} className="w-full max-w-lg overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] shadow-[var(--shadow-lg)]">
         <div className="flex items-center justify-between border-b border-[#e2e8f0] bg-[#f8fafc] px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e2c2a3] text-[#6e4228]"><UserRound size={18} /></div>
@@ -73,7 +73,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
           <label className="block">
             <span className="mb-1.5 block text-xs font-bold text-[#334155]">Department</span>
             <select className="auth-input" value={department} onChange={e => setDepartment(e.target.value as Department)}>
-              <option>Food Technology</option><option>CSE</option><option>AIDS</option><option>ECE</option><option>EEE</option>
+              {departments.filter(d => d !== 'All').map(dept => <option key={dept} value={dept}>{dept}</option>)}
             </select>
           </label>
 
