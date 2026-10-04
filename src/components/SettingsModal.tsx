@@ -60,12 +60,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
         <form onSubmit={save} className="space-y-5 p-6">
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
-              <span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Full name</span>
-              <input className="auth-input" value={name} onChange={e => setName(e.target.value)} required />
+              <span id="settings-name-label" className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Full name</span>
+              <input id="settings-name" name="name" className="auth-input" value={name} onChange={e => setName(e.target.value)} required />
             </label>
             <label className="block">
-              <span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">KL ID</span>
-              <input className="auth-input font-mono" value={klId} onChange={e => setKlId(e.target.value)} required />
+              <span id="settings-kl-id-label" className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">KL ID</span>
+              <input id="settings-kl-id" name="klId" className="auth-input font-mono" value={klId} onChange={e => setKlId(e.target.value)} required />
             </label>
           </div>
 
