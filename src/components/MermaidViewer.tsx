@@ -13,12 +13,12 @@ mermaid.initialize({
   securityLevel: 'strict',
   fontFamily: 'Inter, system-ui, sans-serif',
   themeVariables: {
-    primaryColor: '#fbebed',
-    primaryTextColor: '#831d32',
-    primaryBorderColor: '#b4374f',
-    lineColor: '#691829',
-    secondaryColor: '#f5f3f0',
-    tertiaryColor: '#ffffff'
+    primaryColor: 'var(--danger-soft)',
+    primaryTextColor: 'var(--danger)',
+    primaryBorderColor: 'var(--danger)',
+    lineColor: 'var(--danger)',
+    secondaryColor: 'var(--muted)',
+    tertiaryColor: 'var(--card)'
   }
 });
 
