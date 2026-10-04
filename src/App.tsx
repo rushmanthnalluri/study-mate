@@ -511,7 +511,7 @@ export const App: React.FC = () => {
           <FeedbackScreen
             currentTopic={currentNote?.topic || "Study feedback"}
             currentDepartment={currentNote?.department || currentSubject?.department || ""}
-            currentSubject={currentNote?.subject || currentSubject?.name || "Operating Systems"}
+            currentSubject={currentNote?.subject || currentSubject?.name || ""}
             onNavigate={setCurrentScreen}
             onSubmitFeedback={handleSubmitFeedback}
             recentFeedbacks={feedbacks}
