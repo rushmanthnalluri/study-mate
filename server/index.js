@@ -1257,6 +1257,8 @@ app.get('*', (req, res) => {
   });
 }
 
+await ensureBootstrapAdmin();
+
 const server = app.listen(PORT, () => {
   console.log(`StudyMate AI server running on port ${PORT}`);
 });
