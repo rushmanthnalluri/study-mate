@@ -31,11 +31,13 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
   onRefreshSubjects
 }) => {
   const [activeTab, setActiveTab] = useState<'manage' | 'add-subject' | 'add-resource' | 'ai-config'>('manage');
-  const [aiProvider, setAiProvider] = useState<'offline' | 'groq' | 'gemini'>('offline');
+  const [aiProvider, setAiProvider] = useState('offline');
   const [aiModel, setAiModel] = useState('');
   const [aiKey, setAiKey] = useState('');
   const [aiConfigured, setAiConfigured] = useState(false);
   const [aiSecretReady, setAiSecretReady] = useState(false);
+  const [aiEndpoint, setAiEndpoint] = useState('');
+  const [aiProviders, setAiProviders] = useState<Array<{ id: string; label: string; defaultModel: string; type: string }>>([]);
   const [aiConfigMessage, setAiConfigMessage] = useState('');
   const [isSavingAiConfig, setIsSavingAiConfig] = useState(false);
 
@@ -85,6 +87,8 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
       .then(data => {
         setAiProvider(data.provider || 'offline');
         setAiModel(data.model || '');
+        setAiEndpoint(data.endpoint || '');
+        setAiProviders(Array.isArray(data.providers) ? data.providers : []);
         setAiConfigured(Boolean(data.configured));
         setAiSecretReady(Boolean(data.secretConfigured));
       })
@@ -102,7 +106,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '')
         },
-        body: JSON.stringify({ provider: aiProvider, model: aiModel, apiKey: aiKey })
+        body: JSON.stringify({ provider: aiProvider, model: aiModel, apiKey: aiKey, endpoint: aiEndpoint })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Could not save AI configuration.');
@@ -361,7 +365,7 @@ Enter only grading guidance published or verified by your institution.
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent-100)] text-[var(--foreground)]"><ShieldCheck size={20} /></div>
             <div>
               <h3 className="text-base font-black text-[var(--foreground)]">Central AI control</h3>
-              <p className="mt-1 text-xs leading-5 text-[var(--muted-foreground)]">This is the only place where an application-wide Groq or Gemini API key can be configured. The key is encrypted server-side and is never sent back to students.</p>
+              <p className="mt-1 text-xs leading-5 text-[var(--muted-foreground)]">Configure the application-wide AI provider. Credentials are encrypted server-side and are never sent back to students. OpenAI-compatible providers can share the same routing engine.</p>
             </div>
           </div>
           <form onSubmit={handleSaveAiConfig} className="space-y-4">
@@ -369,16 +373,46 @@ Enter only grading guidance published or verified by your institution.
             {aiConfigMessage && <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 text-xs font-semibold text-[var(--foreground)]">{aiConfigMessage}</div>}
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Provider</span>
-                <select id="admin-ai-provider" name="aiProvider" value={aiProvider} onChange={e => setAiProvider(e.target.value as any)} className="auth-input">
-                  <option value="offline">Offline knowledge engine</option>
-                  <option value="groq">Groq</option>
-                  <option value="gemini">Google Gemini</option>
+                <select id="admin-ai-provider" name="aiProvider" value={aiProvider} onChange={e => {
+                  const next = e.target.value;
+                  setAiProvider(next);
+                  const meta = aiProviders.find(p => p.id === next);
+                  if (meta?.defaultModel) setAiModel(meta.defaultModel);
+                  if (next !== 'custom') setAiEndpoint('');
+                }} className="auth-input">
+                  {aiProviders.length > 0 ? aiProviders.map(provider => (
+                    <option key={provider.id} value={provider.id}>{provider.label}</option>
+                  )) : (
+                    <>
+                      <option value="offline">Offline knowledge engine</option>
+                      <option value="openai">OpenAI</option>
+                      <option value="anthropic">Anthropic Claude</option>
+                      <option value="gemini">Google Gemini</option>
+                      <option value="groq">Groq</option>
+                      <option value="deepseek">DeepSeek</option>
+                      <option value="mistral">Mistral AI</option>
+                      <option value="xai">xAI (Grok)</option>
+                      <option value="openrouter">OpenRouter</option>
+                      <option value="together">Together AI</option>
+                      <option value="cerebras">Cerebras</option>
+                      <option value="fireworks">Fireworks AI</option>
+                      <option value="perplexity">Perplexity</option>
+                      <option value="cohere">Cohere</option>
+                      <option value="sambanova">SambaNova</option>
+                      <option value="custom">Custom OpenAI-compatible endpoint</option>
+                    </>
+                  )}
                 </select>
               </label>
               <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Model</span>
-                <input id="admin-ai-model" name="aiModel" value={aiModel} onChange={e => setAiModel(e.target.value)} placeholder={aiProvider === 'groq' ? 'llama-3.3-70b-versatile' : 'gemini-3.8-flash'} className="auth-input" />
+                <input id="admin-ai-model" name="aiModel" value={aiModel} onChange={e => setAiModel(e.target.value)} placeholder={aiProviders.find(p => p.id === aiProvider)?.defaultModel || 'Enter the provider model ID'} className="auth-input" />
               </label>
             </div>
+            {aiProvider === 'custom' && (
+              <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">OpenAI-compatible HTTPS endpoint</span>
+                <input id="admin-ai-endpoint" name="endpoint" value={aiEndpoint} onChange={e => setAiEndpoint(e.target.value)} type="url" placeholder="https://your-provider.example/v1" className="auth-input font-mono" required />
+              </label>
+            )}
             {aiProvider !== 'offline' && (
               <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">New API key</span>
                 <input id="admin-ai-key" name="apiKey" value={aiKey} onChange={e => setAiKey(e.target.value)} type="password" placeholder="Paste a new key; it will not be displayed again" className="auth-input font-mono" required />
