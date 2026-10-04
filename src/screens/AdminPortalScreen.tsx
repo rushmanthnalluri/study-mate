@@ -447,7 +447,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-sans uppercase tracking-wider font-bold text-[var(--muted-foreground)]">
-              Active Food Technology Subjects
+              Published Subjects
             </span>
             <span className="text-[10px] text-[var(--muted-foreground)]">
               Source: administrator-managed MongoDB
@@ -601,10 +601,10 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
         <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-5 shadow-sm space-y-4">
           <div>
             <h3 className="text-sm font-bold text-[var(--foreground)] font-serif">
-              Add New Food Technology Subject
+              Add New Subject
             </h3>
             <p className="text-xs text-[var(--muted-foreground)]">
-              Creates a dedicated subject folder with all 6 standard files pre-initialized.
+              Creates a database record. Resources are published separately so nothing is invented or exposed by default.
             </p>
           </div>
 
@@ -616,7 +616,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
           )}
 
           <form onSubmit={handleCreateSubject} className="space-y-3.5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                   Subject Name *
@@ -633,7 +633,23 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
 
               <div>
                 <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
-                  KL Course Code *
+                  Department *
+                </label>
+                <select
+                  required
+                  value={newSubjDepartment}
+                  onChange={(e) => setNewSubjDepartment(e.target.value as Department)}
+                  className="w-full bg-surface border border-[var(--border)] rounded-md p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                >
+                  <option value="">Select department</option>
+                  {Array.from(new Set(subjects.map((subject) => subject.department).filter(Boolean))).map((dept) => (
+                    <option key={dept} value={dept}>{dept}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
+                  KL Course Code * 
                 </label>
                 <input
                   type="text"
@@ -706,7 +722,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
               ) : (
                 <>
                   <PlusCircle size={15} />
-                  <span>Create Subject in KL Knowledge Base</span>
+                  <span>Create Subject</span>
                 </>
               )}
             </button>
