@@ -5,7 +5,6 @@ import { X, GraduationCap, LockKeyhole, Mail, UserRound, ArrowRight, ShieldCheck
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  currentUser: UserProfile | null;
   onAuthSuccess: (user: UserProfile, token: string) => void;
 }
 
