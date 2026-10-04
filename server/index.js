@@ -16,6 +16,7 @@ import {
   addFeedback,
   getChatMessages,
   saveChatMessage,
+  deleteChatMessages,
   isDatabaseConnected,
   getAiConfig,
   saveAiConfig,
@@ -390,6 +391,15 @@ app.get('/api/chat/history', requireAuth, async (req, res) => {
   try {
     const messages = await getChatMessages(req.user.id, Math.min(200, Math.max(1, Number(req.query.limit) || 100)));
     res.json(messages);
+  } catch (err) {
+    res.status(500).json({ error: 'Request could not be completed.' });
+  }
+});
+
+app.delete('/api/chat/history', requireAuth, rateLimit(60000, 10), async (req, res) => {
+  try {
+    await deleteChatMessages(req.user.id);
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'Request could not be completed.' });
   }
