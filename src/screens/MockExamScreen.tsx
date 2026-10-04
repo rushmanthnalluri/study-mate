@@ -116,6 +116,8 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
           <label className="mt-5 block max-w-xl print:hidden">
             <span className="small-caps mb-2 block text-[var(--muted-foreground)]">Subject</span>
             <select
+              id="mock-exam-subject"
+              name="subject"
               value={activeSubject?.id || ''}
               onChange={event => setSelectedSubjId(event.target.value)}
               className="editorial-input w-full"
