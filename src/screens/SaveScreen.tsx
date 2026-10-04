@@ -75,7 +75,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search saved revision notes..."
-            className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm"
+            className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] editorial-focus shadow-sm"
           />
         </div>
 
@@ -116,12 +116,12 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
           filteredNotes.map((note) => (
             <div
               key={note.id || note.topic}
-              className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3.5 shadow-sm hover:border-brand-300 transition-all flex flex-col justify-between space-y-2"
+              className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3.5 shadow-sm hover:border-[var(--accent-300)] transition-all flex flex-col justify-between space-y-2"
             >
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface-subtle text-[var(--muted-foreground)]">
+                    <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-[var(--surface)] text-[var(--muted-foreground)]">
                       {note.code}
                     </span>
                     <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[var(--accent)]">
@@ -146,7 +146,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
                     className={`p-1.5 rounded-lg border text-xs transition-colors ${
                       note.isReviewed
                         ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
-                        : 'bg-[var(--card)] text-[var(--muted-foreground)] border-[var(--border)] hover:bg-surface-subtle'
+                        : 'bg-[var(--card)] text-[var(--muted-foreground)] border-[var(--border)] hover:bg-[var(--surface)]'
                     }`}
                   >
                     <CheckCircle size={15} />
@@ -166,7 +166,7 @@ export const SaveScreen: React.FC<SaveScreenProps> = ({
                 {note.keywords.slice(0, 3).map((kw, i) => (
                   <span
                     key={i}
-                    className="text-[9px] bg-surface-subtle px-1.5 py-0.5 rounded text-[var(--muted-foreground)] font-medium"
+                    className="text-[9px] bg-[var(--surface)] px-1.5 py-0.5 rounded text-[var(--muted-foreground)] font-medium"
                   >
                     #{kw}
                   </span>
