@@ -322,7 +322,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
           onClick={() => setActiveTab('manage')}
           className={`pb-2 px-3 text-xs font-bold border-b-2 transition-all ${
             activeTab === 'manage'
-              ? 'border-brand-800 text-[var(--accent)]'
+              ? 'border-[var(--accent)] text-[var(--accent)]'
               : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
           }`}
         >
@@ -332,7 +332,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
           onClick={() => setActiveTab('add-subject')}
           className={`pb-2 px-3 text-xs font-bold border-b-2 transition-all flex items-center space-x-1 ${
             activeTab === 'add-subject'
-              ? 'border-brand-800 text-[var(--accent)]'
+              ? 'border-[var(--accent)] text-[var(--accent)]'
               : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
           }`}
         >
@@ -343,7 +343,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
           onClick={() => setActiveTab('add-resource')}
           className={`pb-2 px-3 text-xs font-bold border-b-2 transition-all flex items-center space-x-1 ${
             activeTab === 'add-resource'
-              ? 'border-brand-800 text-[var(--accent)]'
+              ? 'border-[var(--accent)] text-[var(--accent)]'
               : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
           }`}
         >
@@ -353,7 +353,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
       </div>
 
       {activeTab === 'ai-config' && (
-        <div className="rounded-[24px] border border-[#dbe3ee] bg-[#ffffff] p-5 shadow-sm">
+        <div className="rounded-[24px] border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm">
           <div className="mb-5 flex items-start gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent-100)] text-[var(--foreground)]"><ShieldCheck size={20} /></div>
             <div>
@@ -363,7 +363,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
           </div>
           <form onSubmit={handleSaveAiConfig} className="space-y-4">
             {!aiSecretReady && <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 text-xs font-semibold text-[var(--foreground)]">Server protection is not initialized yet. Set <code>STUDYMATE_CONFIG_SECRET</code> on Render before saving a key.</div>}
-            {aiConfigMessage && <div className="rounded-2xl border border-[var(--border)] bg-[#f8fafc] p-3 text-xs font-semibold text-[#5d4738]">{aiConfigMessage}</div>}
+            {aiConfigMessage && <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 text-xs font-semibold text-[var(--foreground)]">{aiConfigMessage}</div>}
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Provider</span>
                 <select value={aiProvider} onChange={e => setAiProvider(e.target.value as any)} className="auth-input">
@@ -381,7 +381,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 <input value={aiKey} onChange={e => setAiKey(e.target.value)} type="password" placeholder="Paste a new key; it will not be displayed again" className="auth-input font-mono" required />
               </label>
             )}
-            <div className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-[#f8fafc] p-4">
+            <div className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
               <div><p className="text-xs font-extrabold text-[var(--foreground)]">Current status</p><p className="mt-1 text-[11px] text-[var(--muted-foreground)]">{aiConfigured ? 'A central provider is configured.' : 'No cloud provider is configured; offline mode is available.'}</p></div>
               <span className={`rounded-full px-3 py-1 text-[10px] font-black ${aiConfigured ? 'bg-[var(--accent-100)] text-[var(--foreground)]' : 'bg-[var(--surface)] text-[var(--muted-foreground)]'}`}>{aiConfigured ? 'CONFIGURED' : 'OFFLINE'}</span>
             </div>
@@ -406,7 +406,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
             {subjects.map((subj) => (
               <div
                 key={subj.id}
-                className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-3 hover:border-brand-300 transition-all"
+                className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-3 hover:border-[var(--accent)] transition-all"
               >
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
@@ -414,7 +414,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                       <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-surface-subtle border border-[var(--border)] text-[var(--foreground)]">
                         {subj.code}
                       </span>
-                      <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-brand-50 text-[var(--accent)]">
+                      <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[var(--accent-50)] text-[var(--accent)]">
                         {subj.department}
                       </span>
                     </div>
@@ -429,7 +429,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                         setSelectedSubjName(subj.name);
                         setActiveTab('add-resource');
                       }}
-                      className="px-2.5 py-1.5 rounded-lg border border-brand-200 bg-brand-50 hover:bg-brand-100 text-[var(--accent)] text-xs font-semibold flex items-center space-x-1 transition-colors"
+                      className="px-2.5 py-1.5 rounded-lg border border-[var(--accent-200)] bg-[var(--accent-50)] hover:bg-[var(--accent-100)] text-[var(--accent)] text-xs font-semibold flex items-center space-x-1 transition-colors"
                     >
                       <Edit3 size={13} className="text-[var(--accent)]" />
                       <span>Manage Resources</span>
@@ -445,7 +445,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 </div>
 
                 {/* Subject Description */}
-                <div className="bg-surface-subtle border border-[var(--border)]/70 rounded-lg p-2.5 text-xs text-stone-700 leading-relaxed">
+                <div className="bg-surface-subtle border border-[var(--border)]/70 rounded-lg p-2.5 text-xs text-[var(--foreground)] leading-relaxed">
                   <span className="font-semibold text-[var(--foreground)] block text-[10px] mb-0.5 uppercase tracking-wider font-sans">
                     Subject Description & Academic Scope:
                   </span>
@@ -474,7 +474,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                         subj.resources.map((res) => (
                           <div
                             key={res.id}
-                            className="p-2.5 rounded-lg border border-[var(--border)] bg-[#ffffff] space-y-1 hover:border-brand-200 transition-colors"
+                            className="p-2.5 rounded-lg border border-[var(--border)] bg-[var(--card)] space-y-1 hover:border-[var(--accent-200)] transition-colors"
                           >
                             <div className="flex items-start justify-between">
                               <div className="space-y-0.5">
@@ -546,7 +546,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
 
       {/* TAB 2: ADD NEW SUBJECT */}
       {activeTab === 'add-subject' && (
-        <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-5 shadow-sm space-y-4">
+        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 shadow-sm space-y-4">
           <div>
             <h3 className="text-sm font-bold text-[var(--foreground)] font-serif">
               Add New Subject
@@ -677,7 +677,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
 
       {/* TAB 3: ADD / EDIT RESOURCES */}
       {activeTab === 'add-resource' && (
-        <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-5 shadow-sm space-y-4">
+        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-5 shadow-sm space-y-4">
           <div>
             <h3 className="text-sm font-bold text-[var(--foreground)] font-serif">
               Add / Update Subject Resources & Materials
@@ -750,7 +750,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                     value={resourceTitle}
                     onChange={(e) => setResourceTitle(e.target.value)}
                     placeholder="e.g. Unit IV Thermal Death Kinetics Master Lecture Handout"
-                    className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] editorial-focus"
+                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] editorial-focus"
                   />
                 </div>
 
@@ -763,7 +763,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                     value={resourceUnit}
                     onChange={(e) => setResourceUnit(e.target.value)}
                     placeholder="e.g. Unit IV: Thermal Death Kinetics or Units I - V"
-                    className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] editorial-focus"
+                    className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] editorial-focus"
                   />
                 </div>
               </div>
@@ -778,7 +778,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={resourceDescription}
                   onChange={(e) => setResourceDescription(e.target.value)}
                   placeholder="Explain what concepts, equations, previous questions, or rubrics this resource provides..."
-                  className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus"
+                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus"
                 />
               </div>
 
@@ -791,7 +791,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={resourceAuthor}
                   onChange={(e) => setResourceAuthor(e.target.value)}
                   placeholder="e.g. Administrator / Course Coordinator"
-                  className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] editorial-focus"
+                  className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] editorial-focus"
                 />
               </div>
             </div>
