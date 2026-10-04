@@ -368,19 +368,19 @@ Enter only grading guidance published or verified by your institution.
             {aiConfigMessage && <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 text-xs font-semibold text-[var(--foreground)]">{aiConfigMessage}</div>}
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Provider</span>
-                <select value={aiProvider} onChange={e => setAiProvider(e.target.value as any)} className="auth-input">
+                <select id="admin-ai-provider" name="aiProvider" value={aiProvider} onChange={e => setAiProvider(e.target.value as any)} className="auth-input">
                   <option value="offline">Offline knowledge engine</option>
                   <option value="groq">Groq</option>
                   <option value="gemini">Google Gemini</option>
                 </select>
               </label>
               <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Model</span>
-                <input value={aiModel} onChange={e => setAiModel(e.target.value)} placeholder={aiProvider === 'groq' ? 'llama-3.3-70b-versatile' : 'gemini-1.5-flash'} className="auth-input" />
+                <input id="admin-ai-model" name="aiModel" value={aiModel} onChange={e => setAiModel(e.target.value)} placeholder={aiProvider === 'groq' ? 'llama-3.3-70b-versatile' : 'gemini-1.5-flash'} className="auth-input" />
               </label>
             </div>
             {aiProvider !== 'offline' && (
               <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">New API key</span>
-                <input value={aiKey} onChange={e => setAiKey(e.target.value)} type="password" placeholder="Paste a new key; it will not be displayed again" className="auth-input font-mono" required />
+                <input id="admin-ai-key" name="apiKey" value={aiKey} onChange={e => setAiKey(e.target.value)} type="password" placeholder="Paste a new key; it will not be displayed again" className="auth-input font-mono" required />
               </label>
             )}
             <div className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
@@ -572,6 +572,8 @@ Enter only grading guidance published or verified by your institution.
                   Subject Name *
                 </label>
                 <input
+                  id="new-subject-name"
+                  name="name"
                   type="text"
                   required
                   value={newSubjName}
@@ -599,6 +601,8 @@ Enter only grading guidance published or verified by your institution.
                   KL Course Code * 
                 </label>
                 <input
+                  id="new-subject-code"
+                  name="code"
                   type="text"
                   required
                   value={newSubjCode}
@@ -615,6 +619,8 @@ Enter only grading guidance published or verified by your institution.
                 Subject Description & Academic Scope *
               </label>
               <textarea
+                id="new-subject-description"
+                name="description"
                 rows={3}
                 required
                 value={newSubjDescription}
@@ -629,6 +635,8 @@ Enter only grading guidance published or verified by your institution.
                 Sample Examination Topics (Comma separated)
               </label>
               <input
+                id="new-subject-topics"
+                name="topics"
                 type="text"
                 value={newSubjTopics}
                 onChange={(e) => setNewSubjTopics(e.target.value)}
@@ -703,6 +711,8 @@ Enter only grading guidance published or verified by your institution.
                   Target Subject:
                 </label>
                 <select
+                  id="resource-subject"
+                  name="subject"
                   value={selectedSubjName}
                   onChange={(e) => setSelectedSubjName(e.target.value)}
                   className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
@@ -720,6 +730,8 @@ Enter only grading guidance published or verified by your institution.
                   Select Resource Category:
                 </label>
                 <select
+                  id="resource-type"
+                  name="resourceType"
                   value={resourceType}
                   onChange={(e) => setResourceType(e.target.value as any)}
                   className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
@@ -749,6 +761,8 @@ Enter only grading guidance published or verified by your institution.
                     Resource Title / Document Name *
                   </label>
                   <input
+                    id="resource-title"
+                    name="title"
                     type="text"
                     required
                     value={resourceTitle}
@@ -763,6 +777,8 @@ Enter only grading guidance published or verified by your institution.
                     Target Unit / Coverage Scope
                   </label>
                   <input
+                    id="resource-unit"
+                    name="unit"
                     type="text"
                     value={resourceUnit}
                     onChange={(e) => setResourceUnit(e.target.value)}
@@ -777,6 +793,8 @@ Enter only grading guidance published or verified by your institution.
                   Resource Description & Coverage Details *
                 </label>
                 <textarea
+                  id="resource-description"
+                  name="description"
                   rows={2}
                   required
                   value={resourceDescription}
@@ -791,6 +809,8 @@ Enter only grading guidance published or verified by your institution.
                   Author / Contributor
                 </label>
                 <input
+                  id="resource-author"
+                  name="author"
                   type="text"
                   value={resourceAuthor}
                   onChange={(e) => setResourceAuthor(e.target.value)}
@@ -825,6 +845,8 @@ Enter only grading guidance published or verified by your institution.
                 Resource Document Content ({resourceType.endsWith('json') ? 'JSON' : 'Markdown'})
               </label>
               <textarea
+                id="resource-content"
+                name="content"
                 rows={12}
                 value={resourceContent}
                 onChange={(e) => setResourceContent(e.target.value)}
