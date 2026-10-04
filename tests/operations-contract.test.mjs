@@ -67,3 +67,15 @@ test('CI MongoDB integration uses the supported Node runtime', () => {
   const ci = read('.github/workflows/ci.yml');
   assert.match(ci, /node-version:\s*22\.12\.0/);
 });
+
+
+test('local environment files are loaded before production startup checks', () => {
+  const launcher = read('server.js');
+  assert.match(launcher, /^import ['"]dotenv\/config['"];\n/);
+});
+
+test('Render uses the lockfile for reproducible production installs', () => {
+  const render = read('render.yaml');
+  assert.match(render, /buildCommand: npm ci && npm run build/);
+  assert.doesNotMatch(render, /buildCommand: npm install && npm run build/);
+});
