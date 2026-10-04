@@ -135,6 +135,8 @@ textarea:focus {
   border-top: 2px solid var(--accent);
 }
 
+.relative > button { min-height: 0; }
+
 .auth-input {\n  min-height: 44px;\n  width: 100%;\n  border: 1px solid var(--border);\n  border-radius: 0.375rem;\n  background: var(--card);\n  color: var(--foreground);\n  padding: 0.625rem 0.75rem;\n}\n\n.editorial-input {
   border-radius: 0.375rem;
   background: var(--card);
