@@ -4,8 +4,8 @@
 ## Semester Examination Papers Catalog
 - **KL End-Semester May 2024 (Regular & Supplementary)**
 - **KL End-Semester Dec 2023 (Odd Semester)**
-- **KL In-Semester Examination 1 (Mid-Term 2024)**
-- **KL In-Semester Examination 2 (Mid-Term 2024)**
+- **KL assessmentester Examination 1 (Mid-Term 2024)**
+- **KL assessmentester Examination 2 (Mid-Term 2024)**
 
 ## Key Exam Patterns Observed
 - **Part A:** 5 mandatory questions $\times$ 2 marks = 10 marks (Direct definitions, fundamental laws, no fluff).
