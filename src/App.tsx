@@ -286,7 +286,7 @@ export const App: React.FC = () => {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6">
         <div className="rounded-3xl border border-[var(--border)] bg-white px-7 py-6 text-center shadow-lg">
-          <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-2 border-[var(--border)] border-t-[#2563eb]" />
+          <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-2 border-[var(--border)] border-t-[var(--accent)]" />
           <p className="text-xs font-black uppercase tracking-[.16em] text-[var(--accent)]">Securing your workspace</p>
           <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">Validating your StudyMate session…</p>
         </div>
