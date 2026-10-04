@@ -6,7 +6,7 @@
 import crypto from 'crypto';
 import { getAiConfig } from './db.js';
 
-const normalizeGeminiModel = (model) => {\n  const value = String(model || '').trim();\n  const legacy = new Set(['gemini-1.5-flash', 'gemini-1.5-flash-001', 'gemini-2.0-flash', 'gemini-2.0-flash-001', 'gemini-2.0-flash-lite', 'gemini-2.0-flash-lite-001']);\n  return !value || legacy.has(value) ? 'gemini-3.8-flash' : value;\n};\n\nexport const centralConfig = async () => {
+export const normalizeGeminiModel = (model) => {\n  const value = String(model || '').trim();\n  const legacy = new Set(['gemini-1.5-flash', 'gemini-1.5-flash-001', 'gemini-2.0-flash', 'gemini-2.0-flash-001', 'gemini-2.0-flash-lite', 'gemini-2.0-flash-lite-001']);\n  return !value || legacy.has(value) ? 'gemini-3.8-flash' : value;\n};\n\nexport const centralConfig = async () => {
   const stored = await getAiConfig();
   const secret = process.env.STUDYMATE_CONFIG_SECRET || '';
   if (stored?.encryptedApiKey && secret.length >= 32) {
