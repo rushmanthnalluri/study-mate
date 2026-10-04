@@ -6,7 +6,7 @@
 import crypto from 'crypto';
 import { getAiConfig } from './db.js';
 
-export const centralConfig = async () => {
+const normalizeGeminiModel = (model) => {\n  const value = String(model || '').trim();\n  const legacy = new Set(['gemini-1.5-flash', 'gemini-1.5-flash-001', 'gemini-2.0-flash', 'gemini-2.0-flash-001', 'gemini-2.0-flash-lite', 'gemini-2.0-flash-lite-001']);\n  return !value || legacy.has(value) ? 'gemini-3.8-flash' : value;\n};\n\nexport const centralConfig = async () => {
   const stored = await getAiConfig();
   const secret = process.env.STUDYMATE_CONFIG_SECRET || '';
   if (stored?.encryptedApiKey && secret.length >= 32) {
@@ -16,10 +16,10 @@ export const centralConfig = async () => {
       const decipher = crypto.createDecipheriv('aes-256-gcm', key, Buffer.from(ivHex, 'hex'));
       decipher.setAuthTag(Buffer.from(tagHex, 'hex'));
       const apiKey = Buffer.concat([decipher.update(Buffer.from(dataHex, 'hex')), decipher.final()]).toString('utf8');
-      if (apiKey) return { provider: stored.provider, model: stored.model || '', apiKey };
+      if (apiKey) return { provider: stored.provider, model: stored.provider === 'gemini' ? normalizeGeminiModel(stored.model) : (stored.model || ''), apiKey };
     } catch {}
   }
-  if (process.env.GEMINI_API_KEY) return { provider: 'gemini', model: process.env.GEMINI_MODEL || 'gemini-1.5-flash', apiKey: process.env.GEMINI_API_KEY };
+  if (process.env.GEMINI_API_KEY) return { provider: 'gemini', model: process.env.GEMINI_MODEL ? normalizeGeminiModel(process.env.GEMINI_MODEL) : 'gemini-3.8-flash', apiKey: process.env.GEMINI_API_KEY };
   if (process.env.GROQ_API_KEY) return { provider: 'groq', model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile', apiKey: process.env.GROQ_API_KEY };
   return { provider: 'offline', model: '', apiKey: '' };
 };
