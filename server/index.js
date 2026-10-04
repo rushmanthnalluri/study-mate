@@ -645,14 +645,13 @@ app.post('/api/auth/password', requireAuth, rateLimit(15 * 60 * 1000, 5), async 
 // Update the authenticated user's profile. Role and AI settings are immutable here.
 app.put('/api/auth/profile', requireAuth, rateLimit(60 * 60 * 1000, 20), async (req, res) => {
   try {
-    const { name, klId, department } = req.body || {};
+    const { name, klId } = req.body || {};
     const cleanName = String(name || '').trim();
     const cleanKlId = String(klId || '').trim();
-    const cleanDepartment = String(department || '').trim();
-    if (!cleanName || !cleanKlId || !cleanDepartment) {
-      return res.status(400).json({ error: 'Name, KL ID and department are required.' });
+    if (!cleanName || !cleanKlId) {
+      return res.status(400).json({ error: 'Name and KL ID are required.' });
     }
-    if (cleanName.length < 2 || cleanName.length > 100 || cleanKlId.length < 2 || cleanKlId.length > 100 || cleanDepartment.length < 2 || cleanDepartment.length > 100) {
+    if (cleanName.length < 2 || cleanName.length > 100 || cleanKlId.length < 2 || cleanKlId.length > 100) {
       return res.status(400).json({ error: 'Profile fields must be between 2 and 100 characters.' });
     }
     const users = await getAllUsers();
@@ -664,7 +663,6 @@ app.put('/api/auth/profile', requireAuth, rateLimit(60 * 60 * 1000, 20), async (
     if (duplicate) return res.status(409).json({ error: 'An account with this KL ID already exists.' });
     req.user.name = cleanName;
     req.user.klId = cleanKlId;
-    req.user.department = cleanDepartment;
     await saveUser(req.user);
     res.json({ success: true, user: sanitizeUser(req.user) });
   } catch (err) {
