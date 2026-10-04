@@ -36,6 +36,9 @@ const app = express();
 if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3001;
 
+// Parse bounded JSON requests before API handlers. PDF ingestion uses its own raw parser.
+app.use(express.json({ limit: '1mb' }));
+
 const rateLimitBuckets = new Map();
 const MAX_RATE_LIMIT_BUCKETS = 10000;
 function rateLimit(windowMs, maxRequests) {
