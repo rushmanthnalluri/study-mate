@@ -1,19 +1,6 @@
-import React, { useState } from 'react';
-import { Department, ScreenId, Subject, ExamNote } from '../types';
-import {
-  FileText,
-  Printer,
-  ArrowLeft,
-  ChevronDown,
-  ChevronUp,
-  Sparkles,
-  BookOpen,
-  Award,
-  Layers,
-  ArrowRight,
-  CheckCircle2
-} from 'lucide-react';
-import { MermaidViewer } from '../components/MermaidViewer';
+import React, { useMemo, useState } from 'react';
+import { ArrowLeft, ArrowRight, BookOpen, Printer } from 'lucide-react';
+import { Department, ScreenId, Subject } from '../types';
 
 interface MockExamScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -29,347 +16,189 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
   onOpenGeneratedNote
 }) => {
   const [deptFilter, setDeptFilter] = useState<Department>(selectedDepartment);
-  const [selectedSubjId, setSelectedSubjId] = useState<string>(subjects[0]?.id || '');
-  const [expandedQuestionId, setExpandedQuestionId] = useState<string | null>(null);
+  const [selectedSubjId, setSelectedSubjId] = useState(subjects[0]?.id || '');
 
-  const filteredSubjects = subjects.filter(
-    (s) => deptFilter === 'All' || s.department === deptFilter
+  const departments = useMemo(
+    () => ['All', ...Array.from(new Set(subjects.map(subject => subject.department).filter(Boolean)))],
+    [subjects]
   );
 
-  const activeSubject = subjects.find((s) => s.id === selectedSubjId) || filteredSubjects[0] || subjects[0];
+  const filteredSubjects = useMemo(
+    () => subjects.filter(subject => deptFilter === 'All' || subject.department === deptFilter),
+    [subjects, deptFilter]
+  );
 
-  // Synthesize realistic KL Exam Paper structure: Part A (2M), Part B (5M), Part C (10M)
-  const partAQuestions = [
-    {
-      id: 'pa-1',
-      num: '1.(a)',
-      text: `Define the primary governing principle of ${activeSubject.topics?.[0] || activeSubject.name}.`,
-      marks: 2,
-      co: 'CO1',
-      btl: 'BTL 1 (Remember)'
-    },
-    {
-      id: 'pa-2',
-      num: '1.(b)',
-      text: `State the standard mathematical relationship and boundary constraints for ${activeSubject.topics?.[1] || 'state stability'}.`,
-      marks: 2,
-      co: 'CO2',
-      btl: 'BTL 1 (Remember)'
-    },
-    {
-      id: 'pa-3',
-      num: '1.(c)',
-      text: `Mention two critical parameters checked during ${activeSubject.topics?.[2] || 'system verification'}.`,
-      marks: 2,
-      co: 'CO3',
-      btl: 'BTL 2 (Understand)'
-    },
-    {
-      id: 'pa-4',
-      num: '1.(d)',
-      text: `What is the significance of boundary condition verification in ${activeSubject.name}?`,
-      marks: 2,
-      co: 'CO4',
-      btl: 'BTL 2 (Understand)'
-    },
-    {
-      id: 'pa-5',
-      num: '1.(e)',
-      text: `State the allowable tolerance or metric range required under KL academic standards.`,
-      marks: 2,
-      co: 'CO5',
-      btl: 'BTL 1 (Remember)'
-    }
-  ];
+  const activeSubject =
+    subjects.find(subject => subject.id === selectedSubjId && (deptFilter === 'All' || subject.department === deptFilter)) ||
+    filteredSubjects[0] ||
+    subjects[0];
 
-  const partBQuestions = [
-    {
-      id: 'pb-1',
-      num: '2',
-      text: `Explain the structured operational phases and working mechanism of ${activeSubject.topics?.[0] || 'the core process'}. Draw a concise block flowchart.`,
-      marks: 5,
-      co: 'CO2',
-      btl: 'BTL 3 (Apply)'
-    },
-    {
-      id: 'pb-2',
-      num: '3',
-      text: `Compare and contrast conventional algorithms versus modern optimized approaches in ${activeSubject.name}. List 4 key differences.`,
-      marks: 5,
-      co: 'CO3',
-      btl: 'BTL 4 (Analyze)'
-    },
-    {
-      id: 'pb-3',
-      num: '4',
-      text: `Derive the fundamental governing equations for ${activeSubject.topics?.[1] || 'parameter response'} with clear definition of symbols.`,
-      marks: 5,
-      co: 'CO4',
-      btl: 'BTL 3 (Apply)'
-    }
-  ];
+  const questions = useMemo(
+    () => (activeSubject?.questionBank || []).filter(question =>
+      question &&
+      typeof question.question === 'string' &&
+      question.question.trim() &&
+      [2, 5, 10].includes(Number(question.marks))
+    ),
+    [activeSubject]
+  );
 
-  const partCQuestions = [
-    {
-      id: 'pc-1',
-      num: '5',
-      text: `Explain ${activeSubject.topics?.[0] || 'the foundational mechanism'} in detail with its mathematical formulation, step-by-step pipeline execution, architectural diagram, and practical industrial applications.`,
-      marks: 10,
-      co: 'CO3',
-      btl: 'BTL 4 (Analyze / Evaluate)'
-    },
-    {
-      id: 'pc-2',
-      num: '6',
-      text: `Formulate a comprehensive case study on ${activeSubject.topics?.[1] || 'system failure recovery'}. Detail trade-offs, stability criteria, and evaluator conclusion.`,
-      marks: 10,
-      co: 'CO5',
-      btl: 'BTL 4 (Analyze)'
-    }
-  ];
+  const grouped = useMemo(
+    () => ({
+      2: questions.filter(question => Number(question.marks) === 2),
+      5: questions.filter(question => Number(question.marks) === 5),
+      10: questions.filter(question => Number(question.marks) === 10)
+    }),
+    [questions]
+  );
 
-  const toggleExpand = (id: string) => {
-    setExpandedQuestionId(expandedQuestionId === id ? null : id);
+  const handleDepartmentChange = (department: Department) => {
+    setDeptFilter(department);
+    const next = subjects.find(subject =>
+      (department === 'All' || subject.department === department) &&
+      subject.id
+    );
+    if (next) setSelectedSubjId(next.id);
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const handlePrint = () => window.print();
 
   return (
-    <div className="space-y-4 pb-28 animate-fade-in print:p-0 print:m-0">
-      {/* Screen Header */}
-      <div className="flex items-center justify-between pt-1 print:hidden">
-        <div className="flex items-center space-x-2">
+    <div className="space-y-6 pb-28 print:p-0">
+      <header className="flex items-center justify-between gap-4 print:hidden">
+        <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={() => onNavigate('home')}
-            className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            aria-label="Back to home"
+            className="editorial-secondary flex h-11 w-11 items-center justify-center"
           >
             <ArrowLeft size={16} />
           </button>
           <div>
-            <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[var(--accent)]">
-              Exam Simulation
-            </span>
-            <h1 className="text-lg font-sans font-bold text-[var(--foreground)] leading-tight">
-              KL Full Mock Exam Paper
-            </h1>
+            <p className="small-caps text-[var(--accent)]">Assessment library</p>
+            <h1 className="mt-1 font-serif text-2xl text-[var(--foreground)]">Published mock paper</h1>
           </div>
         </div>
-
-        <button
-          onClick={handlePrint}
-          className="flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-[var(--surface)] transition-colors shadow-[var(--shadow-sm)]"
-        >
-          <Printer size={15} />
-          <span>Print / PDF</span>
+        <button type="button" onClick={handlePrint} className="editorial-secondary inline-flex min-h-11 items-center gap-2 px-4 text-xs font-semibold">
+          <Printer size={15} /> Print / PDF
         </button>
-      </div>
+      </header>
 
-      {/* Subject Selector Bar */}
-      <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 shadow-sm space-y-2 print:hidden">
-        <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold text-[var(--foreground)] flex items-center space-x-1.5">
-            <BookOpen size={14} className="text-[var(--accent)]" />
-            <span>Select Examination Course:</span>
+      <section className="editorial-card p-5 sm:p-6 print:border-b print:shadow-none">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="small-caps text-[var(--muted-foreground)]">Administrator-published question bank</p>
+            <h2 className="mt-2 font-serif text-3xl text-[var(--foreground)]">
+              {activeSubject?.name || 'No subject selected'}
+            </h2>
+            {activeSubject && (
+              <p className="mt-2 text-sm text-[var(--muted-foreground)]">
+                {activeSubject.code} · {activeSubject.department}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2 print:hidden">
+            {departments.map(department => (
+              <button
+                key={department}
+                type="button"
+                onClick={() => handleDepartmentChange(department as Department)}
+                className={deptFilter === department ? 'editorial-primary min-h-11 px-3 text-xs' : 'editorial-secondary min-h-11 px-3 text-xs'}
+              >
+                {department === 'All' ? 'All' : department}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {filteredSubjects.length > 0 && (
+          <label className="mt-5 block max-w-xl print:hidden">
+            <span className="small-caps mb-2 block text-[var(--muted-foreground)]">Subject</span>
+            <select
+              value={activeSubject?.id || ''}
+              onChange={event => setSelectedSubjId(event.target.value)}
+              className="editorial-input w-full"
+            >
+              {filteredSubjects.map(subject => (
+                <option key={subject.id} value={subject.id}>
+                  {subject.name} · {subject.code}
+                </option>
+              ))}
+            </select>
           </label>
-          <span className="text-[10px] font-mono text-[var(--muted-foreground)]">
-            {activeSubject.code}
-          </span>
-        </div>
-        <select
-          value={activeSubject.id}
-          onChange={(e) => setSelectedSubjId(e.target.value)}
-          className="w-full bg-[var(--surface)] border border-[var(--border)] rounded-lg p-2 text-xs font-medium text-[var(--foreground)] editorial-focus"
-        >
-          {subjects.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name} ({s.code}) — {s.department}
-            </option>
-          ))}
-        </select>
-      </div>
+        )}
+      </section>
 
-      {/* The Official KL University Exam Paper Sheet */}
-      <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 sm:p-7 shadow-[var(--shadow-lg)] space-y-5 print:border-none print:shadow-none print:p-0">
-        {/* Official KL Header */}
-        <div className="text-center border-b-2 border-[var(--border)] pb-4 space-y-1">
-          <h2 className="text-sm sm:text-base font-sans font-extrabold uppercase tracking-wide text-[var(--foreground)]">
-            KONERU LAKSHMAIAH EDUCATION FOUNDATION
-          </h2>
-          <p className="text-[11px] text-[var(--foreground)] italic font-sans">
-            (Deemed to be University, Estd. u/s 3 of UGC Act, 1956)
+      {!activeSubject ? (
+        <section className="editorial-card p-10 text-center">
+          <BookOpen size={28} className="mx-auto text-[var(--accent)]" />
+          <h2 className="mt-4 font-serif text-2xl text-[var(--foreground)]">No published subjects</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--muted-foreground)]">
+            An administrator must publish a subject before an assessment paper can be created.
           </p>
-          <p className="text-xs font-bold uppercase tracking-wider text-[var(--accent)] pt-1">
-            Department of {activeSubject.department}
+        </section>
+      ) : questions.length === 0 ? (
+        <section className="editorial-card p-10 text-center">
+          <BookOpen size={28} className="mx-auto text-[var(--accent)]" />
+          <h2 className="mt-4 font-serif text-2xl text-[var(--foreground)]">No mock-paper questions published</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--muted-foreground)]">
+            StudyMate no longer fabricates exam questions, marks, regulations, CO mappings or paper metadata. Ask an administrator to publish a question bank for this subject.
           </p>
-          <h3 className="text-xs sm:text-sm font-bold text-[var(--foreground)] font-sans">
-            End Semester Examination — {activeSubject.name} ({activeSubject.code})
-          </h3>
-          <div className="flex items-center justify-between pt-2 text-[11px] font-mono text-[var(--foreground)] border-t border-[var(--border)] mt-2">
-            <span>Time: 3 Hours</span>
-            <span>Regulation: 2021-2026</span>
-            <span>Max Marks: 75</span>
-          </div>
-        </div>
-
-        {/* Instructions */}
-        <div className="text-[11px] text-[var(--muted-foreground)] italic bg-[var(--surface)] p-2.5 rounded-lg border border-[var(--border)]/50">
-          <p>Instructions: (1) Answer ALL questions in Part A. (2) Answer any THREE in Part B and TWO in Part C. (3) Draw neat diagrams wherever necessary.</p>
-        </div>
-
-        {/* PART A: 5 x 2 = 10 Marks */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between bg-[var(--surface)] px-3 py-1.5 rounded-md border border-[var(--border)]">
-            <span className="text-xs font-bold uppercase font-sans tracking-wider text-[var(--foreground)]">
-              PART – A (Compulsory: 5 × 2 = 10 Marks)
-            </span>
-            <span className="text-[10px] font-mono text-[var(--muted-foreground)]">Cognitive Level: BTL 1 & 2</span>
+        </section>
+      ) : (
+        <article className="editorial-card overflow-hidden print:border-none print:shadow-none">
+          <div className="border-b border-[var(--border)] p-6 text-center">
+            <p className="small-caps text-[var(--muted-foreground)]">{activeSubject.department}</p>
+            <h2 className="mt-2 font-serif text-2xl text-[var(--foreground)]">{activeSubject.name}</h2>
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--muted-foreground)]">
+              {activeSubject.code} · {questions.length} published questions
+            </p>
           </div>
 
-          <div className="space-y-2 text-xs">
-            {partAQuestions.map((q) => (
-              <div
-                key={q.id}
-                className="border border-[var(--border)]/80 rounded-xl p-3 hover:border-[var(--accent-300)] transition-all bg-[var(--background)]"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1 pr-2">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-mono font-bold text-[var(--accent)]">{q.num}</span>
-                      <span className="text-[9px] font-mono bg-[var(--border)] text-[var(--foreground)] px-1.5 py-0.2 rounded">
-                        {q.co} | {q.btl}
-                      </span>
-                    </div>
-                    <p className="text-xs font-medium text-[var(--foreground)] leading-relaxed">
-                      {q.text}
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="font-mono font-bold text-xs bg-[var(--muted)] text-[var(--accent)] px-2 py-0.5 rounded border border-[var(--accent-200)]">
-                      {q.marks}M
-                    </span>
-                  </div>
+          <div className="space-y-8 p-5 sm:p-8">
+            {([2, 5, 10] as const).map(marks => (
+              <section key={marks}>
+                <div className="flex items-baseline justify-between gap-4 border-b border-[var(--border)] pb-3">
+                  <h3 className="font-serif text-xl text-[var(--foreground)]">{marks}-mark questions</h3>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--muted-foreground)]">
+                    {grouped[marks].length} published
+                  </span>
                 </div>
 
-                <div className="mt-2 pt-2 border-t border-[var(--border)]/50 flex justify-end print:hidden">
-                  <button
-                    onClick={() => onOpenGeneratedNote(q.text, activeSubject.name, activeSubject.department)}
-                    className="text-[11px] font-semibold text-[var(--accent)] hover:underline flex items-center space-x-1"
-                  >
-                    <Sparkles size={12} className="text-amber-500" />
-                    <span>View KL Model 2M Answer & Rubric</span>
-                    <ArrowRight size={12} />
-                  </button>
-                </div>
-              </div>
+                {grouped[marks].length === 0 ? (
+                  <p className="py-5 text-sm text-[var(--muted-foreground)]">No questions published for this mark category.</p>
+                ) : (
+                  <div className="mt-4 space-y-3">
+                    {grouped[marks].map((question, index) => (
+                      <div key={question.id || question.question + index} className="border border-[var(--border)] bg-[var(--surface)] p-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="min-w-0">
+                            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--accent)]">
+                              {question.paperYear || 'Published'} · Unit {question.unit}
+                            </p>
+                            <p className="mt-2 text-sm leading-6 text-[var(--foreground)]">{question.question}</p>
+                          </div>
+                          <span className="shrink-0 font-mono text-xs font-bold text-[var(--accent)]">{marks}M</span>
+                        </div>
+                        <div className="mt-3 flex justify-end print:hidden">
+                          <button
+                            type="button"
+                            onClick={() => onOpenGeneratedNote(question.question, activeSubject.name, activeSubject.department)}
+                            className="editorial-ghost inline-flex min-h-11 items-center gap-1.5 px-3 text-xs font-semibold"
+                          >
+                            Generate grounded answer <ArrowRight size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
             ))}
           </div>
-        </div>
-
-        {/* PART B: 5 x 5 = 25 Marks */}
-        <div className="space-y-3 pt-2">
-          <div className="flex items-center justify-between bg-[var(--surface)] px-3 py-1.5 rounded-md border border-[var(--border)]">
-            <span className="text-xs font-bold uppercase font-sans tracking-wider text-[var(--foreground)]">
-              PART – B (Descriptive: 5 Marks Each)
-            </span>
-            <span className="text-[10px] font-mono text-[var(--muted-foreground)]">Cognitive Level: BTL 3 & 4</span>
-          </div>
-
-          <div className="space-y-2 text-xs">
-            {partBQuestions.map((q) => (
-              <div
-                key={q.id}
-                className="border border-[var(--border)]/80 rounded-xl p-3 hover:border-[var(--accent-300)] transition-all bg-[var(--background)]"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1 pr-2">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-mono font-bold text-[var(--accent)]">Q{q.num}.</span>
-                      <span className="text-[9px] font-mono bg-[var(--border)] text-[var(--foreground)] px-1.5 py-0.2 rounded">
-                        {q.co} | {q.btl}
-                      </span>
-                    </div>
-                    <p className="text-xs font-medium text-[var(--foreground)] leading-relaxed">
-                      {q.text}
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="font-mono font-bold text-xs bg-[var(--accent-50)] text-[var(--accent-900)] px-2 py-0.5 rounded border border-[var(--accent-200)]">
-                      {q.marks}M
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-2 pt-2 border-t border-[var(--border)]/50 flex justify-end print:hidden">
-                  <button
-                    onClick={() => onOpenGeneratedNote(q.text, activeSubject.name, activeSubject.department)}
-                    className="text-[11px] font-semibold text-[var(--accent)] hover:underline flex items-center space-x-1"
-                  >
-                    <Sparkles size={12} className="text-amber-500" />
-                    <span>View KL Model 5M Structured Answer</span>
-                    <ArrowRight size={12} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* PART C: 4 x 10 = 40 Marks */}
-        <div className="space-y-3 pt-2">
-          <div className="flex items-center justify-between bg-[var(--surface)] px-3 py-1.5 rounded-md border border-[var(--border)]">
-            <span className="text-xs font-bold uppercase font-sans tracking-wider text-[var(--foreground)]">
-              PART – C (Comprehensive Essays: 10 Marks Each)
-            </span>
-            <span className="text-[10px] font-mono text-[var(--muted-foreground)]">Cognitive Level: BTL 4 & 5</span>
-          </div>
-
-          <div className="space-y-2 text-xs">
-            {partCQuestions.map((q) => (
-              <div
-                key={q.id}
-                className="border border-[var(--border)]/80 rounded-xl p-3.5 hover:border-[var(--accent-300)] transition-all bg-[var(--background)]"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1 pr-2">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-mono font-bold text-[var(--accent)]">Q{q.num}.</span>
-                      <span className="text-[9px] font-mono bg-[var(--border)] text-[var(--foreground)] px-1.5 py-0.2 rounded">
-                        {q.co} | {q.btl}
-                      </span>
-                    </div>
-                    <p className="text-xs font-medium text-[var(--foreground)] leading-relaxed">
-                      {q.text}
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span className="font-mono font-bold text-xs bg-emerald-50 text-emerald-900 px-2 py-0.5 rounded border border-emerald-200">
-                      {q.marks}M
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-2.5 pt-2 border-t border-[var(--border)]/50 flex justify-end print:hidden">
-                  <button
-                    onClick={() => onOpenGeneratedNote(q.text, activeSubject.name, activeSubject.department)}
-                    className="text-[11px] font-semibold text-[var(--accent)] hover:underline flex items-center space-x-1"
-                  >
-                    <Sparkles size={12} className="text-amber-500" />
-                    <span>Generate Full 10M Essay & Diagram</span>
-                    <ArrowRight size={12} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Paper End Stamp */}
-        <div className="text-center pt-4 text-xs font-mono font-bold text-[var(--muted-foreground)] tracking-widest uppercase">
-          *** END OF EXAMINATION QUESTION PAPER ***
-        </div>
-      </div>
+        </article>
+      )}
     </div>
   );
 };
