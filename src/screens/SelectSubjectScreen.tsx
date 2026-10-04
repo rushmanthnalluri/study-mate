@@ -58,6 +58,8 @@ export const SelectSubjectScreen: React.FC<SelectSubjectScreenProps> = ({
           <span className="relative block">
             <Search size={16} strokeWidth={1.6} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]" />
             <input
+              id="subject-search"
+              name="search"
               type="search"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
