@@ -318,7 +318,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                   <span
                     key={i}
                     onClick={() => handleCopy(kw, `kw-${i}`)}
-                    className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-[#ffffff] border border-[#e2c8ad] text-xs font-medium text-stone-800 hover:border-amber-400 cursor-pointer shadow-2xs transition-colors"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-[#ffffff] border border-[#e2c8ad] text-xs font-medium text-[var(--foreground)] hover:border-amber-400 cursor-pointer shadow-2xs transition-colors"
                   >
                     <span>{kw}</span>
                     {copiedSection === `kw-${i}` ? (
@@ -335,7 +335,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
             <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2.5">
               <div className="flex items-center justify-between border-b border-[var(--border)]/60 pb-2">
                 <div className="flex items-center space-x-2">
-                  <span className="px-2 py-0.5 rounded text-xs font-bold font-mono bg-blue-50 text-blue-800 border border-blue-200">
+                  <span className="px-2 py-0.5 rounded text-xs font-bold font-mono bg-[var(--accent-50)] text-[var(--accent-800)] border border-[var(--accent-200)]">
                     2 Marks
                   </span>
                   <span className="text-xs text-[var(--muted-foreground)] italic">
@@ -366,7 +366,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
             <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2.5">
               <div className="flex items-center justify-between border-b border-[var(--border)]/60 pb-2">
                 <div className="flex items-center space-x-2">
-                  <span className="px-2 py-0.5 rounded text-xs font-bold font-mono bg-purple-50 text-purple-800 border border-purple-200">
+                  <span className="px-2 py-0.5 rounded text-xs font-bold font-mono bg-[var(--accent-50)] text-[var(--accent-800)] border border-[var(--accent-200)]">
                     5 Marks
                   </span>
                   <span className="text-xs text-[var(--muted-foreground)] italic">
@@ -496,7 +496,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                       </span>
                     </div>
 
-                    <p className="text-[11px] text-stone-600 leading-relaxed">
+                    <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">
                       {res.excerpt}
                     </p>
                   </div>
