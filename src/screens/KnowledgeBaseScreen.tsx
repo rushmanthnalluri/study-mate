@@ -216,7 +216,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
                     <p className="text-[10px] text-[var(--muted-foreground)]">
                       {file.name}
                     </p>
-                    <p className="text-[10px] text-stone-500 italic pt-1">
+                    <p className="text-[10px] text-[var(--muted-foreground)] italic pt-1">
                       {file.desc}
                     </p>
                   </div>
@@ -271,7 +271,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto bg-surface-subtle p-3.5 rounded-xl border border-[var(--border)]/60 text-xs font-mono text-stone-800 whitespace-pre-wrap leading-relaxed">
+            <div className="flex-1 overflow-y-auto bg-surface-subtle p-3.5 rounded-xl border border-[var(--border)]/60 text-xs font-mono text-[var(--foreground)] whitespace-pre-wrap leading-relaxed">
               {activeFile.content}
             </div>
 
