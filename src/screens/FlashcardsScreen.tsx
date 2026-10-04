@@ -480,7 +480,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
 
               <div className="max-w-xs mx-auto p-3 rounded-xl bg-surface-subtle text-xs text-[var(--muted-foreground)]">
                 {quizScore >= filteredQuiz.length * 0.8
-                  ? '🌟 Outstanding! You have mastered these KL In-Sem concepts.'
+                  ? '🌟 Outstanding! You have mastered these KL published assessment concepts.'
                   : '💡 Good effort! Review your notes and retry to achieve 100% mastery.'}
               </div>
 
