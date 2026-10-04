@@ -124,12 +124,12 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           <span className="block text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">Assessment Average</span>
           <span className="text-xl font-black text-[var(--accent)]">{attempts.length ? `${averageScore}%` : '—'}</span>
           <span className="block text-[10px] text-[var(--muted-foreground)]">{attempts.length ? `${attempts.length} attempts` : 'Take a quiz to start'}</span>
-        </div>
+        </EditorialCard>
         <EditorialCard className="p-4 text-center">
-          <span className="block text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">Latest Test</span>
+          <span className="block text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">Latest test</span>
           <span className="text-xl font-black text-[var(--accent)]">{attempts[0] ? `${attempts[0].percentage}%` : '—'}</span>
           <span className="block truncate text-[10px] text-[var(--muted-foreground)]">{attempts[0]?.subject || 'No test recorded'}</span>
-        </div>
+        </EditorialCard>
       </div>
 
       {/* Department Readiness Progress Bars */}
