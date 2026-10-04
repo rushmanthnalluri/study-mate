@@ -323,5 +323,6 @@ test('chat history clear is authenticated and server-authoritative', () => {
   const chatbot = fs.readFileSync(path.join(root, 'src', 'screens', 'AiChatbotScreen.tsx'), 'utf8');
   assert.doesNotMatch(chatbot, /studymate_chat_history_/);
   assert.doesNotMatch(chatbot, /According to the KL University curriculum/);
+  assert.doesNotMatch(chatbot, /Here is the academic explanation for your query/);
   assert.match(chatbot, /\/api\/chat\/history\?limit=100/);
 });
