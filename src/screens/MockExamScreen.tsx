@@ -143,15 +143,15 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
         <div className="flex items-center space-x-2">
           <button
             onClick={() => onNavigate('home')}
-            className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#64748b] hover:text-[#172554] transition-colors"
+            className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
           <div>
-            <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
+            <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[var(--accent)]">
               Exam Simulation
             </span>
-            <h1 className="text-lg font-sans font-bold text-[#172554] leading-tight">
+            <h1 className="text-lg font-sans font-bold text-[var(--foreground)] leading-tight">
               KL Full Mock Exam Paper
             </h1>
           </div>
@@ -159,7 +159,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
 
         <button
           onClick={handlePrint}
-          className="flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#172554] hover:bg-surface-subtle transition-colors shadow-2xs"
+          className="flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--foreground)] hover:bg-surface-subtle transition-colors shadow-2xs"
         >
           <Printer size={15} />
           <span>Print / PDF</span>
@@ -167,20 +167,20 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
       </div>
 
       {/* Subject Selector Bar */}
-      <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm space-y-2 print:hidden">
+      <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm space-y-2 print:hidden">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold text-[#172554] flex items-center space-x-1.5">
-            <BookOpen size={14} className="text-[#2563eb]" />
+          <label className="text-xs font-semibold text-[var(--foreground)] flex items-center space-x-1.5">
+            <BookOpen size={14} className="text-[var(--accent)]" />
             <span>Select Examination Course:</span>
           </label>
-          <span className="text-[10px] font-mono text-[#64748b]">
+          <span className="text-[10px] font-mono text-[var(--muted-foreground)]">
             {activeSubject.code}
           </span>
         </div>
         <select
           value={activeSubject.id}
           onChange={(e) => setSelectedSubjId(e.target.value)}
-          className="w-full bg-surface-subtle border border-[#e3d6cb] rounded-lg p-2 text-xs font-medium text-[#172554] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+          className="w-full bg-surface-subtle border border-[var(--border)] rounded-lg p-2 text-xs font-medium text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
         >
           {subjects.map((s) => (
             <option key={s.id} value={s.id}>
@@ -191,7 +191,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
       </div>
 
       {/* The Official KL University Exam Paper Sheet */}
-      <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-2xl p-5 sm:p-7 shadow-elevated space-y-5 print:border-none print:shadow-none print:p-0">
+      <div className="bg-[#ffffff] border border-[var(--border)] rounded-2xl p-5 sm:p-7 shadow-elevated space-y-5 print:border-none print:shadow-none print:p-0">
         {/* Official KL Header */}
         <div className="text-center border-b-2 border-stone-800 pb-4 space-y-1">
           <h2 className="text-sm sm:text-base font-sans font-extrabold uppercase tracking-wide text-stone-900">
@@ -200,7 +200,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
           <p className="text-[11px] text-stone-700 italic font-sans">
             (Deemed to be University, Estd. u/s 3 of UGC Act, 1956)
           </p>
-          <p className="text-xs font-bold uppercase tracking-wider text-[#2563eb] pt-1">
+          <p className="text-xs font-bold uppercase tracking-wider text-[var(--accent)] pt-1">
             Department of {activeSubject.department}
           </p>
           <h3 className="text-xs sm:text-sm font-bold text-stone-900 font-sans">
@@ -214,13 +214,13 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
         </div>
 
         {/* Instructions */}
-        <div className="text-[11px] text-stone-600 italic bg-surface-subtle p-2.5 rounded-lg border border-[#e3d6cb]/50">
+        <div className="text-[11px] text-stone-600 italic bg-surface-subtle p-2.5 rounded-lg border border-[var(--border)]/50">
           <p>Instructions: (1) Answer ALL questions in Part A. (2) Answer any THREE in Part B and TWO in Part C. (3) Draw neat diagrams wherever necessary.</p>
         </div>
 
         {/* PART A: 5 x 2 = 10 Marks */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between bg-[#f1e5da] px-3 py-1.5 rounded-md border border-[#e3d6cb]">
+          <div className="flex items-center justify-between bg-[#f1e5da] px-3 py-1.5 rounded-md border border-[var(--border)]">
             <span className="text-xs font-bold uppercase font-sans tracking-wider text-stone-900">
               PART – A (Compulsory: 5 × 2 = 10 Marks)
             </span>
@@ -231,12 +231,12 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
             {partAQuestions.map((q) => (
               <div
                 key={q.id}
-                className="border border-[#e3d6cb]/80 rounded-xl p-3 hover:border-brand-300 transition-all bg-surface"
+                className="border border-[var(--border)]/80 rounded-xl p-3 hover:border-brand-300 transition-all bg-surface"
               >
                 <div className="flex items-start justify-between">
                   <div className="space-y-1 pr-2">
                     <div className="flex items-center space-x-2">
-                      <span className="font-mono font-bold text-[#2563eb]">{q.num}</span>
+                      <span className="font-mono font-bold text-[var(--accent)]">{q.num}</span>
                       <span className="text-[9px] font-mono bg-[#e7d9cd] text-stone-700 px-1.5 py-0.2 rounded">
                         {q.co} | {q.btl}
                       </span>
@@ -246,16 +246,16 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="font-mono font-bold text-xs bg-[#eff6ff] text-[#2563eb] px-2 py-0.5 rounded border border-[#d7b99d]">
+                    <span className="font-mono font-bold text-xs bg-[var(--muted)] text-[var(--accent)] px-2 py-0.5 rounded border border-[#d7b99d]">
                       {q.marks}M
                     </span>
                   </div>
                 </div>
 
-                <div className="mt-2 pt-2 border-t border-[#e3d6cb]/50 flex justify-end print:hidden">
+                <div className="mt-2 pt-2 border-t border-[var(--border)]/50 flex justify-end print:hidden">
                   <button
                     onClick={() => onOpenGeneratedNote(q.text, activeSubject.name, activeSubject.department)}
-                    className="text-[11px] font-semibold text-[#2563eb] hover:underline flex items-center space-x-1"
+                    className="text-[11px] font-semibold text-[var(--accent)] hover:underline flex items-center space-x-1"
                   >
                     <Sparkles size={12} className="text-amber-500" />
                     <span>View KL Model 2M Answer & Rubric</span>
@@ -269,7 +269,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
 
         {/* PART B: 5 x 5 = 25 Marks */}
         <div className="space-y-3 pt-2">
-          <div className="flex items-center justify-between bg-[#f1e5da] px-3 py-1.5 rounded-md border border-[#e3d6cb]">
+          <div className="flex items-center justify-between bg-[#f1e5da] px-3 py-1.5 rounded-md border border-[var(--border)]">
             <span className="text-xs font-bold uppercase font-sans tracking-wider text-stone-900">
               PART – B (Descriptive: 5 Marks Each)
             </span>
@@ -280,12 +280,12 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
             {partBQuestions.map((q) => (
               <div
                 key={q.id}
-                className="border border-[#e3d6cb]/80 rounded-xl p-3 hover:border-brand-300 transition-all bg-surface"
+                className="border border-[var(--border)]/80 rounded-xl p-3 hover:border-brand-300 transition-all bg-surface"
               >
                 <div className="flex items-start justify-between">
                   <div className="space-y-1 pr-2">
                     <div className="flex items-center space-x-2">
-                      <span className="font-mono font-bold text-[#2563eb]">Q{q.num}.</span>
+                      <span className="font-mono font-bold text-[var(--accent)]">Q{q.num}.</span>
                       <span className="text-[9px] font-mono bg-[#e7d9cd] text-stone-700 px-1.5 py-0.2 rounded">
                         {q.co} | {q.btl}
                       </span>
@@ -301,10 +301,10 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                   </div>
                 </div>
 
-                <div className="mt-2 pt-2 border-t border-[#e3d6cb]/50 flex justify-end print:hidden">
+                <div className="mt-2 pt-2 border-t border-[var(--border)]/50 flex justify-end print:hidden">
                   <button
                     onClick={() => onOpenGeneratedNote(q.text, activeSubject.name, activeSubject.department)}
-                    className="text-[11px] font-semibold text-[#2563eb] hover:underline flex items-center space-x-1"
+                    className="text-[11px] font-semibold text-[var(--accent)] hover:underline flex items-center space-x-1"
                   >
                     <Sparkles size={12} className="text-amber-500" />
                     <span>View KL Model 5M Structured Answer</span>
@@ -318,7 +318,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
 
         {/* PART C: 4 x 10 = 40 Marks */}
         <div className="space-y-3 pt-2">
-          <div className="flex items-center justify-between bg-[#f1e5da] px-3 py-1.5 rounded-md border border-[#e3d6cb]">
+          <div className="flex items-center justify-between bg-[#f1e5da] px-3 py-1.5 rounded-md border border-[var(--border)]">
             <span className="text-xs font-bold uppercase font-sans tracking-wider text-stone-900">
               PART – C (Comprehensive Essays: 10 Marks Each)
             </span>
@@ -329,12 +329,12 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
             {partCQuestions.map((q) => (
               <div
                 key={q.id}
-                className="border border-[#e3d6cb]/80 rounded-xl p-3.5 hover:border-brand-300 transition-all bg-surface"
+                className="border border-[var(--border)]/80 rounded-xl p-3.5 hover:border-brand-300 transition-all bg-surface"
               >
                 <div className="flex items-start justify-between">
                   <div className="space-y-1 pr-2">
                     <div className="flex items-center space-x-2">
-                      <span className="font-mono font-bold text-[#2563eb]">Q{q.num}.</span>
+                      <span className="font-mono font-bold text-[var(--accent)]">Q{q.num}.</span>
                       <span className="text-[9px] font-mono bg-[#e7d9cd] text-stone-700 px-1.5 py-0.2 rounded">
                         {q.co} | {q.btl}
                       </span>
@@ -350,10 +350,10 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                   </div>
                 </div>
 
-                <div className="mt-2.5 pt-2 border-t border-[#e3d6cb]/50 flex justify-end print:hidden">
+                <div className="mt-2.5 pt-2 border-t border-[var(--border)]/50 flex justify-end print:hidden">
                   <button
                     onClick={() => onOpenGeneratedNote(q.text, activeSubject.name, activeSubject.department)}
-                    className="text-[11px] font-semibold text-[#2563eb] hover:underline flex items-center space-x-1"
+                    className="text-[11px] font-semibold text-[var(--accent)] hover:underline flex items-center space-x-1"
                   >
                     <Sparkles size={12} className="text-amber-500" />
                     <span>Generate Full 10M Essay & Diagram</span>
