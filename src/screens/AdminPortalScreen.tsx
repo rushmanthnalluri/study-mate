@@ -635,17 +635,14 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                   Department *
                 </label>
-                <select
+                <input
+                  type="text"
                   required
                   value={newSubjDepartment}
-                  onChange={(e) => setNewSubjDepartment(e.target.value as Department)}
+                  onChange={(e) => setNewSubjDepartment(e.target.value)}
+                  placeholder="e.g. CSE"
                   className="w-full bg-surface border border-[var(--border)] rounded-md p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
-                >
-                  <option value="">Select department</option>
-                  {Array.from(new Set(subjects.map((subject) => subject.department).filter(Boolean))).map((dept) => (
-                    <option key={dept} value={dept}>{dept}</option>
-                  ))}
-                </select>
+                />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
