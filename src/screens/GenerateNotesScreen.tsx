@@ -64,7 +64,7 @@ export const GenerateNotesScreen: React.FC<GenerateNotesScreenProps> = ({
   };
 
   const getFullExamSheetText = () => {
-    return `KL UNIVERSITY EXAM NOTES — FOOD TECHNOLOGY
+    return `STUDYMATE EXAM NOTES
 Subject: ${note.subject} (${note.code})
 Topic: ${note.topic}
 Unit: ${note.unit}
@@ -92,7 +92,7 @@ ${note.tenMarks.answer}
 
   const handleDownloadMarkdown = () => {
     const text = `# ${note.topic} — KL Exam Notes
-**Program:** B.Tech Food Technology | **Subject:** ${note.subject} (${note.code})
+**Department:** ${note.department} | **Subject:** ${note.subject} (${note.code})
 **Unit:** ${note.unit}
 
 ## Essential Keywords
