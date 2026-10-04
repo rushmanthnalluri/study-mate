@@ -576,7 +576,7 @@ app.post('/api/auth/login', rateLimit(15 * 60 * 1000, 20), async (req, res) => {
 // POST signup — every account is a real persisted student account.
 app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => {
   try {
-    const { name, klId, email, password, department = '' } = req.body || {};
+    const { name, klId, email, password } = req.body || {};
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email, and password are required.' });
     }
