@@ -102,7 +102,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
               value={topicInput}
               onChange={(e) => setTopicInput(e.target.value)}
               placeholder="e.g. Banker's Algorithm safety steps, AVL tree rotations, Nyquist criterion, or paste an exact question..."
-              className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm leading-relaxed"
+              className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm leading-relaxed"
             />
           </div>
           <p className="text-[11px] text-[var(--muted-foreground)] mt-1 italic">
@@ -146,7 +146,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
           className={`w-full py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 shadow-md transition-all active:scale-[0.98] ${
             !topicInput.trim() || isLoading
               ? 'bg-surface-border text-[var(--muted-foreground)] cursor-not-allowed'
-              : 'bg-[var(--accent)] text-white hover:bg-[var(--accent)] ring-2 ring-brand-800/20'
+              : 'bg-[var(--accent)] text-white hover:bg-[var(--accent)] editorial-focus'
           }`}
         >
           {isLoading ? (
