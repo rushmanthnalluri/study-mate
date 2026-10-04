@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Department, ScreenId, Subject } from '../types';
+import { ScreenId, Subject } from '../types';
 import { Calendar, Clock, CheckSquare, Square, ArrowLeft, ChevronRight } from 'lucide-react';
 import { EditorialCard, EmptyState, PageHeader, EditorialButton, SectionLabel } from '../components/Editorial';
 
