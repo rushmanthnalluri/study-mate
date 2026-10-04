@@ -48,5 +48,5 @@ test('production launcher runs MongoDB migrations before the server when MongoDB
 test('Render production service has a deterministic Node start command', () => {
   const packageJson = JSON.parse(read('package.json'));
   assert.equal(packageJson.scripts.start, 'node server.js');
-  assert.equal(packageJson.engines.node, '20.x');
+  assert.equal(packageJson.engines.node, '>=22.12.0');
 });
