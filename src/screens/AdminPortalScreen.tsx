@@ -45,6 +45,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
   const [newSubjName, setNewSubjName] = useState('');
   const [newSubjCode, setNewSubjCode] = useState('');
   const [newSubjDescription, setNewSubjDescription] = useState('');
+  const [newSubjDepartment, setNewSubjDepartment] = useState<Department>('');
   const [newSubjUnits, setNewSubjUnits] = useState<string[]>([]);
   const [newSubjTopics, setNewSubjTopics] = useState('');
   const [isSubmittingSubj, setIsSubmittingSubj] = useState(false);
@@ -128,12 +129,12 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
       setResourceAuthor(existingRes.author || 'KL Department Faculty');
     } else {
       const typeLabelMap: Record<string, string> = {
-        'course-materials': 'Official Lecture Handouts & Course Material',
-        'previous-papers': 'Previous Semester Examination Papers',
-        'question-bank': 'Graded Question Bank (2M, 5M, 10M)',
-        'marks-pattern': 'Marks Pattern & Evaluation Scheme',
-        'answer-style': 'Examiner Answer Presentation Guide',
-        'syllabus': 'Official Syllabus & Unit Learning Outcomes'
+        'course-materials': 'Course Materials',
+        'previous-papers': 'Previous Papers',
+        'question-bank': 'Question Bank',
+        'marks-pattern': 'Marks Pattern',
+        'answer-style': 'Answer Style',
+        'syllabus': 'Syllabus'
       };
       setResourceTitle(`${selectedSubjName} ${typeLabelMap[resourceType] || 'Resource Material'}`);
       setResourceDescription('');
@@ -160,7 +161,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
             setResourceTitle(r.title || '');
             setResourceDescription(r.description || '');
             setResourceUnit(r.unit || 'All Units');
-            setResourceAuthor(r.author || 'KL Department Faculty');
+            setResourceAuthor(r.author || '');
           }
         }
       })
@@ -169,7 +170,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
 
   const handleCreateSubject = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newSubjName.trim() || !newSubjCode.trim()) return;
+    if (!newSubjName.trim() || !newSubjCode.trim() || !newSubjDepartment.trim()) return;
 
     setIsSubmittingSubj(true);
     setSubjectSuccessMsg('');
@@ -182,7 +183,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
           name: newSubjName.trim(),
           code: newSubjCode.trim(),
           description: newSubjDescription.trim(),
-          department: 'Food Technology',
+          department: newSubjDepartment.trim(),
           units: newSubjUnits.filter((u) => u.trim().length > 0),
           topics: newSubjTopics.split(',').map((t) => t.trim()).filter((t) => t.length > 0)
         })
@@ -195,6 +196,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
       setNewSubjName('');
       setNewSubjCode('');
       setNewSubjDescription('');
+      setNewSubjDepartment('');
       setNewSubjTopics('');
       await onRefreshSubjects();
       setTimeout(() => setSubjectSuccessMsg(''), 4000);
@@ -218,7 +220,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '') },
         body: JSON.stringify({
           subjectName: selectedSubjName,
-          department: 'Food Technology',
+          department: subjects.find((s) => s.name === selectedSubjName)?.department || '',
           resourceType,
           title: resourceTitle.trim(),
           description: resourceDescription.trim(),
@@ -247,7 +249,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
     }
 
     try {
-      const res = await fetch(`/api/admin/subjects/${encodeURIComponent(subjName)}?department=Food+Technology`, {
+      const res = await fetch(`/api/admin/subjects/${encodeURIComponent(subjName)}?department=${encodeURIComponent(subjects.find((s) => s.name === subjName)?.department || '')}`, {
         method: 'DELETE',
         headers: { Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '') }
       });
@@ -261,28 +263,20 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
   const insertQuestionTemplate = () => {
     const sample = `[
   {
-    "id": "q-sample-1",
-    "topic": "Thermal Death Kinetics (D, z, F Values)",
-    "marks": 10,
-    "unit": 4,
-    "paperYear": "KL End Sem May 2024",
-    "question": "Mathematically derive D-value, z-value, and F-value in thermal bacteriology and explain 12D concept in commercial canning."
-  },
-  {
-    "id": "q-sample-2",
-    "topic": "Alkaline Phosphatase Indicator Test",
+    "id": "",
+    "topic": "",
     "marks": 2,
-    "unit": 3,
-    "paperYear": "KL In-Sem 2 2024",
-    "question": "Why is Alkaline Phosphatase used as indicator enzyme to verify milk pasteurization?"
+    "unit": 1,
+    "paperYear": "",
+    "question": ""
   }
 ]`;
     setResourceContent(sample);
   };
 
   const insertRubricTemplate = () => {
-    const sample = `# KL University Marks Pattern & Grading Rubric
-Subject: ${selectedSubjName} | Department: Food Technology
+    const sample = `# Marks Pattern & Grading Rubric
+Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === selectedSubjName)?.department || ''}
 
 ## 2 Marks Questions (20-40 words)
 - Direct scientific definition, units, zero fluff.
@@ -315,8 +309,8 @@ Subject: ${selectedSubjName} | Department: Food Technology
                 Admin Mode
               </span>
             </div>
-            <h1 className="text-xl font-serif font-bold text-[var(--foreground)] leading-tight">
-              Food Technology Admin Portal
+            <h1 className="font-serif text-3xl font-medium text-[var(--foreground)] leading-tight">
+              Administrator Console
             </h1>
           </div>
         </div>
