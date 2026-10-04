@@ -37,11 +37,21 @@ if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3001;
 
 const rateLimitBuckets = new Map();
+const MAX_RATE_LIMIT_BUCKETS = 10000;
 function rateLimit(windowMs, maxRequests) {
   return (req, res, next) => {
     const identity = String(req.user?.id || req.ip || 'anonymous');
     const key = `${identity}:${req.path}`;
     const now = Date.now();
+
+    // Bound in-memory state so unique client identities cannot grow this map forever.
+    if (rateLimitBuckets.size > MAX_RATE_LIMIT_BUCKETS) {
+      for (const [bucketKey, bucket] of rateLimitBuckets) {
+        if (now - bucket.startedAt >= windowMs) rateLimitBuckets.delete(bucketKey);
+        if (rateLimitBuckets.size <= MAX_RATE_LIMIT_BUCKETS) break;
+      }
+    }
+
     const current = rateLimitBuckets.get(key);
     if (!current || now - current.startedAt >= windowMs) {
       rateLimitBuckets.set(key, { startedAt: now, count: 1 });
@@ -56,8 +66,6 @@ function rateLimit(windowMs, maxRequests) {
     return next();
   };
 }
-
-app.use(express.json({ limit: '1mb' }));
 
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
