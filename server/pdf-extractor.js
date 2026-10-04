@@ -45,10 +45,20 @@ function extractTextOperators(stream) {
 
 function inflateStream(bytes, dictionary, maxOutputLength) {
   if (!/\/FlateDecode(?:\s|\/|$)/.test(dictionary)) return bytes;
+  let wrappedError;
   try {
     return zlib.inflateSync(bytes, { maxOutputLength });
-  } catch {
-    try { return zlib.inflateRawSync(bytes, { maxOutputLength }); } catch { return Buffer.alloc(0); }
+  } catch (error) {
+    wrappedError = error;
+  }
+
+  try {
+    return zlib.inflateRawSync(bytes, { maxOutputLength });
+  } catch (rawError) {
+    if (wrappedError?.code === 'ERR_BUFFER_TOO_LARGE' || rawError?.code === 'ERR_BUFFER_TOO_LARGE') {
+      throw new Error('PDF decompression limit exceeded.');
+    }
+    return Buffer.alloc(0);
   }
 }
 
