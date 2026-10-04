@@ -274,31 +274,6 @@ textarea:focus {
   color: var(--foreground);
 }
 
-/* Legacy blue/slate utilities -> editorial ivory/gold palette. */
-[class*="bg-[#2563eb]"] { background-color: var(--accent) !important; }
-[class*="bg-[#172554]"] { background-color: var(--foreground) !important; }
-[class*="bg-[#0f172a]"] { background-color: var(--foreground) !important; }
-[class*="bg-[#eff6ff]"],
-[class*="bg-[#f1f5f9]"],
-[class*="bg-[#f8fafc]"],
-[class*="bg-[#fbf3e9]"] { background-color: var(--muted) !important; }
-[class*="bg-[#ffffff]"] { background-color: var(--card) !important; }
-[class*="text-[#2563eb]"] { color: var(--accent) !important; }
-[class*="text-[#172554]"],
-[class*="text-[#0f172a]"] { color: var(--foreground) !important; }
-[class*="text-[#64748b]"],
-[class*="text-[#6f4a31]"] { color: var(--muted-foreground) !important; }
-[class*="border-[#e3d6cb]"],
-[class*="border-[#dbe3ee]"],
-[class*="border-[#e2d6c8]"] { border-color: var(--border) !important; }
-
-/* Remove legacy blue gradients in favour of quiet editorial surfaces. */
-[class*="from-[#2563eb]"],
-[class*="to-[#60a5fa]"] {
-  --tw-gradient-from: var(--accent) !important;
-  --tw-gradient-to: var(--accent-secondary) !important;
-}
-
 /* Keep legacy rounded utilities restrained. */
 [class*="rounded-[28px]"],
 [class*="rounded-[36px]"] { border-radius: 0.5rem !important; }
