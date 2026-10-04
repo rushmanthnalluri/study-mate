@@ -259,7 +259,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
             {note.code}
           </span>
           <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[var(--muted)] text-[var(--accent)]">
-            Food Technology
+            {note.department}
           </span>
           <span className="text-[10px] text-[var(--muted-foreground)]">
             {note.subject}
