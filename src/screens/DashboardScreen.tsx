@@ -165,7 +165,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             </div>
           ))}
         </div>
-      </div>
+      </EditorialCard>
 
       {attempts.length > 0 && (
         <EditorialCard className="p-4 space-y-3">
