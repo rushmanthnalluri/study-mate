@@ -84,7 +84,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
               <ShieldCheck className="mt-0.5 text-[var(--accent)]" size={18} />
               <div>
                 <p className="text-xs font-extrabold text-[var(--foreground)]">AI configuration is administrator-controlled</p>
-                <p className="mt-1 text-[11px] leading-relaxed text-[var(--muted-foreground)]">Students cannot enter, replace, or expose the Groq/Gemini keys used by the application. The administrator manages the single app-wide provider configuration.</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-[var(--muted-foreground)]">Students cannot enter, replace, or expose the AI credentials used by the application. The administrator manages the single app-wide provider configuration.</p>
               </div>
             </div>
           </div>
