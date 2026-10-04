@@ -205,38 +205,77 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleSaveNote = (note: ExamNote) => {
-    const exists = savedNotes.some(
+  const handleSaveNote = async (note: ExamNote) => {
+    const existing = savedNotes.find(
       (n) => n.topic === note.topic && n.subject === note.subject
     );
-    if (exists) {
-      setSavedNotes(savedNotes.filter((n) => n.topic !== note.topic || n.subject !== note.subject));
-    } else {
-      const newNote = {
-        ...note,
-        id: `note-${Date.now()}`,
-        savedAt: new Date().toISOString(),
-        isReviewed: false
-      };
-      setSavedNotes([newNote, ...savedNotes]);
 
-      fetch('/api/saved-notes', {
+    if (existing?.id) {
+      try {
+        const res = await fetch(`/api/saved-notes/${encodeURIComponent(existing.id)}`, {
+          method: 'DELETE',
+          headers: authHeaders()
+        });
+        if (!res.ok) throw new Error('Could not remove saved note.');
+        setSavedNotes((current) => current.filter((n) => n.id !== existing.id));
+      } catch {
+        setAppError('Could not update saved notes. Please try again.');
+      }
+      return;
+    }
+
+    const newNote = {
+      ...note,
+      id: `note-${Date.now()}`,
+      savedAt: new Date().toISOString(),
+      isReviewed: false
+    };
+
+    try {
+      const res = await fetch('/api/saved-notes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify(newNote)
-      }).catch(() => {});
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data) throw new Error('Could not save note.');
+      setSavedNotes((current) => [data, ...current.filter(
+        (n) => !(n.topic === data.topic && n.subject === data.subject)
+      )]);
+    } catch {
+      setAppError('Could not save this note. Please try again.');
     }
   };
 
-  const handleDeleteNote = (id: string) => {
-    setSavedNotes(savedNotes.filter((n) => n.id !== id));
-    fetch(`/api/saved-notes/${id}`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+  const handleDeleteNote = async (id: string) => {
+    try {
+      const res = await fetch(`/api/saved-notes/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: authHeaders()
+      });
+      if (!res.ok) throw new Error('Could not delete note.');
+      setSavedNotes((current) => current.filter((n) => n.id !== id));
+    } catch {
+      setAppError('Could not delete this note. Please try again.');
+    }
   };
 
-  const handleToggleReviewed = (id: string) => {
-    setSavedNotes(
-      savedNotes.map((n) => (n.id === id ? { ...n, isReviewed: !n.isReviewed } : n))
-    );
+  const handleToggleReviewed = async (id: string) => {
+    const note = savedNotes.find((n) => n.id === id);
+    if (!note) return;
+    const nextValue = !note.isReviewed;
+    try {
+      const res = await fetch(`/api/saved-notes/${encodeURIComponent(id)}/reviewed`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        body: JSON.stringify({ isReviewed: nextValue })
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data) throw new Error('Could not update review state.');
+      setSavedNotes((current) => current.map((n) => n.id === id ? data : n));
+    } catch {
+      setAppError('Could not update the review state. Please try again.');
+    }
   };
 
   const handleSubmitFeedback = async (data: {
