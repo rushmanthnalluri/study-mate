@@ -314,7 +314,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   <button
             type="button"
             onClick={() => setActiveTab('ai-config')}
-            className={`px-3 py-2 rounded-xl text-xs font-bold ${activeTab === 'ai-config' ? 'bg-[var(--foreground)] text-white' : 'bg-[#f1f5f9] text-[#5f4939] hover:bg-[#dbeafe]'}`}
+            className={`px-3 py-2 rounded-xl text-xs font-bold ${activeTab === 'ai-config' ? 'bg-[var(--foreground)] text-white' : 'bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--accent-50)]'}`}
           >
             AI Control
           </button>
@@ -355,37 +355,37 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
       {activeTab === 'ai-config' && (
         <div className="rounded-[24px] border border-[#dbe3ee] bg-[#ffffff] p-5 shadow-sm">
           <div className="mb-5 flex items-start gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#ead4bd] text-[#714628]"><ShieldCheck size={20} /></div>
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--accent-100)] text-[var(--foreground)]"><ShieldCheck size={20} /></div>
             <div>
               <h3 className="text-base font-black text-[var(--foreground)]">Central AI control</h3>
               <p className="mt-1 text-xs leading-5 text-[var(--muted-foreground)]">This is the only place where an application-wide Groq or Gemini API key can be configured. The key is encrypted server-side and is never sent back to students.</p>
             </div>
           </div>
           <form onSubmit={handleSaveAiConfig} className="space-y-4">
-            {!aiSecretReady && <div className="rounded-2xl border border-[#efc9b9] bg-[#fff0ec] p-3 text-xs font-semibold text-[#9c4637]">Server protection is not initialized yet. Set <code>STUDYMATE_CONFIG_SECRET</code> on Render before saving a key.</div>}
-            {aiConfigMessage && <div className="rounded-2xl border border-[#d9c8b8] bg-[#f8fafc] p-3 text-xs font-semibold text-[#5d4738]">{aiConfigMessage}</div>}
+            {!aiSecretReady && <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 text-xs font-semibold text-[var(--foreground)]">Server protection is not initialized yet. Set <code>STUDYMATE_CONFIG_SECRET</code> on Render before saving a key.</div>}
+            {aiConfigMessage && <div className="rounded-2xl border border-[var(--border)] bg-[#f8fafc] p-3 text-xs font-semibold text-[#5d4738]">{aiConfigMessage}</div>}
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="block"><span className="mb-1.5 block text-xs font-bold text-[#334155]">Provider</span>
+              <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Provider</span>
                 <select value={aiProvider} onChange={e => setAiProvider(e.target.value as any)} className="auth-input">
                   <option value="offline">Offline knowledge engine</option>
                   <option value="groq">Groq</option>
                   <option value="gemini">Google Gemini</option>
                 </select>
               </label>
-              <label className="block"><span className="mb-1.5 block text-xs font-bold text-[#334155]">Model</span>
+              <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Model</span>
                 <input value={aiModel} onChange={e => setAiModel(e.target.value)} placeholder={aiProvider === 'groq' ? 'llama-3.3-70b-versatile' : 'gemini-1.5-flash'} className="auth-input" />
               </label>
             </div>
             {aiProvider !== 'offline' && (
-              <label className="block"><span className="mb-1.5 block text-xs font-bold text-[#334155]">New API key</span>
+              <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">New API key</span>
                 <input value={aiKey} onChange={e => setAiKey(e.target.value)} type="password" placeholder="Paste a new key; it will not be displayed again" className="auth-input font-mono" required />
               </label>
             )}
-            <div className="flex items-center justify-between rounded-2xl border border-[#e4d5c6] bg-[#f8fafc] p-4">
-              <div><p className="text-xs font-extrabold text-[#334155]">Current status</p><p className="mt-1 text-[11px] text-[var(--muted-foreground)]">{aiConfigured ? 'A central provider is configured.' : 'No cloud provider is configured; offline mode is available.'}</p></div>
-              <span className={`rounded-full px-3 py-1 text-[10px] font-black ${aiConfigured ? 'bg-[#dcebd5] text-[#4f6d45]' : 'bg-[#eee2d8] text-[var(--muted-foreground)]'}`}>{aiConfigured ? 'CONFIGURED' : 'OFFLINE'}</span>
+            <div className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-[#f8fafc] p-4">
+              <div><p className="text-xs font-extrabold text-[var(--foreground)]">Current status</p><p className="mt-1 text-[11px] text-[var(--muted-foreground)]">{aiConfigured ? 'A central provider is configured.' : 'No cloud provider is configured; offline mode is available.'}</p></div>
+              <span className={`rounded-full px-3 py-1 text-[10px] font-black ${aiConfigured ? 'bg-[var(--accent-100)] text-[var(--foreground)]' : 'bg-[var(--surface)] text-[var(--muted-foreground)]'}`}>{aiConfigured ? 'CONFIGURED' : 'OFFLINE'}</span>
             </div>
-            <button disabled={isSavingAiConfig || !aiSecretReady} className="w-full rounded-2xl bg-[var(--accent)] px-4 py-3 text-xs font-extrabold text-white shadow-sm hover:bg-[#1d4ed8] disabled:opacity-50">{isSavingAiConfig ? 'Saving securely…' : 'Save central AI configuration'}</button>
+            <button disabled={isSavingAiConfig || !aiSecretReady} className="w-full rounded-2xl bg-[var(--accent)] px-4 py-3 text-xs font-extrabold text-white shadow-sm hover:bg-[var(--accent-700)] disabled:opacity-50">{isSavingAiConfig ? 'Saving securely…' : 'Save central AI configuration'}</button>
           </form>
         </div>
       )}
