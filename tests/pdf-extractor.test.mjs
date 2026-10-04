@@ -48,3 +48,25 @@ test('rejects compressed streams that expand beyond the extractor safety limit',
   ]);
   assert.throws(() => extractPdfText(pdf), /No extractable text|maximum|too large/i);
 });
+
+test('rejects PDFs whose cumulative decompressed streams exceed the total safety budget', () => {
+  const makeStream = (size) => {
+    const payload = Buffer.alloc(size, 65);
+    const compressed = zlib.deflateSync(payload);
+    return Buffer.concat([
+      Buffer.from('<< /Length ' + compressed.length + ' /Filter /FlateDecode >>\\nstream\\n', 'latin1'),
+      compressed,
+      Buffer.from('\\nendstream\\n', 'latin1')
+    ]);
+  };
+
+  const pdf = Buffer.concat([
+    Buffer.from('%PDF-1.4\\n', 'latin1'),
+    makeStream(6 * 1024 * 1024),
+    makeStream(6 * 1024 * 1024),
+    makeStream(6 * 1024 * 1024),
+    Buffer.from('%%EOF', 'latin1')
+  ]);
+
+  assert.throws(() => extractPdfText(pdf), /decompression limit|No extractable text|maximum|too large/i);
+});
