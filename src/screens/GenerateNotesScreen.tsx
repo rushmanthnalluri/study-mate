@@ -192,7 +192,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
         <div className="flex items-center space-x-2">
           <button
             onClick={() => onNavigate('enter-topic')}
-            className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
@@ -209,7 +209,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
         <div className="flex items-center space-x-1">
           <button
             onClick={() => setShowSelfTest(true)}
-            className="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg bg-[#fbf3e9] text-[#714628] border border-amber-300 hover:bg-[#f0e0cf] font-semibold transition-colors"
+            className="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg bg-[var(--surface)] text-[var(--foreground)] border border-amber-300 hover:bg-[var(--surface-strong)] font-semibold transition-colors"
             title="Test Recall & Grade Me"
           >
             <Award size={14} className="text-[var(--accent)]" />
@@ -218,7 +218,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
           <button
             onClick={handleDownloadMarkdown}
             title="Download Markdown Notes"
-            className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--foreground)] hover:bg-surface-subtle transition-colors text-xs font-medium flex items-center space-x-1"
+            className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-surface-subtle transition-colors text-xs font-medium flex items-center space-x-1"
           >
             <Download size={14} />
             <span className="hidden md:inline">Download</span>
@@ -226,14 +226,14 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
           <button
             onClick={handlePrint}
             title="Print or Save PDF"
-            className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors"
+            className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors"
           >
             <Printer size={15} />
           </button>
           <button
             onClick={handleCopyAll}
             title="Copy Complete Exam Sheet"
-            className="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--foreground)] hover:bg-surface-subtle transition-colors font-medium"
+            className="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-surface-subtle transition-colors font-medium"
           >
             {copiedSection === 'all' ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
             <span className="hidden sm:inline">{copiedSection === 'all' ? 'Copied' : 'Copy'}</span>
@@ -253,7 +253,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
       </div>
 
       {/* Note Meta Header Card */}
-      <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2">
+      <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2">
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-surface-subtle text-[var(--foreground)] border border-[var(--border)]">
             {note.code}
@@ -293,7 +293,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                   activeTab === tab.id
                     ? 'bg-[var(--accent)] text-white shadow-sm'
-                    : 'bg-[#ffffff] text-[var(--foreground)] border border-[var(--border)] hover:bg-surface-subtle'
+                    : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] hover:bg-surface-subtle'
                 }`}
               >
                 {tab.label}
@@ -303,9 +303,9 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
           {/* 🔑 SECTION: Essential Scoring Keywords */}
           {(activeTab === 'all' || activeTab === '2m' || activeTab === '5m') && (
-            <div className="bg-[#fbf3e9]/70 border border-[#e2c8ad]/80 rounded-xl p-3.5 space-y-2">
+            <div className="bg-[var(--surface)]/70 border border-[var(--border)]/80 rounded-xl p-3.5 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-sans font-bold uppercase tracking-wider text-[#714628] flex items-center space-x-1.5">
+                <span className="text-xs font-sans font-bold uppercase tracking-wider text-[var(--foreground)] flex items-center space-x-1.5">
                   <Sparkles size={14} className="text-[var(--accent)]" />
                   <span>Key Words Looked For by KL Evaluators</span>
                 </span>
@@ -318,7 +318,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                   <span
                     key={i}
                     onClick={() => handleCopy(kw, `kw-${i}`)}
-                    className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-[#ffffff] border border-[#e2c8ad] text-xs font-medium text-[var(--foreground)] hover:border-amber-400 cursor-pointer shadow-2xs transition-colors"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-[var(--card)] border border-[var(--border)] text-xs font-medium text-[var(--foreground)] hover:border-amber-400 cursor-pointer shadow-2xs transition-colors"
                   >
                     <span>{kw}</span>
                     {copiedSection === `kw-${i}` ? (
@@ -332,7 +332,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
           {/* 📌 SECTION: 2 Marks Answer */}
           {(activeTab === 'all' || activeTab === '2m') && (
-            <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2.5">
+            <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2.5">
               <div className="flex items-center justify-between border-b border-[var(--border)]/60 pb-2">
                 <div className="flex items-center space-x-2">
                   <span className="px-2 py-0.5 rounded text-xs font-bold font-mono bg-[var(--accent-50)] text-[var(--accent-800)] border border-[var(--accent-200)]">
@@ -363,7 +363,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
           {/* 📝 SECTION: 5 Marks Answer */}
           {(activeTab === 'all' || activeTab === '5m') && (
-            <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2.5">
+            <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2.5">
               <div className="flex items-center justify-between border-b border-[var(--border)]/60 pb-2">
                 <div className="flex items-center space-x-2">
                   <span className="px-2 py-0.5 rounded text-xs font-bold font-mono bg-[var(--accent-50)] text-[var(--accent-800)] border border-[var(--accent-200)]">
@@ -412,7 +412,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
           {/* 📚 SECTION: 10 Marks Answer */}
           {(activeTab === 'all' || activeTab === '10m') && (
-            <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 sm:p-5 shadow-sm space-y-3">
+            <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 sm:p-5 shadow-sm space-y-3">
               <div className="flex items-center justify-between border-b border-[var(--border)]/60 pb-2">
                 <div className="flex items-center space-x-2">
                   <span className="px-2 py-0.5 rounded text-xs font-bold font-mono bg-emerald-50 text-emerald-800 border border-emerald-200">
@@ -460,7 +460,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
         {/* Right Inspector: LAPTOP MODEL GROUNDING RESOURCES (4 cols on laptop) */}
         <div className="hidden lg:block lg:col-span-4 space-y-3 sticky top-20">
-          <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-3">
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-3">
             <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
               <span className="text-xs font-sans uppercase tracking-wider font-bold text-[var(--foreground)] flex items-center space-x-1.5">
                 <BookOpen size={14} className="text-[var(--accent)]" />
@@ -491,7 +491,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                           {res.title}
                         </span>
                       </div>
-                      <span className="text-[9px] font-mono text-[var(--muted-foreground)] bg-[#ffffff] px-1.5 py-0.2 rounded border border-[var(--border)]">
+                      <span className="text-[9px] font-mono text-[var(--muted-foreground)] bg-[var(--card)] px-1.5 py-0.2 rounded border border-[var(--border)]">
                         {res.file}
                       </span>
                     </div>
@@ -537,7 +537,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
       )}
 
       {/* Bottom Sticky Action Bar */}
-      <div className="fixed bottom-14 left-0 right-0 z-30 bg-[#ffffff]/90 backdrop-blur-md border-t border-[var(--border)] py-2 px-4 print:hidden">
+      <div className="fixed bottom-14 left-0 right-0 z-30 bg-[var(--card)]/90 backdrop-blur-md border-t border-[var(--border)] py-2 px-4 print:hidden">
         <div className="max-w-md mx-auto flex items-center justify-between space-x-2">
           <button
             onClick={() => onSaveNote(note)}
