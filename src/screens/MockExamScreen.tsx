@@ -220,7 +220,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
 
         {/* PART A: 5 x 2 = 10 Marks */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between bg-[#f1e5da] px-3 py-1.5 rounded-md border border-[var(--border)]">
+          <div className="flex items-center justify-between bg-[var(--surface)] px-3 py-1.5 rounded-md border border-[var(--border)]">
             <span className="text-xs font-bold uppercase font-sans tracking-wider text-[var(--foreground)]">
               PART – A (Compulsory: 5 × 2 = 10 Marks)
             </span>
@@ -237,7 +237,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                   <div className="space-y-1 pr-2">
                     <div className="flex items-center space-x-2">
                       <span className="font-mono font-bold text-[var(--accent)]">{q.num}</span>
-                      <span className="text-[9px] font-mono bg-[#e7d9cd] text-[var(--foreground)] px-1.5 py-0.2 rounded">
+                      <span className="text-[9px] font-mono bg-[var(--border)] text-[var(--foreground)] px-1.5 py-0.2 rounded">
                         {q.co} | {q.btl}
                       </span>
                     </div>
@@ -246,7 +246,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="font-mono font-bold text-xs bg-[var(--muted)] text-[var(--accent)] px-2 py-0.5 rounded border border-[#d7b99d]">
+                    <span className="font-mono font-bold text-xs bg-[var(--muted)] text-[var(--accent)] px-2 py-0.5 rounded border border-[var(--accent-200)]">
                       {q.marks}M
                     </span>
                   </div>
@@ -269,7 +269,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
 
         {/* PART B: 5 x 5 = 25 Marks */}
         <div className="space-y-3 pt-2">
-          <div className="flex items-center justify-between bg-[#f1e5da] px-3 py-1.5 rounded-md border border-[var(--border)]">
+          <div className="flex items-center justify-between bg-[var(--surface)] px-3 py-1.5 rounded-md border border-[var(--border)]">
             <span className="text-xs font-bold uppercase font-sans tracking-wider text-[var(--foreground)]">
               PART – B (Descriptive: 5 Marks Each)
             </span>
@@ -286,7 +286,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                   <div className="space-y-1 pr-2">
                     <div className="flex items-center space-x-2">
                       <span className="font-mono font-bold text-[var(--accent)]">Q{q.num}.</span>
-                      <span className="text-[9px] font-mono bg-[#e7d9cd] text-[var(--foreground)] px-1.5 py-0.2 rounded">
+                      <span className="text-[9px] font-mono bg-[var(--border)] text-[var(--foreground)] px-1.5 py-0.2 rounded">
                         {q.co} | {q.btl}
                       </span>
                     </div>
@@ -318,7 +318,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
 
         {/* PART C: 4 x 10 = 40 Marks */}
         <div className="space-y-3 pt-2">
-          <div className="flex items-center justify-between bg-[#f1e5da] px-3 py-1.5 rounded-md border border-[var(--border)]">
+          <div className="flex items-center justify-between bg-[var(--surface)] px-3 py-1.5 rounded-md border border-[var(--border)]">
             <span className="text-xs font-bold uppercase font-sans tracking-wider text-[var(--foreground)]">
               PART – C (Comprehensive Essays: 10 Marks Each)
             </span>
@@ -335,7 +335,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
                   <div className="space-y-1 pr-2">
                     <div className="flex items-center space-x-2">
                       <span className="font-mono font-bold text-[var(--accent)]">Q{q.num}.</span>
-                      <span className="text-[9px] font-mono bg-[#e7d9cd] text-[var(--foreground)] px-1.5 py-0.2 rounded">
+                      <span className="text-[9px] font-mono bg-[var(--border)] text-[var(--foreground)] px-1.5 py-0.2 rounded">
                         {q.co} | {q.btl}
                       </span>
                     </div>
