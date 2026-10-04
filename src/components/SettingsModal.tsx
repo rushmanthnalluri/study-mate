@@ -68,12 +68,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
               <input className="auth-input font-mono" value={klId} onChange={e => setKlId(e.target.value)} required />
             </label>
           </div>
-          <label className="block">
-            <span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Department</span>
-            <select className="auth-input" value={department} onChange={e => setDepartment(e.target.value as Department)}>
-              {departments.filter(d => d !== 'All').map(dept => <option key={dept} value={dept}>{dept}</option>)}
-            </select>
-          </label>
 
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--accent-50)] p-4">
             <div className="mb-3 flex items-center gap-2"><KeyRound size={16} className="text-[var(--accent)]"/><p className="text-xs font-extrabold text-[var(--foreground)]">Change password</p></div>
