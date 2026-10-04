@@ -1298,17 +1298,30 @@ app.delete('/api/admin/subjects/:name', requireAdmin, rateLimit(60 * 60 * 1000, 
   try {
     const name = String(req.params.name || '').trim();
     const department = String(req.query.department || '').trim();
-    const subjectId = `${department.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-    const existing = (await getAllSubjects('All')).find(subject => subject.id === subjectId);
-    if (!existing) return res.status(404).json({ error: `Subject "${name}" not found.` });
+    if (!name || !department) {
+      return res.status(400).json({ error: 'Subject name and department are required.' });
+    }
+
+    // Resolve the persisted subject first. Do not reconstruct its ID from
+    // department/name because existing administrator records may use a
+    // course-code-based or otherwise stable identifier.
+    const existing = (await getAllSubjects('All')).find(subject =>
+      String(subject.name || '').trim().toLowerCase() === name.toLowerCase() &&
+      String(subject.department || '').trim().toLowerCase() === department.toLowerCase()
+    );
+    if (!existing?.id) return res.status(404).json({ error: `Subject "${name}" not found.` });
 
     await saveKnowledgeBaseOverride({
-      subjectId,
-      department,
+      subjectId: existing.id,
+      department: String(existing.department || department),
       deleted: true,
-      payload: { id: subjectId, name, department }
+      payload: {
+        id: existing.id,
+        name: existing.name || name,
+        department: existing.department || department
+      }
     });
-    res.json({ success: true, deletedSubject: name });
+    res.json({ success: true, deletedSubject: existing.name || name });
   } catch {
     res.status(500).json({ error: 'Subject could not be deleted.' });
   }
