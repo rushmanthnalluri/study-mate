@@ -294,3 +294,23 @@ test('service worker never caches private API responses', () => {
   assert.match(sw, /Never cache API responses/);
   assert.match(sw, /pathname\.startsWith\('\/api\/'\)/);
 });
+
+
+test('saved-note creation does not trust client identity or server-owned timestamps', () => {
+  assert.match(server, /id: crypto\.randomUUID\(\)/);
+  assert.match(server, /userId: req\.user\.id/);
+  assert.match(server, /savedAt: new Date\(\)\.toISOString\(\)/);
+  assert.doesNotMatch(server, /id: req\.body\.id/);
+  assert.doesNotMatch(server, /savedAt: req\.body\.savedAt/);
+});
+
+test('Mongo chat-history failures fail closed instead of falling back to local files', () => {
+  const chatBlock = db.slice(db.indexOf('export async function getChatMessages'), db.indexOf('export async function saveChatMessage'));
+  assert.match(chatBlock, /catch \{\s*throw new Error\('Database unavailable\.'\);/);
+  assert.doesNotMatch(chatBlock, /catch \{\}\s*if \(!fs\.existsSync\(chatHistoryFile\)/);
+});
+
+test('rate-limit state remains strictly bounded even when all buckets are active', () => {
+  assert.match(server, /MAX_RATE_LIMIT_BUCKETS = 10000/);
+  assert.match(server, /while \(rateLimitBuckets\.size > MAX_RATE_LIMIT_BUCKETS\)/);
+});
