@@ -1,5 +1,6 @@
 import React from 'react';
 import { Department, Subject, ScreenId, ExamNote } from '../types';
+import { EditorialCard, EmptyState, PageHeader, SectionLabel } from '../components/Editorial';
 import {
   ArrowRight,
   BookOpen,
@@ -53,16 +54,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <section className="relative px-1 sm:px-4">
         <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[var(--accent)]/[0.035] blur-3xl" aria-hidden="true" />
         <div className="relative max-w-3xl">
-          <div className="editorial-section-label">
-            <span>StudyMate</span>
-          </div>
-          <h1 className="text-[2.6rem] font-normal leading-[1.1] tracking-[-0.02em] text-[var(--foreground)] sm:text-6xl">
-            Study with clarity.
-            <span className="block text-[var(--accent)]">Write with structure.</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-base leading-7 text-[var(--muted-foreground)] sm:text-lg">
-            A private academic workspace for notes, practice, revision and AI tutoring — grounded in the subjects and resources published for your account.
-          </p>
+          <PageHeader
+            eyebrow="StudyMate"
+            title="Study with clarity. Write with structure."
+            description="A private academic workspace for notes, practice, revision and AI tutoring — grounded in the subjects and resources published for your account."
+          />
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <button type="button" onClick={() => onNavigate('select-subject')} className="editorial-primary inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold tracking-[0.02em]">
               Choose a subject <ArrowRight size={16} />
@@ -75,7 +71,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </section>
 
       <section>
-        <div className="editorial-section-label"><span>Workspace</span></div>
+        <SectionLabel>Workspace</SectionLabel>
         <div className="grid gap-px overflow-hidden border border-[var(--border)] bg-[var(--border)] sm:grid-cols-2 lg:grid-cols-3">
           {features.map(({ id, title, text, icon: Icon }) => (
             <button
@@ -96,7 +92,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </section>
 
       <section>
-        <div className="editorial-section-label"><span>Published subjects</span></div>
+        <SectionLabel>Published subjects</SectionLabel>
         <div className="mb-6 flex items-center justify-between gap-4">
           <div>
             <h2 className="font-serif text-3xl text-[var(--foreground)]">Your academic library</h2>
@@ -132,13 +128,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         )}
 
         {filteredSubjects.length === 0 ? (
-          <div className="border border-dashed border-[var(--border)] bg-white px-6 py-16 text-center">
-            <BookOpen size={25} strokeWidth={1.4} className="mx-auto text-[var(--accent)]" />
-            <h3 className="mt-5 font-serif text-2xl text-[var(--foreground)]">The library is waiting for a publication.</h3>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--muted-foreground)]">
-              No administrator-managed subjects are currently published for this selection.
-            </p>
-          </div>
+          <EmptyState className="py-16"
+            title="The library is waiting for a publication."
+            description="No administrator-managed subjects are currently published for this selection."
+            icon={<BookOpen size={25} strokeWidth={1.4} />}
+          />
         ) : (
           <div className="grid gap-5 md:grid-cols-2">
             {filteredSubjects.slice(0, 6).map(subject => (
@@ -165,7 +159,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     {subject.units?.length || 0} units · {subject.questionCount || 0} questions
                   </span>
                   <ArrowRight size={15} className="text-[var(--accent)] transition-transform duration-200 group-hover:translate-x-1" />
-                </div>
+                </EditorialCard>
               </button>
             ))}
           </div>
@@ -175,7 +169,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {recentNotes.length > 0 && (
         <section>
           <div className="editorial-section-label"><span>Recent revision</span></div>
-          <div className="editorial-card divide-y divide-[var(--border)] overflow-hidden">
+          <EditorialCard className="divide-y divide-[var(--border)] overflow-hidden">
             {recentNotes.slice(0, 3).map((note, index) => (
               <button
                 key={note.id || index}
