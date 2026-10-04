@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Department, ScreenId } from '../types';
-import { Search, BookMarked, ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ArrowLeft, ArrowRight, BookMarked, Search, Sparkles } from 'lucide-react';
+import { Department, GlossaryTerm, ScreenId, Subject } from '../types';
 
 interface GlossaryScreenProps {
   onNavigate: (screen: ScreenId) => void;
@@ -8,203 +8,133 @@ interface GlossaryScreenProps {
   selectedDepartment: Department;
 }
 
-interface GlossaryTerm {
-  term: string;
-  department: Department;
-  subject: string;
-  definition: string;
-  keyRule: string;
-}
-
-export const glossaryTerms: GlossaryTerm[] = [
-  // CSE
-  {
-    term: "Belady's Anomaly",
-    department: "CSE",
-    subject: "Operating Systems",
-    definition: "The phenomenon where increasing the number of physical page frames results in an increase (rather than decrease) in the number of page faults for certain memory access patterns under FIFO page replacement.",
-    keyRule: "Does not occur in Stack algorithms like LRU and Optimal."
-  },
-  {
-    term: "Critical Section",
-    department: "CSE",
-    subject: "Operating Systems",
-    definition: "A segment of code in multi-threaded processes that accesses shared resources (memory, files) that must not be concurrently executed by more than one process.",
-    keyRule: "Must satisfy Mutual Exclusion, Progress, and Bounded Waiting."
-  },
-  {
-    term: "B+ Tree Index",
-    department: "CSE",
-    subject: "Database Management Systems",
-    definition: "A self-balancing search tree where all data records are stored exclusively in leaf nodes linked as a doubly linked list, while internal nodes store only search keys and routing pointers.",
-    keyRule: "Enables logarithmic O(log N) point queries and high-speed range scans."
-  },
-
-  // AI & DS
-  {
-    term: "Kernel Trick",
-    department: "AIDS",
-    subject: "Machine Learning",
-    definition: "A mathematical technique that maps non-linearly separable inputs into a high-dimensional Hilbert feature space where a linear hyperplane can separate the classes, without explicitly computing the coordinates.",
-    keyRule: "Computed via inner product K(x, z) = phi(x)^T phi(z)."
-  },
-  {
-    term: "Self-Attention Mechanism",
-    department: "AIDS",
-    subject: "Deep Learning",
-    definition: "An attention mechanism in Transformer models that computes representation by correlating different positions of a single sequence using Query (Q), Key (K), and Value (V) projections.",
-    keyRule: "Attention(Q, K, V) = softmax(Q K^T / sqrt(d_k)) V."
-  },
-
-  // ECE
-  {
-    term: "Twiddle Factor",
-    department: "ECE",
-    subject: "Digital Signal Processing",
-    definition: "The complex trigonometric multiplier W_N = e^(-j 2π / N) used in Discrete Fourier Transform and Fast Fourier Transform algorithms.",
-    keyRule: "Satisfies symmetry W_N^(k + N/2) = -W_N^k and periodicity W_N^(k+N) = W_N^k."
-  },
-  {
-    term: "Euler Path Stick Diagram",
-    department: "ECE",
-    subject: "VLSI Design",
-    definition: "A graph-theoretic traversal path that visits every transistor drain/source diffusion edge exactly once to enable uninterrupted diffusion strips in CMOS layout.",
-    keyRule: "Minimizes parasitic layout capacitance and silicon area."
-  },
-
-  // EEE
-  {
-    term: "Ferranti Effect",
-    department: "EEE",
-    subject: "Power Systems",
-    definition: "An anomalous voltage rise where receiving-end voltage exceeds sending-end voltage in unloaded or lightly loaded long transmission lines.",
-    keyRule: "Neutralized by installing shunt reactors at the receiving substation."
-  },
-  {
-    term: "Routh-Hurwitz Array",
-    department: "EEE",
-    subject: "Control Systems",
-    definition: "A tabular algebraic method to determine the number of closed-loop poles in the right-half s-plane without factoring the characteristic polynomial.",
-    keyRule: "The number of right-half plane poles equals the number of sign changes in the first column."
-  },
-
-];
-
 export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
   onNavigate,
   onGenerateForTerm,
   selectedDepartment
 }) => {
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [deptFilter, setDeptFilter] = useState<Department>(selectedDepartment);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const filtered = glossaryTerms.filter((item) => {
-    const matchesDept = deptFilter === 'All' || item.department === deptFilter;
-    const matchesSearch =
-      item.term.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.definition.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.subject.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesDept && matchesSearch;
-  });
+  useEffect(() => setDeptFilter(selectedDepartment), [selectedDepartment]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/subjects')
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Published glossary content could not be loaded.');
+        const data = await response.json();
+        if (!cancelled) setSubjects(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (!cancelled) setSubjects([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const terms = useMemo(
+    () => subjects.flatMap((subject) => (subject.glossary || []).map((term) => ({
+      ...term,
+      department: term.department || subject.department,
+      subject: term.subject || subject.name
+    }))),
+    [subjects]
+  );
+
+  const departments = useMemo(
+    () => ['All', ...Array.from(new Set(terms.map((term) => term.department).filter(Boolean)))],
+    [terms]
+  );
+
+  const filtered = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    return terms.filter((item) => {
+      const matchesDept = deptFilter === 'All' || item.department === deptFilter;
+      const matchesSearch = !query ||
+        item.term.toLowerCase().includes(query) ||
+        item.definition.toLowerCase().includes(query) ||
+        String(item.subject || '').toLowerCase().includes(query);
+      return matchesDept && matchesSearch;
+    });
+  }, [terms, deptFilter, searchQuery]);
 
   return (
-    <div className="space-y-4 pb-24 animate-fade-in">
-      {/* Screen Header */}
-      <div className="flex items-center space-x-3 pt-1">
-        <button
-          type="button"
-          aria-label="Back to home"
-          onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-        >
+    <div className="space-y-5 pb-24 animate-fade-in">
+      <div className="flex items-center gap-3 pt-1">
+        <button type="button" aria-label="Back to home" onClick={() => onNavigate('home')} className="p-2 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] editorial-focus">
           <ArrowLeft size={16} />
         </button>
         <div>
-          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[var(--accent)]">
-            KL Engineering Reference
-          </span>
-          <h1 className="text-xl font-sans font-bold text-[var(--foreground)] leading-tight">
-            Technical Glossary
-          </h1>
+          <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[var(--accent)]">Published reference</span>
+          <h1 className="text-xl font-serif font-bold text-[var(--foreground)] leading-tight">Technical Glossary</h1>
         </div>
       </div>
 
-      <p className="text-xs text-[var(--muted-foreground)]">
-        High-yield technical terminology and governing principles frequently evaluated in KL exams.
-      </p>
+      <p className="text-xs text-[var(--muted-foreground)]">Only glossary entries published by an administrator for the available subjects appear here.</p>
 
-      {/* Search Bar */}
       <div className="relative">
         <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]" />
         <input
-          type="text"
+          type="search"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search glossary terms (e.g. Belady, Ferranti, 12D, Kernel)..."
-          className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] editorial-focus shadow-sm"
+          onChange={(event) => setSearchQuery(event.target.value)}
+          placeholder="Search published terms…"
+          aria-label="Search glossary"
+          className="w-full min-h-11 bg-[var(--card)] border border-[var(--border)] rounded-xl pl-10 pr-4 py-2.5 text-xs text-[var(--foreground)] editorial-focus"
         />
       </div>
 
-      {/* Department Tabs */}
-      <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
-        {['All', ...Array.from(new Set(glossaryTerms.map(term => term.department).filter(Boolean)))].map((dept) => (
-          <button
-            key={dept}
-            onClick={() => setDeptFilter(dept as Department)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
-              deptFilter === dept
-                ? 'bg-[var(--accent)] text-white shadow-sm'
-                : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] hover:bg-[var(--surface)]'
-            }`}
-          >
-            {dept === 'All' ? 'All Depts' : dept}
-          </button>
-        ))}
-      </div>
+      {departments.length > 1 && (
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          {departments.map((dept) => (
+            <button key={dept} type="button" onClick={() => setDeptFilter(dept as Department)} className={`min-h-11 px-3 rounded-xl text-xs font-semibold whitespace-nowrap border ${deptFilter === dept ? 'bg-[var(--accent)] text-white border-[var(--accent)]' : 'bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]'}`}>
+              {dept === 'All' ? 'All' : dept}
+            </button>
+          ))}
+        </div>
+      )}
 
-      {/* Glossary Items List */}
-      <div className="space-y-3 pt-1">
-        {filtered.map((item, idx) => (
-          <div
-            key={idx}
-            className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2 hover:border-[var(--accent-300)] transition-all"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <span className="text-xs font-bold text-[var(--foreground)] font-sans">
-                  {item.term}
-                </span>
-                <span className="text-[9px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[var(--muted)] text-[var(--accent)]">
-                  {item.department}
-                </span>
+      {loading ? (
+        <div className="p-8 text-center text-sm text-[var(--muted-foreground)]">Loading published glossary…</div>
+      ) : filtered.length === 0 ? (
+        <div className="p-8 text-center bg-[var(--card)] border border-[var(--border)] rounded-2xl">
+          <BookMarked size={24} className="mx-auto mb-3 text-[var(--accent)]" />
+          <h2 className="font-serif font-bold text-[var(--foreground)]">No published glossary entries</h2>
+          <p className="mt-1 text-xs text-[var(--muted-foreground)]">Ask an administrator to publish glossary content for this subject.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {filtered.map((item, index) => (
+            <article key={item.term + '-' + index} className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-serif font-bold text-[var(--foreground)]">{item.term}</h2>
+                  <span className="text-[9px] font-mono uppercase tracking-wider px-2 py-1 rounded-lg bg-[var(--surface)] text-[var(--accent)]">{item.department}</span>
+                </div>
+                <span className="text-[10px] font-mono text-[var(--muted-foreground)]">{item.subject}</span>
               </div>
-              <span className="text-[10px] text-[var(--muted-foreground)] font-mono">
-                {item.subject}
-              </span>
-            </div>
-
-            <p className="text-xs text-[var(--foreground)] leading-relaxed font-sans">
-              {item.definition}
-            </p>
-
-            <div className="bg-[var(--surface)] p-2 rounded-lg border border-[var(--border)]/50 text-[11px] text-[var(--foreground)]">
-              <span className="font-semibold text-[var(--accent)]">KL Evaluator Key Criterion: </span>
-              <span>{item.keyRule}</span>
-            </div>
-
-            <div className="pt-2 border-t border-[var(--border)]/40 flex justify-end">
-              <button
-                onClick={() => onGenerateForTerm(item.term, item.department)}
-                className="text-xs font-semibold text-[var(--accent)] hover:underline flex items-center space-x-1"
-              >
-                <Sparkles size={13} className="text-amber-500" />
-                <span>Generate Full Exam Note</span>
-                <ArrowRight size={13} />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+              <p className="text-sm leading-6 text-[var(--foreground)]">{item.definition}</p>
+              {item.keyRule ? (
+                <div className="p-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-xs text-[var(--foreground)]">
+                  <span className="font-semibold text-[var(--accent)]">Key rule: </span>{item.keyRule}
+                </div>
+              ) : null}
+              <div className="pt-2 border-t border-[var(--border)] flex justify-end">
+                <button type="button" onClick={() => onGenerateForTerm(item.term, item.department || selectedDepartment)} className="min-h-11 px-3 rounded-xl text-xs font-semibold text-[var(--accent)] hover:underline editorial-focus">
+                  <Sparkles size={13} className="inline mr-1" /> Generate full note <ArrowRight size={13} className="inline ml-1" />
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
