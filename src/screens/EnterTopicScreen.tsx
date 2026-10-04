@@ -93,7 +93,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
       {/* Input Form */}
       <form onSubmit={handleSubmit} className="space-y-3">
         <div>
-          <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
+          <label htmlFor="topic-input" className="block text-xs font-semibold text-[var(--foreground)] mb-1">
             Topic or Past Exam Question
           </label>
           <div className="relative">
