@@ -180,7 +180,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
         <select
           value={activeSubject.id}
           onChange={(e) => setSelectedSubjId(e.target.value)}
-          className="w-full bg-surface-subtle border border-[var(--border)] rounded-lg p-2 text-xs font-medium text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+          className="w-full bg-surface-subtle border border-[var(--border)] rounded-lg p-2 text-xs font-medium text-[var(--foreground)] editorial-focus"
         >
           {subjects.map((s) => (
             <option key={s.id} value={s.id}>
