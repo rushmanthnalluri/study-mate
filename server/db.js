@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema({
   passwordHash: { type: String },
   authTokenHash: { type: String },
   authTokenIssuedAt: { type: String },
-  department: { type: String, default: 'Food Technology' },
+  department: { type: String },
   role: { type: String, default: 'student' },
 }, { timestamps: true });
 UserSchema.index({ email: 1 }, { unique: true, collation: { locale: 'en', strength: 2 }, name: 'users_email_unique_ci' });
