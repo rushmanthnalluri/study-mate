@@ -110,8 +110,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     document.documentElement.classList.remove('dark');
     localStorage.removeItem('studymate_night_mode');
-    localStorage.removeItem('studymate_lms_state');
-  }, []);
+      }, []);
 
   const fetchSubjects = async () => {
     try {
@@ -176,8 +175,13 @@ export const App: React.FC = () => {
   const handleGenerate = async (topic: string, forcedSubject?: string, forcedDept?: Department) => {
     setIsLoading(true);
     setAppError('');
-    const dept = forcedDept || currentSubject?.department || selectedDepartment || 'General Engineering';
-    const subjName = forcedSubject || currentSubject?.name || 'Core Curriculum';
+    const dept = forcedDept || currentSubject?.department || (selectedDepartment !== 'All' ? selectedDepartment : '');
+    const subjName = forcedSubject || currentSubject?.name || '';
+    if (!dept || !subjName) {
+      setAppError('Select an administrator-published subject before generating notes.');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch('/api/generate', {
@@ -291,7 +295,7 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-colors">
+    <div className="editorial-app min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col transition-colors">
       {!currentUser && (
         <div className="min-h-screen w-full bg-[radial-gradient(circle_at_top,#FFFFFF_0%,#FAFAF8_58%,#F5F3F0_100%)] px-5 py-10">
           <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-4xl items-center justify-center">
@@ -537,11 +541,12 @@ export const App: React.FC = () => {
       </button>
 
       </>}
-      {/* KL University & LMS Authentication Modal */}
+      {/* Account authentication */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         currentUser={currentUser}
+        departments={['All', ...Array.from(new Set(subjects.map((subject) => subject.department))).filter(Boolean)] as Department[]}
         onAuthSuccess={(user, token) => {
           setCurrentUser(user);
           try {
@@ -559,6 +564,7 @@ export const App: React.FC = () => {
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
         currentUser={currentUser}
+        departments={['All', ...Array.from(new Set(subjects.map((subject) => subject.department))).filter(Boolean)] as Department[]}
         onSaveProfile={async (updated) => {
           try {
             const res = await fetch('/api/auth/profile', {
