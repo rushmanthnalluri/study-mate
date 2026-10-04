@@ -30,7 +30,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
   const [selectedDept, setSelectedDept] = useState<Department>('All');
   const [customText, setCustomText] = useState('');
   const [docTitle, setDocTitle] = useState('Uploaded Document');
-  const [targetSubject, setTargetSubject] = useState('Food Microbiology');
+  const [targetSubject, setTargetSubject] = useState(subjects[0]?.name || '');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<{
     summary: string;
@@ -209,7 +209,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
                 {analysisResult.questions.map((q, idx) => (
                   <div
                     key={idx}
-                    onClick={() => onGenerateQuestion(q.text, targetSubject, selectedDept === 'All' ? 'Food Technology' : selectedDept)}
+                    onClick={() => onGenerateQuestion(q.text, targetSubject, selectedDept === 'All' ? (subjects.find(s => s.name === targetSubject)?.department || '') : selectedDept)}
                     className="bg-surface-subtle dark:bg-stone-800/80 border border-[#e3d6cb] dark:border-stone-700 p-2.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-brand-400 group"
                   >
                     <div className="space-y-0.5">
@@ -243,7 +243,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
 
         {/* Department Filters */}
         <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
-          {['All', 'Food Technology', 'CSE', 'AIDS', 'ECE', 'EEE'].map((dept) => (
+          {['All', ...Array.from(new Set(subjects.map(subject => subject.department).filter(Boolean)))].map((dept) => (
             <button
               key={dept}
               onClick={() => setSelectedDept(dept as Department)}
