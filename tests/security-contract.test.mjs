@@ -334,3 +334,11 @@ test('seeded flashcards and glossary are absent from the student bundle', () => 
   assert.match(server, /'flashcards': 'flashcards'/);
   assert.match(server, /'glossary': 'glossary'/);
 });
+
+
+test('signup does not require a department field', () => {
+  const auth = fs.readFileSync(path.join(root, 'src', 'components', 'AuthModal.tsx'), 'utf8');
+  assert.doesNotMatch(auth, /signupDepartment|departments\.filter/);
+  assert.doesNotMatch(auth, /department: signupDepartment/);
+  assert.match(server, /const \{ name, klId, email, password \} = req\.body \|\| \{\};/);
+});
