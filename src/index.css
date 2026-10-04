@@ -58,6 +58,11 @@ textarea {
 }
 
 button,
+[role="button"] {
+  min-height: 44px;
+}
+
+button,
 a {
   -webkit-tap-highlight-color: transparent;
 }
