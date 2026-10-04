@@ -176,7 +176,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
         </div>
 
         {/* Tab switcher: Flashcards vs Quiz */}
-        <div className="flex items-center bg-surface-subtle p-1 rounded-xl border border-[var(--border)] text-xs font-semibold">
+        <div className="flex items-center bg-[var(--surface)] p-1 rounded-xl border border-[var(--border)] text-xs font-semibold">
           <button
             onClick={() => setActiveTab('flashcards')}
             className={`px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors ${
@@ -222,7 +222,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
               deptFilter === dept
                 ? 'bg-[var(--accent)] text-white shadow-sm'
-                : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] hover:bg-surface-subtle'
+                : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] hover:bg-[var(--surface)]'
             }`}
           >
             {dept === 'All' ? 'All Depts' : dept}
@@ -243,7 +243,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
               <span>Card {filteredCards.length > 0 ? currentIndex + 1 : 0} of {filteredCards.length}</span>
               <span>{progressPercent}% Mastered · {reviewDueIds.length} due</span>
             </div>
-            <div className="w-full bg-surface-subtle h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-[var(--surface)] h-2 rounded-full overflow-hidden">
               <div
                 className="bg-[var(--accent)] h-full transition-all duration-300"
                 style={{ width: `${progressPercent}%` }}
@@ -255,7 +255,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
           {currentCard ? (
             <div
               onClick={() => setIsFlipped(!isFlipped)}
-              className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 min-h-[260px] flex flex-col justify-between shadow-card cursor-pointer hover:border-brand-300 transition-all select-none relative group"
+              className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 min-h-[260px] flex flex-col justify-between shadow-[var(--shadow-md)] cursor-pointer hover:border-[var(--accent-300)] transition-all select-none relative group"
             >
               <div className="flex items-center justify-between text-xs">
                 <span className="font-mono px-2 py-0.5 rounded bg-[var(--muted)] text-[var(--accent)]  font-bold">
@@ -303,7 +303,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
               </div>
 
               {/* Card Footer */}
-              <div className="flex items-center justify-between pt-2 border-t border-surface-subtle text-xs">
+              <div className="flex items-center justify-between pt-2 border-t border-[var(--surface)] text-xs">
                 <button
                   type="button"
                   onClick={(e) => {
@@ -313,7 +313,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
                   className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl font-semibold transition-colors ${
                     isMastered
                       ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-surface-subtle text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                      : 'bg-[var(--surface)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                   }`}
                 >
                   <CheckCircle2 size={15} />
@@ -344,7 +344,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
             <button
               onClick={handlePrevCard}
               disabled={filteredCards.length <= 1}
-              className="px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] font-semibold text-xs hover:bg-surface-subtle flex items-center space-x-1 shadow-sm disabled:opacity-40"
+              className="px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] font-semibold text-xs hover:bg-[var(--surface)] flex items-center space-x-1 shadow-sm disabled:opacity-40"
             >
               <ChevronLeft size={16} />
               <span>Previous</span>
@@ -368,9 +368,9 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
       {activeTab === 'quiz' && (
         <div className="space-y-4">
           {!isQuizFinished && currentQuizItem ? (
-            <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-card space-y-4">
+            <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 shadow-[var(--shadow-md)] space-y-4">
               {/* Question Header */}
-              <div className="flex items-center justify-between text-xs pb-3 border-b border-surface-subtle">
+              <div className="flex items-center justify-between text-xs pb-3 border-b border-[var(--surface)]">
                 <div className="flex items-center space-x-2">
                   <span className="font-mono px-2 py-0.5 rounded bg-[var(--muted)] text-[var(--accent)]  font-bold">
                     {currentQuizItem.subject}
@@ -403,7 +403,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
                   const isCorrect = idx === currentQuizItem.correctAnswerIndex;
                   const hasAnswered = selectedOption !== null;
 
-                  let optionStyle = 'bg-surface-subtle border-[var(--border)] text-[var(--foreground)] hover:border-brand-400';
+                  let optionStyle = 'bg-[var(--surface)] border-[var(--border)] text-[var(--foreground)] hover:border-[var(--accent-400)]';
 
                   if (hasAnswered) {
                     if (isCorrect) {
@@ -465,7 +465,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
             </div>
           ) : isQuizFinished ? (
             /* Quiz Completed Score Card */
-            <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-8 text-center shadow-card space-y-4 animate-fade-in">
+            <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-8 text-center shadow-[var(--shadow-md)] space-y-4 animate-fade-in">
               <div className="w-16 h-16 rounded-2xl bg-[var(--surface-strong)] text-[var(--accent)]  mx-auto flex items-center justify-center">
                 <Trophy size={36} />
               </div>
@@ -478,7 +478,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
                 </p>
               </div>
 
-              <div className="max-w-xs mx-auto p-3 rounded-xl bg-surface-subtle text-xs text-[var(--muted-foreground)]">
+              <div className="max-w-xs mx-auto p-3 rounded-xl bg-[var(--surface)] text-xs text-[var(--muted-foreground)]">
                 {quizScore >= filteredQuiz.length * 0.8
                   ? '🌟 Outstanding! You have mastered these KL published assessment concepts.'
                   : '💡 Good effort! Review your notes and retry to achieve 100% mastery.'}
@@ -494,7 +494,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
                 </button>
                 <button
                   onClick={() => onNavigate('select-subject')}
-                  className="px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] font-bold text-xs hover:bg-surface-subtle"
+                  className="px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] font-bold text-xs hover:bg-[var(--surface)]"
                 >
                   <span>Study Notes</span>
                 </button>
