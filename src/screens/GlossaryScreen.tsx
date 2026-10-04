@@ -22,7 +22,16 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
 
   useEffect(() => {
     let cancelled = false;
-    fetch('/api/subjects')
+    const token = localStorage.getItem('studymate_token');
+    if (!token) {
+      setSubjects([]);
+      setLoading(false);
+      return;
+    }
+
+    fetch('/api/subjects', {
+      headers: { Authorization: 'Bearer ' + token }
+    }
       .then(async (response) => {
         if (!response.ok) throw new Error('Published glossary content could not be loaded.');
         const data = await response.json();
