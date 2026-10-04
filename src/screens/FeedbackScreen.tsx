@@ -107,7 +107,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                   setIsSubmitted(false);
                   setComment('');
                 }}
-                className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border)] hover:bg-surface-subtle"
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border)] hover:bg-[var(--surface)]"
               >
                 Send Another Note
               </button>
@@ -122,7 +122,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Topic Context */}
-            <div className="bg-surface-subtle p-3 rounded-lg border border-[var(--border)]/60">
+            <div className="bg-[var(--surface)] p-3 rounded-lg border border-[var(--border)]/60">
               <span className="text-[10px] uppercase font-sans tracking-wider font-bold text-[var(--muted-foreground)] block mb-0.5">
                 Feedback for Topic:
               </span>
@@ -146,7 +146,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                   className={`py-2.5 px-3 rounded-xl border flex items-center justify-center space-x-2 text-xs font-semibold transition-all ${
                     rating === 'useful'
                       ? 'bg-emerald-50 border-emerald-400 text-emerald-800 ring-2 ring-emerald-500/20'
-                      : 'bg-[var(--card)] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
+                      : 'bg-[var(--card)] border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--surface)]'
                   }`}
                 >
                   <ThumbsUp size={15} />
@@ -158,7 +158,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                   className={`py-2.5 px-3 rounded-xl border flex items-center justify-center space-x-2 text-xs font-semibold transition-all ${
                     rating === 'not_useful'
                       ? 'bg-rose-50 border-rose-400 text-rose-800 ring-2 ring-rose-500/20'
-                      : 'bg-[var(--card)] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
+                      : 'bg-[var(--card)] border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--surface)]'
                   }`}
                 >
                   <ThumbsDown size={15} />
@@ -202,8 +202,8 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                       onClick={() => setSource(item.id)}
                       className={`p-2 rounded-xl border text-left flex flex-col justify-between transition-all ${
                         isSelected
-                          ? 'bg-brand-50 border-brand-500 text-[var(--accent)] ring-1 ring-brand-500/20'
-                          : 'bg-[var(--card)] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
+                          ? 'bg-[var(--accent-50)] border-[var(--accent-50)]0 text-[var(--accent)] ring-1 ring-[var(--accent-50)]0/20'
+                          : 'bg-[var(--card)] border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--surface)]'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1">
@@ -275,7 +275,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
               className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 shadow-sm text-left space-y-1"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-50 text-[var(--accent)]">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent-50)] text-[var(--accent)]">
                   {item.source}
                 </span>
                 <span className="text-[9px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
