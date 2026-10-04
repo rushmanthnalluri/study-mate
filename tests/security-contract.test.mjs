@@ -58,6 +58,16 @@ test('session revocation endpoint exists and clears server token state', () => {
   assert.ok(server.includes("req.user.authTokenHash = ''"));
 });
 
+test('bearer authentication uses an indexed token-hash lookup instead of scanning every user', () => {
+  assert.match(db, /UserSchema\.index\(\{ authTokenHash: 1 \}, \{ sparse: true/);
+  assert.match(db, /export async function getUserByAuthTokenHash\(authTokenHash\)/);
+  assert.match(server, /getUserByAuthTokenHash\(tokenHash\(token\)\)/);
+  assert.doesNotMatch(server, /const users = await getAllUsers\(\);[\s\S]*users\.find\(u => u\.authTokenHash === hashed\)/);
+  const migration = fs.readFileSync(path.join(root, 'scripts', 'mongodb-migrate.mjs'), 'utf8');
+  assert.match(migration, /hasMigration\(db, 5\)/);
+  assert.match(migration, /users_auth_token_hash/);
+});
+
 test('expensive authenticated endpoints have rate limits', () => {
   const routes = [
     "app.post('/api/generate', requireAuth, rateLimit",
