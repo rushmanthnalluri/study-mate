@@ -158,7 +158,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
               </div>
               <div className="w-full bg-surface-subtle h-2 rounded-full overflow-hidden border border-[var(--border)]/40">
                 <div
-                  className="bg-brand-800 h-full rounded-full transition-all duration-300"
+                  className="bg-[var(--accent)] h-full rounded-full transition-all duration-300"
                   style={{ width: `${item.average ?? 0}%` }}
                 ></div>
               </div>
@@ -167,27 +167,30 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
         </div>
       </div>
 
-      {/* Exam Format Marks Distribution */}
-      <div className="bg-surface-subtle border border-[var(--border)] rounded-xl p-3.5 space-y-2">
-        <h4 className="text-xs font-semibold text-[var(--foreground)] flex items-center space-x-1.5">
-          <Award size={14} className="text-[var(--accent)]" />
-          <span>Assessment activity</span>
-        </h4>
-        <div className="grid grid-cols-3 gap-2 pt-1 text-center">
-          <div className="bg-[#ffffff] p-2 rounded-lg border border-[var(--border)]/60">
-            <span className="text-[9px] font-mono font-bold text-blue-700 block">Part A (10M)</span>
-            <span className="text-[10px] text-[var(--foreground)] font-medium">Direct questions</span>
+      {attempts.length > 0 && (
+        <EditorialCard className="p-4 space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <h4 className="text-sm font-semibold text-[var(--foreground)] flex items-center gap-2">
+              <Clock size={14} className="text-[var(--accent)]" />
+              Recent assessments
+            </h4>
+            <button type="button" onClick={() => onNavigate('quiz')} className="editorial-ghost text-xs">Practice again</button>
           </div>
-          <div className="bg-[#ffffff] p-2 rounded-lg border border-[var(--border)]/60">
-            <span className="text-[9px] font-mono font-bold text-purple-700 block">Part B (25M)</span>
-            <span className="text-[10px] text-[var(--foreground)] font-medium">Structured questions</span>
+          <div className="divide-y divide-[var(--border)]">
+            {attempts.slice(0, 5).map((attempt) => (
+              <div key={attempt.id} className="flex items-center justify-between gap-4 py-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-[var(--foreground)]">{attempt.subject}</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--muted-foreground)]">
+                    {attempt.mode} · {new Date(attempt.completedAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <span className="font-mono text-sm font-medium text-[var(--accent)]">{attempt.percentage}%</span>
+              </div>
+            ))}
           </div>
-          <div className="bg-[#ffffff] p-2 rounded-lg border border-[var(--border)]/60">
-            <span className="text-[9px] font-mono font-bold text-emerald-700 block">Part C (40M)</span>
-            <span className="text-[10px] text-[var(--foreground)] font-medium">Long-answer questions</span>
-          </div>
-        </div>
-      </div>
+        </EditorialCard>
+      )}
     </div>
   );
 };
