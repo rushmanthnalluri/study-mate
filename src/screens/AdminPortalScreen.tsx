@@ -254,7 +254,8 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
         method: 'DELETE',
         headers: { Authorization: 'Bearer ' + (localStorage.getItem('studymate_token') || '') }
       });
-      if (!res.ok) throw new Error('Failed to delete subject');
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Failed to delete subject');
       await onRefreshSubjects();
     } catch (err: any) {
       alert(err.message);
