@@ -15,7 +15,7 @@ Each published subject can contain:
 - question-bank entries
 - assessment metadata where explicitly provided by the administrator
 
-The repository `knowledge-base/` and seed script are development/operations assets only; they are not a production fallback for student content.
+There is no repository-seeded student catalog. A fresh production deployment starts with no published subjects until an administrator creates them in MongoDB.
 
 ---
 
@@ -79,10 +79,7 @@ Server runs on `http://localhost:3001` (or `$PORT`).
 # 1. Install dependencies
 npm install
 
-# 2. Seed knowledge base
-node scripts/seedKnowledgeBase.js
-
-# 3. Start development server
+# 2. Start development server
 # Terminal 1: Backend API
 npm start
 
