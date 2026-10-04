@@ -205,7 +205,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
       <p className="text-xs text-[var(--muted-foreground)]">
         {activeTab === 'flashcards'
           ? 'Master high-yield 2-mark definitions, standards, and kinetics evaluated in KL University exams.'
-          : 'Self-assess with multiple-choice questions aligned with KL In-Sem exam standards.'}
+          : 'Self-assess with multiple-choice questions aligned with published assessment standards.'}
       </p>
 
       {/* Department Tabs */}
