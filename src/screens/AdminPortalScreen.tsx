@@ -376,7 +376,7 @@ Enter only grading guidance published or verified by your institution.
                 </select>
               </label>
               <label className="block"><span className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Model</span>
-                <input id="admin-ai-model" name="aiModel" value={aiModel} onChange={e => setAiModel(e.target.value)} placeholder={aiProvider === 'groq' ? 'llama-3.3-70b-versatile' : 'gemini-1.5-flash'} className="auth-input" />
+                <input id="admin-ai-model" name="aiModel" value={aiModel} onChange={e => setAiModel(e.target.value)} placeholder={aiProvider === 'groq' ? 'llama-3.3-70b-versatile' : 'gemini-3.8-flash'} className="auth-input" />
               </label>
             </div>
             {aiProvider !== 'offline' && (
