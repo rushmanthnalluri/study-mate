@@ -140,7 +140,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
             value={customText}
             onChange={(e) => setCustomText(e.target.value)}
             placeholder="Paste text from lecture slides, syllabus notes, or question papers..."
-            className="w-full bg-surface-subtle border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted focus:outline-none focus:ring-1 editorial-focus leading-relaxed"
+            className="w-full bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:ring-1 editorial-focus leading-relaxed"
           />
           <button
             type="submit"
@@ -154,7 +154,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
 
         {/* Analysis Results Display */}
         {analysisResult && (
-          <div className="pt-3 border-t border-surface-subtle space-y-3 animate-fade-in">
+          <div className="pt-3 border-t border-[var(--surface)] space-y-3 animate-fade-in">
             {/* Executive Summary */}
             <div className="bg-[var(--muted)]/60 p-3 rounded-xl border border-[var(--border)]/60 space-y-1">
               <span className="text-[11px] font-bold text-[var(--accent)]  flex items-center space-x-1">
@@ -175,7 +175,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
                 {analysisResult.keyDefinitions.map((kd, idx) => (
                   <div
                     key={idx}
-                    className="p-2.5 rounded-xl border border-[var(--border)] bg-surface-subtle text-xs"
+                    className="p-2.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-xs"
                   >
                     <span className="font-bold block text-[var(--accent)]  mb-0.5">
                       {kd.term}
@@ -210,7 +210,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
                   <div
                     key={idx}
                     onClick={() => onGenerateQuestion(q.text, targetSubject, selectedDept === 'All' ? (subjects.find(s => s.name === targetSubject)?.department || '') : selectedDept)}
-                    className="bg-surface-subtle border border-[var(--border)] p-2.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-brand-400 group"
+                    className="bg-[var(--surface)] border border-[var(--border)] p-2.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-[var(--accent-400)] group"
                   >
                     <div className="space-y-0.5">
                       <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[var(--surface-strong)] text-[var(--accent)] font-mono">
@@ -264,7 +264,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
             <div
               key={idx}
               onClick={() => onGenerateQuestion(q.text, q.subject, q.dept)}
-              className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 shadow-sm hover:border-brand-400 cursor-pointer group transition-all"
+              className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 shadow-sm hover:border-[var(--accent-400)] cursor-pointer group transition-all"
             >
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center space-x-1.5">
@@ -282,7 +282,7 @@ export const PaperAnalyzerScreen: React.FC<PaperAnalyzerScreenProps> = ({
               <p className="text-xs font-semibold text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors leading-relaxed">
                 {q.text}
               </p>
-              <div className="mt-2 pt-1.5 border-t border-surface-subtle flex items-center justify-between text-[11px] text-[var(--accent)]  font-medium">
+              <div className="mt-2 pt-1.5 border-t border-[var(--surface)] flex items-center justify-between text-[11px] text-[var(--accent)]  font-medium">
                 <span>Generate Model Answer</span>
                 <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
               </div>
