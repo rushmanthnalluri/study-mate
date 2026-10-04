@@ -246,7 +246,8 @@ app.post('/api/generate', requireAuth, rateLimit(60 * 1000, 10), async (req, res
     const note = await generateKLNotes({
       department: subjectMeta.department,
       subject: subjectMeta.name,
-      topic: cleanTopic
+      topic: cleanTopic,
+      subjectMeta
     });
 
     // Ground generated notes only with resources stored in the administrator-managed subject payload.
@@ -383,7 +384,7 @@ app.post('/api/chat', requireAuth, rateLimit(60 * 1000, 20), async (req, res) =>
       message: cleanMessage,
       history: cleanHistory,
       department: department || '',
-      subject: subject || 'Food Microbiology',
+      subject: subject || 'General',
       
     });
 
