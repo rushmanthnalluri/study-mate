@@ -235,7 +235,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
       {/* ========================================================================= */}
       {activeTab === 'flashcards' && (
         <>
-          {progressError && <div role="alert" className="rounded-xl border border-[#efc4b8] bg-[#fff0ec] px-3 py-2 text-[11px] font-semibold text-[#8f3328]">{progressError}</div>}
+          {progressError && <div role="alert" className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-[11px] font-semibold text-[var(--foreground)]">{progressError}</div>}
 
       {/* Progress Bar */}
           <div className="space-y-1">
@@ -291,7 +291,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
                         {currentCard.keywords.map((kw, idx) => (
                           <span
                             key={idx}
-                            className="text-[10px] bg-[#fbf3e9] text-[#714628]  border border-[#e2c8ad] px-2 py-0.5 rounded-full font-medium"
+                            className="text-[10px] bg-[var(--surface)] text-[var(--foreground)]  border border-[var(--border)] px-2 py-0.5 rounded-full font-medium"
                           >
                             {kw}
                           </span>
@@ -375,7 +375,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
                   <span className="font-mono px-2 py-0.5 rounded bg-[var(--muted)] text-[var(--accent)]  font-bold">
                     {currentQuizItem.subject}
                   </span>
-                  <span className="px-2 py-0.5 rounded bg-[#f0e0cf] text-[#714628]  text-[10px] font-bold">
+                  <span className="px-2 py-0.5 rounded bg-[var(--surface-strong)] text-[var(--foreground)]  text-[10px] font-bold">
                     {currentQuizItem.difficulty}
                   </span>
                 </div>
@@ -439,8 +439,8 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
 
               {/* Immediate Explanation Box */}
               {selectedOption !== null && (
-                <div className="mt-4 p-4 rounded-xl bg-[#fbf3e9]/70 border border-[#e2c8ad]/80 space-y-1.5 animate-fade-in text-xs">
-                  <div className="flex items-center space-x-1.5 font-bold text-[#714628] ">
+                <div className="mt-4 p-4 rounded-xl bg-[var(--surface)]/70 border border-[var(--border)]/80 space-y-1.5 animate-fade-in text-xs">
+                  <div className="flex items-center space-x-1.5 font-bold text-[var(--foreground)] ">
                     <Sparkles size={14} />
                     <span>KL Evaluator Explanation:</span>
                   </div>
@@ -466,7 +466,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
           ) : isQuizFinished ? (
             /* Quiz Completed Score Card */
             <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-8 text-center shadow-card space-y-4 animate-fade-in">
-              <div className="w-16 h-16 rounded-2xl bg-[#f0e0cf] text-[var(--accent)]  mx-auto flex items-center justify-center">
+              <div className="w-16 h-16 rounded-2xl bg-[var(--surface-strong)] text-[var(--accent)]  mx-auto flex items-center justify-center">
                 <Trophy size={36} />
               </div>
               <div>
