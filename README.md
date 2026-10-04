@@ -22,9 +22,7 @@ In accordance with KL University's engineering curriculum, StudyMate AI provides
 4. **EEE (Electrical & Electronics Engineering)**
    - Power Systems (`21EE2207`)
    - Control Systems (`21EE2105`)
-5. **Food Technology (Biotechnology & Food Engineering)**
-   - Food Microbiology (`21BT2210`)
-   - Dairy Technology (`21BT3112`)
+
 
 ---
 
