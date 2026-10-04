@@ -584,6 +584,7 @@ export const App: React.FC = () => {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
+        canDismiss={Boolean(currentUser)}
         onAuthSuccess={(user, token) => {
           setCurrentUser(user);
           try {
