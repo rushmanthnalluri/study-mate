@@ -319,6 +319,9 @@ export const AiChatbotScreen: React.FC<AiChatbotScreenProps> = ({
         className="bg-white border border-[var(--border)] rounded-2xl p-2 shadow-sm flex items-center space-x-2 shrink-0"
       >
         <input
+          id="chat-message"
+          name="message"
+          aria-label="Chat message"
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
