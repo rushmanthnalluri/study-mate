@@ -186,11 +186,11 @@ export const SelfTestModal: React.FC<SelfTestModalProps> = ({ note, onClose }) =
                   Simulated KL Score
                 </span>
                 <div className="text-2xl font-mono font-bold">
-                  {evaluation.score} <span className="text-sm font-normal text-stone-300">/ {evaluation.maxScore}</span>
+                  {evaluation.score} <span className="text-sm font-normal text-[var(--card)]">/ {evaluation.maxScore}</span>
                 </div>
               </div>
               <div className="text-right text-xs">
-                <span className="font-mono text-stone-300">{evaluation.wordCount} Words</span>
+                <span className="font-mono text-[var(--card)]">{evaluation.wordCount} Words</span>
                 <div className="text-amber-300 font-bold">
                   {evaluation.matchedKeywords.length}/{note.keywords.length} Keywords
                 </div>
@@ -203,7 +203,7 @@ export const SelfTestModal: React.FC<SelfTestModalProps> = ({ note, onClose }) =
                 <CheckCircle2 size={13} className="text-emerald-700" />
                 <span>Evaluator Feedback:</span>
               </span>
-              <p className="text-stone-700 leading-relaxed">
+              <p className="text-[var(--foreground)] leading-relaxed">
                 {evaluation.feedback}
               </p>
             </div>
