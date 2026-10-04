@@ -138,7 +138,7 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
             />
           </div>
         ) : (
-          <div className="w-full text-left font-mono text-xs p-3 bg-stone-900 text-stone-100 rounded-lg overflow-x-auto">
+          <div className="w-full text-left font-mono text-xs p-3 bg-[var(--foreground)] text-[var(--card)] rounded-lg overflow-x-auto">
             <div className="text-amber-400 font-sans font-semibold mb-2">Process / Architecture Flow:</div>
             <pre className="whitespace-pre-wrap">{code}</pre>
           </div>
