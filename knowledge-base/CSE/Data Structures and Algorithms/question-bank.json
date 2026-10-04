@@ -20,7 +20,7 @@
     "topic": "0/1 Knapsack Dynamic Programming",
     "marks": 5,
     "unit": 5,
-    "paperYear": "KL In-Sem Exam 2, 2024",
+    "paperYear": "KL assessment Exam 2, 2024",
     "question": "Derive the Dynamic Programming recurrence relation for the 0/1 Knapsack problem with a memoization table."
   },
   {
