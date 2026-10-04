@@ -20,7 +20,7 @@
     "topic": "Bias-Variance Tradeoff",
     "marks": 5,
     "unit": 1,
-    "paperYear": "KL In-Sem Exam 1, 2024",
+    "paperYear": "KL assessment Exam 1, 2024",
     "question": "Explain the Bias-Variance tradeoff curve and demonstrate how L1 (Lasso) and L2 (Ridge) regularization control model complexity."
   },
   {
