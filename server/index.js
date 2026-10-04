@@ -111,6 +111,8 @@ async function getAllSubjects(deptFilter = 'All') {
       contentSource: override.payload.contentSource || 'admin-managed',
       resources: Array.isArray(override.payload.resources) ? override.payload.resources : [],
       questionBank: Array.isArray(override.payload.questionBank) ? override.payload.questionBank : [],
+      flashcards: Array.isArray(override.payload.flashcards) ? override.payload.flashcards : [],
+      glossary: Array.isArray(override.payload.glossary) ? override.payload.glossary : [],
       resourcesAvailable: override.payload.resourcesAvailable || {}
     }))
     .filter(subject =>
@@ -163,6 +165,8 @@ app.get('/api/subjects/:id', async (req, res) => {
       marksPattern: typeof subject.marksPattern === 'string' ? subject.marksPattern : '',
       answerStyle: typeof subject.answerStyle === 'string' ? subject.answerStyle : '',
       questionBank: Array.isArray(subject.questionBank) ? subject.questionBank : [],
+      flashcards: Array.isArray(subject.flashcards) ? subject.flashcards : [],
+      glossary: Array.isArray(subject.glossary) ? subject.glossary : [],
       resources: Array.isArray(subject.resources) ? subject.resources : []
     });
   } catch {
@@ -1190,7 +1194,9 @@ app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), as
       'question-bank': 'questionBank',
       'marks-pattern': 'marksPattern',
       'answer-style': 'answerStyle',
-      'syllabus': 'syllabus'
+      'syllabus': 'syllabus',
+      'flashcards': 'flashcards',
+      'glossary': 'glossary'
     };
     const payloadField = allowedTypes[cleanResourceType];
     if (!payloadField) return res.status(400).json({ error: 'Unsupported resource type.' });
@@ -1203,7 +1209,7 @@ app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), as
     if (!existingSubject) return res.status(404).json({ error: 'Subject not found in administrator-managed data.' });
 
     let parsedContent = content;
-    if (cleanResourceType === 'question-bank' || cleanResourceType === 'syllabus') {
+    if (['question-bank', 'syllabus', 'flashcards', 'glossary'].includes(cleanResourceType)) {
       try {
         parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
       } catch {
@@ -1245,6 +1251,20 @@ app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), as
       if (!Array.isArray(parsedContent)) return res.status(400).json({ error: 'Question bank must be an array.' });
       persistedPayload.questionBank = parsedContent.slice(0, 500);
       persistedPayload.questionCount = persistedPayload.questionBank.length;
+    } else if (cleanResourceType === 'flashcards') {
+      if (!Array.isArray(parsedContent)) return res.status(400).json({ error: 'Flashcards must be an array.' });
+      const flashcards = parsedContent.filter(item => item && typeof item === 'object').slice(0, 500);
+      if (flashcards.some(item => !item.id || !item.topic || !item.question || !item.answer)) {
+        return res.status(400).json({ error: 'Each flashcard requires id, topic, question, and answer.' });
+      }
+      persistedPayload.flashcards = flashcards;
+    } else if (cleanResourceType === 'glossary') {
+      if (!Array.isArray(parsedContent)) return res.status(400).json({ error: 'Glossary must be an array.' });
+      const glossary = parsedContent.filter(item => item && typeof item === 'object').slice(0, 500);
+      if (glossary.some(item => !item.term || !item.definition)) {
+        return res.status(400).json({ error: 'Each glossary entry requires term and definition.' });
+      }
+      persistedPayload.glossary = glossary;
     } else if (cleanResourceType === 'syllabus') {
       if (!parsedContent || typeof parsedContent !== 'object' || Array.isArray(parsedContent)) {
         return res.status(400).json({ error: 'Syllabus must be a JSON object.' });
