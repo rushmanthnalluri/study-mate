@@ -20,7 +20,7 @@
     "topic": "FIR Filter Windowing Techniques",
     "marks": 5,
     "unit": 4,
-    "paperYear": "KL In-Sem Exam 2, 2024",
+    "paperYear": "KL assessment Exam 2, 2024",
     "question": "Compare Rectangular, Hamming, and Blackman windows for FIR filter design in terms of main-lobe width and peak side-lobe attenuation."
   },
   {
