@@ -47,7 +47,7 @@ function inflateStream(bytes, dictionary) {
   try {
     return zlib.inflateSync(bytes, { maxOutputLength: MAX_STREAM_BYTES });
   } catch {
-    try { return zlib.inflateRawSync(bytes); } catch { return Buffer.alloc(0); }
+    try { return zlib.inflateRawSync(bytes, { maxOutputLength: MAX_STREAM_BYTES }); } catch { return Buffer.alloc(0); }
   }
 }
 
