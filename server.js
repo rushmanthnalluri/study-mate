@@ -1,3 +1,4 @@
+import 'dotenv/config';
 const { initDatabase, isDatabaseConnected } = await import('./server/db.js');
 
 if (process.env.NODE_ENV === 'production' && !process.env.MONGODB_URI) {
