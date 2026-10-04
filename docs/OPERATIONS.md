@@ -66,6 +66,6 @@ For an authentication incident, revoke affected sessions and rotate secrets as a
 
 ## Knowledge-base administration
 
-The repository's seeded knowledge base is shipped with the application, but administrator-created/edited/deleted subjects are persisted as MongoDB overrides. Do not treat Render's application filesystem as durable application state; Render services use an ephemeral filesystem by default.
+The production application has no repository-seeded student catalog. Administrator-created/edited/deleted subjects are persisted as MongoDB records and are the only production content source. Do not treat Render's application filesystem as durable application state; Render services use an ephemeral filesystem by default.
 
 A MongoDB backup therefore covers administrator knowledge-base changes along with accounts, notes, Study Studio sources, quiz attempts, and flashcard progress.
