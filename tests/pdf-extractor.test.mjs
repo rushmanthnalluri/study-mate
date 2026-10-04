@@ -35,7 +35,7 @@ test('rejects raw-deflate streams that bypass zlib wrapper detection', () => {
     compressed,
     Buffer.from('\\nendstream\\n%%EOF', 'latin1')
   ]);
-  assert.throws(() => extractPdfText(pdf), /No extractable text|maximum|too large/i);
+  assert.throws(() => extractPdfText(pdf), /No extractable text|decompression limit|maximum|too large/i);
 });
 
 test('rejects compressed streams that expand beyond the extractor safety limit', () => {
