@@ -1,7 +1,7 @@
 {
   "name": "StudyMate AI — KL Exam Mode",
   "short_name": "StudyMate",
-  "description": "KL Exam Mode Notes Generator for Food Technology",
+  "description": "Private academic workspace for administrator-published subjects",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fbfaf8",
