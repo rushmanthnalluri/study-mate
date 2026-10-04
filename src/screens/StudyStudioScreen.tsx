@@ -79,9 +79,9 @@ export const StudyStudioScreen:React.FC<Props>=({note,onNavigate})=>{
       <div className="w-9"/>
     </div>
     {!note
-      ? <div className="rounded-[28px] bg-[var(--card)] p-7 text-center"><Headphones className="mx-auto text-[var(--accent)]" size={38}/><h2 className="mt-3 font-black">Open a generated note first</h2><button onClick={()=>onNavigate('enter-topic')} className="mt-4 rounded-2xl bg-[var(--accent)] px-5 py-3 text-xs font-black text-white">Generate notes</button></div>
+      ? <div className="rounded-lg bg-[var(--card)] p-7 text-center"><Headphones className="mx-auto text-[var(--accent)]" size={38}/><h2 className="mt-3 font-black">Open a generated note first</h2><button onClick={()=>onNavigate('enter-topic')} className="mt-4 rounded-2xl bg-[var(--accent)] px-5 py-3 text-xs font-black text-white">Generate notes</button></div>
       : <>
-        <div className="rounded-[28px] border border-[var(--border)] bg-[var(--accent)] p-6 text-white shadow-sm">
+        <div className="rounded-lg border border-[var(--border)] bg-[var(--accent)] p-6 text-white shadow-sm">
           <p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--accent-100)]">{note.subject}</p><h2 className="mt-2 text-2xl font-black">{note.topic}</h2><p className="mt-2 text-xs leading-5 text-[var(--accent-50)]">A single study workspace for audio overview, voice capture, flowchart and mind map.</p>
           <div className="mt-5 flex flex-wrap gap-2">
             <button onClick={playing?stop:speak} className="inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-[var(--foreground)]">{playing?<Pause size={15}/>:<Play size={15}/>} {playing?'Pause':'Listen'}</button>
