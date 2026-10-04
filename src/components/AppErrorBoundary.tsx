@@ -19,8 +19,8 @@ export class AppErrorBoundary extends React.Component<Props, State> {
 
     return (
       <div className="min-h-screen bg-[var(--muted)] px-5 py-16 text-[var(--foreground)]">
-        <div className="mx-auto max-w-md rounded-[28px] border border-[#dbe3ee] bg-[#ffffff] p-7 text-center shadow-sm">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f3e4d5] text-xl">!</div>
+        <div className="mx-auto max-w-md rounded-[28px] border border-[var(--border)] bg-[var(--card)] p-7 text-center shadow-sm">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent-100)] text-xl">!</div>
           <h1 className="mt-4 text-xl font-black">StudyMate needs a refresh</h1>
           <p className="mt-2 text-sm leading-6 text-[var(--muted-foreground)]">
             The current screen encountered an unexpected error. Your account data remains on the server.
@@ -28,7 +28,7 @@ export class AppErrorBoundary extends React.Component<Props, State> {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="mt-5 rounded-2xl bg-[var(--accent)] px-5 py-3 text-xs font-black text-white hover:bg-[#643c20]"
+            className="mt-5 rounded-2xl bg-[var(--accent)] px-5 py-3 text-xs font-black text-white hover:bg-[var(--accent-700)]"
           >
             Reload StudyMate
           </button>
