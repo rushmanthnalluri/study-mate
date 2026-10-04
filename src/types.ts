@@ -30,6 +30,7 @@ export interface Subject {
   topics: string[];
   questionCount: number;
   questionBank?: ExamQuestion[];
+  courseMaterials?: string;
   previousPapers?: string;
   marksPattern?: string;
   answerStyle?: string;
