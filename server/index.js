@@ -606,7 +606,7 @@ app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 10), async (req, res) => 
       passwordHash: hashPassword(String(password)),
       authTokenHash: tokenHash(token),
       authTokenIssuedAt: new Date().toISOString(),
-      department,
+      department: '',
       role: 'student',
       
     };
