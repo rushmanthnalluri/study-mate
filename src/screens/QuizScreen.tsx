@@ -150,7 +150,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
 
       {!started && (
         <div className="rounded-[28px] border border-[var(--border)] bg-[var(--card)] p-5 shadow-sm">
-          <div className="mb-4 flex items-center gap-2 rounded-2xl border border-[#ead9c8] bg-[var(--accent-50)] p-3 text-[11px] text-[var(--muted-foreground)]">
+          <div className="mb-4 flex items-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--accent-50)] p-3 text-[11px] text-[var(--muted-foreground)]">
             <Sparkles size={15} className="text-[var(--accent)]" />
             <span>Questions are generated from the subject question bank using the administrator-configured AI provider. If the provider is unavailable, the assessment will not invent questions.</span>
           </div>
@@ -236,13 +236,13 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
                   key={choice}
                   disabled={revealed}
                   onClick={() => answer(choice)}
-                  className={`flex w-full items-center gap-3 rounded-2xl border p-3 text-left text-xs font-semibold transition ${revealed && correct ? 'border-[#86a276] bg-[#eaf3e5]' : revealed && chosen ? 'border-[#c98b7b] bg-[#fff0ec]' : 'border-[#e4d7cc] bg-white hover:bg-[#f8fafc]'}`}
+                  className={`flex w-full items-center gap-3 rounded-2xl border p-3 text-left text-xs font-semibold transition ${revealed && correct ? 'border-[var(--accent-secondary)] bg-[var(--accent-50)]' : revealed && chosen ? 'border-[var(--danger-border)] bg-[var(--danger-soft)]' : 'border-[var(--border)] bg-white hover:bg-[var(--muted)]'}`}
                 >
                   {revealed && correct
-                    ? <CheckCircle2 size={18} className="shrink-0 text-[#55734a]" />
+                    ? <CheckCircle2 size={18} className="shrink-0 text-[var(--foreground)]" />
                     : chosen
-                      ? <Circle size={18} className="shrink-0 text-[#a04434]" />
-                      : <Circle size={18} className="shrink-0 text-[#b7a396]" />}
+                      ? <Circle size={18} className="shrink-0 text-[var(--danger)]" />
+                      : <Circle size={18} className="shrink-0 text-[var(--muted-foreground)]" />}
                   <span>{option}</span>
                 </button>
               );
@@ -250,7 +250,7 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
           </div>
 
           {selected !== null && (
-            <div className="mt-4 rounded-2xl bg-[var(--muted)] p-3 text-[11px] leading-5 text-[#705b4c]">
+            <div className="mt-4 rounded-2xl bg-[var(--muted)] p-3 text-[11px] leading-5 text-[var(--muted-foreground)]">
               <b>Explanation:</b> {current.explanation}
             </div>
           )}
@@ -268,12 +268,12 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
 
       {finished && (
         <div className="rounded-[28px] border border-[var(--border)] bg-[var(--card)] p-7 text-center shadow-sm">
-          <Trophy className="mx-auto text-[#b77943]" size={42} />
+          <Trophy className="mx-auto text-[var(--accent)]" size={42} />
           <p className="mt-3 text-[10px] font-black uppercase tracking-[.2em] text-[var(--accent)]">Test complete</p>
           <h2 className="mt-1 text-3xl font-black text-[var(--foreground)]">{score}/{questions.length}</h2>
           <p className="mt-2 text-xs text-[var(--muted-foreground)]">{percentage}% • {mode === 'model' ? 'Model Test' : 'Quick Quiz'} • {subject?.name}</p>
           <div className="mt-5 flex gap-2">
-            <button onClick={reset} className="flex-1 rounded-2xl border border-[#ddcdbd] bg-white py-3 text-xs font-black text-[#5e4a3d]">
+            <button onClick={reset} className="flex-1 rounded-2xl border border-[var(--border)] bg-white py-3 text-xs font-black text-[var(--foreground)]">
               <RotateCcw className="mr-1 inline" size={14} />Retake
             </button>
             <button onClick={() => onNavigate('flashcards')} className="flex-1 rounded-2xl bg-[var(--accent)] py-3 text-xs font-black text-white">
