@@ -32,6 +32,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'flashcards' | 'quiz'>('flashcards');
   const [deptFilter, setDeptFilter] = useState<Department>(selectedDepartment);
+  const availableDepartments = ['All', ...Array.from(new Set([...initialFlashcards.map(card => card.department), ...initialQuizQuestions.map(question => question.department)].filter(Boolean)))];
 
   // Flashcards state
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -209,7 +210,7 @@ export const FlashcardsScreen: React.FC<FlashcardsScreenProps> = ({
 
       {/* Department Tabs */}
       <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
-        {['All', 'Food Technology', 'CSE', 'AIDS', 'ECE', 'EEE'].map((dept) => (
+        {availableDepartments.map((dept) => (
           <button
             key={dept}
             onClick={() => {
