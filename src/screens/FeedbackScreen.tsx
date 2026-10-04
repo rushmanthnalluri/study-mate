@@ -70,35 +70,35 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
           type="button"
           aria-label="Back to home"
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#64748b] hover:text-[#172554] transition-colors"
+          className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
         <div>
-          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
+          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[var(--accent)]">
             Step 06 of 06
           </span>
-          <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
+          <h1 className="text-xl font-sans font-bold text-[var(--foreground)] leading-tight">
             Give Feedback
           </h1>
         </div>
       </div>
 
-      <p className="text-xs text-[#64748b]">
+      <p className="text-xs text-[var(--muted-foreground)]">
         Every answer produces a signal. Your feedback directly improves the prompt grounding and knowledge base context.
       </p>
 
       {/* Blueprint Step 06 Form */}
-      <div className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-4 shadow-sm space-y-4">
+      <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-4">
         {isSubmitted ? (
           <div className="text-center py-6 space-y-3">
             <div className="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto">
               <CheckCircle2 size={24} />
             </div>
-            <h3 className="text-base font-sans font-bold text-[#172554]">
+            <h3 className="text-base font-sans font-bold text-[var(--foreground)]">
               Signal Recorded!
             </h3>
-            <p className="text-xs text-[#64748b] max-w-xs mx-auto">
+            <p className="text-xs text-[var(--muted-foreground)] max-w-xs mx-auto">
               Thank you. Your feedback has been logged to improve the KL examination prompts and scoring weights.
             </p>
             <div className="pt-2 flex justify-center space-x-2">
@@ -107,13 +107,13 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                   setIsSubmitted(false);
                   setComment('');
                 }}
-                className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#e3d6cb] hover:bg-surface-subtle"
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border)] hover:bg-surface-subtle"
               >
                 Send Another Note
               </button>
               <button
                 onClick={() => onNavigate('home')}
-                className="text-xs font-semibold px-4 py-1.5 rounded-lg bg-[#2563eb] text-white"
+                className="text-xs font-semibold px-4 py-1.5 rounded-lg bg-[var(--accent)] text-white"
               >
                 Back to Home
               </button>
@@ -122,21 +122,21 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Topic Context */}
-            <div className="bg-surface-subtle p-3 rounded-lg border border-[#e3d6cb]/60">
-              <span className="text-[10px] uppercase font-sans tracking-wider font-bold text-[#64748b] block mb-0.5">
+            <div className="bg-surface-subtle p-3 rounded-lg border border-[var(--border)]/60">
+              <span className="text-[10px] uppercase font-sans tracking-wider font-bold text-[var(--muted-foreground)] block mb-0.5">
                 Feedback for Topic:
               </span>
-              <p className="text-xs font-bold text-[#172554] line-clamp-1">
+              <p className="text-xs font-bold text-[var(--foreground)] line-clamp-1">
                 {currentTopic}
               </p>
-              <p className="text-[10px] text-[#64748b]">
+              <p className="text-[10px] text-[var(--muted-foreground)]">
                 {currentSubject} • {currentDepartment}
               </p>
             </div>
 
             {/* Quick Rating: Useful or Not Useful */}
             <div>
-              <label className="block text-xs font-semibold text-[#172554] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--foreground)] mb-1.5">
                 Was this answer useful for KL exams?
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -146,7 +146,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                   className={`py-2.5 px-3 rounded-xl border flex items-center justify-center space-x-2 text-xs font-semibold transition-all ${
                     rating === 'useful'
                       ? 'bg-emerald-50 border-emerald-400 text-emerald-800 ring-2 ring-emerald-500/20'
-                      : 'bg-[#ffffff] border-[#e3d6cb] text-[#172554] hover:bg-surface-subtle'
+                      : 'bg-[#ffffff] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
                   }`}
                 >
                   <ThumbsUp size={15} />
@@ -158,7 +158,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                   className={`py-2.5 px-3 rounded-xl border flex items-center justify-center space-x-2 text-xs font-semibold transition-all ${
                     rating === 'not_useful'
                       ? 'bg-rose-50 border-rose-400 text-rose-800 ring-2 ring-rose-500/20'
-                      : 'bg-[#ffffff] border-[#e3d6cb] text-[#172554] hover:bg-surface-subtle'
+                      : 'bg-[#ffffff] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
                   }`}
                 >
                   <ThumbsDown size={15} />
@@ -169,7 +169,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
 
             {/* Blueprint Section 04: Three Sources of Signal */}
             <div>
-              <label className="block text-xs font-semibold text-[#172554] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--foreground)] mb-1.5">
                 Your Signal Perspective (Three Sources):
               </label>
               <div className="grid grid-cols-3 gap-1.5">
@@ -202,16 +202,16 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                       onClick={() => setSource(item.id)}
                       className={`p-2 rounded-xl border text-left flex flex-col justify-between transition-all ${
                         isSelected
-                          ? 'bg-brand-50 border-brand-500 text-[#2563eb] ring-1 ring-brand-500/20'
-                          : 'bg-[#ffffff] border-[#e3d6cb] text-[#172554] hover:bg-surface-subtle'
+                          ? 'bg-brand-50 border-brand-500 text-[var(--accent)] ring-1 ring-brand-500/20'
+                          : 'bg-[#ffffff] border-[var(--border)] text-[var(--foreground)] hover:bg-surface-subtle'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1">
-                        <Icon size={14} className={isSelected ? 'text-[#2563eb]' : 'text-[#64748b]'} />
-                        {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[#2563eb]"></span>}
+                        <Icon size={14} className={isSelected ? 'text-[var(--accent)]' : 'text-[var(--muted-foreground)]'} />
+                        {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]"></span>}
                       </div>
                       <span className="text-[11px] font-bold block">{item.label}</span>
-                      <span className="text-[9px] text-[#64748b] leading-tight mt-0.5">{item.desc}</span>
+                      <span className="text-[9px] text-[var(--muted-foreground)] leading-tight mt-0.5">{item.desc}</span>
                     </button>
                   );
                 })}
@@ -220,7 +220,7 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
 
             {/* Comment Area */}
             <div>
-              <label className="block text-xs font-semibold text-[#172554] mb-1">
+              <label className="block text-xs font-semibold text-[var(--foreground)] mb-1">
                 Short Comment / Examiner Insight
               </label>
               <textarea
@@ -234,14 +234,14 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
                     ? 'e.g. Ensure the D121 and z-value units are explicitly defined...'
                     : 'Tell us how this helped or what was missing...'
                 }
-                className="w-full bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 text-xs text-[#172554] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm"
+                className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 shadow-sm"
               />
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 rounded-xl font-bold text-xs bg-[#2563eb] text-white hover:bg-[#2563eb] transition-all flex items-center justify-center space-x-1.5 shadow-sm active:scale-[0.98]"
+              className="w-full py-3 px-4 rounded-xl font-bold text-xs bg-[var(--accent)] text-white hover:bg-[var(--accent)] transition-all flex items-center justify-center space-x-1.5 shadow-sm active:scale-[0.98]"
             >
               {isSubmitting ? (
                 <span>Recording Signal...</span>
@@ -259,11 +259,11 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
       {/* Blueprint Section 04: Community Signal Loop Feed */}
       <div className="space-y-2 pt-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-sans uppercase tracking-wider font-bold text-[#64748b] flex items-center space-x-1.5">
+          <h3 className="text-xs font-sans uppercase tracking-wider font-bold text-[var(--muted-foreground)] flex items-center space-x-1.5">
             <Sparkles size={13} className="text-amber-600" />
             <span>Active KL Exam Signals Loop</span>
           </h3>
-          <span className="text-[10px] text-[#64748b]">
+          <span className="text-[10px] text-[var(--muted-foreground)]">
             {recentFeedbacks.length} Signals
           </span>
         </div>
@@ -272,21 +272,21 @@ export const FeedbackScreen: React.FC<FeedbackScreenProps> = ({
           {recentFeedbacks.slice(0, 4).map((item) => (
             <div
               key={item.id}
-              className="bg-[#ffffff] border border-[#e3d6cb] rounded-xl p-3 shadow-sm text-left space-y-1"
+              className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm text-left space-y-1"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-50 text-[#2563eb]">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-50 text-[var(--accent)]">
                   {item.source}
                 </span>
                 <span className="text-[9px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
                   ✓ {item.rating === 'useful' ? 'Verified Useful' : 'Refinement noted'}
                 </span>
               </div>
-              <p className="text-xs font-semibold text-[#172554] line-clamp-1">
+              <p className="text-xs font-semibold text-[var(--foreground)] line-clamp-1">
                 {item.topic}
               </p>
               {item.comment && (
-                <p className="text-[11px] text-[#64748b] italic">
+                <p className="text-[11px] text-[var(--muted-foreground)] italic">
                   &ldquo;{item.comment}&rdquo;
                 </p>
               )}
