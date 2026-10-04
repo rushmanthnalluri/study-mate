@@ -306,7 +306,7 @@ test('saved-note creation does not trust client identity or server-owned timesta
 
 test('Mongo chat-history failures fail closed instead of falling back to local files', () => {
   const chatBlock = db.slice(db.indexOf('export async function getChatMessages'), db.indexOf('export async function saveChatMessage'));
-  assert.match(chatBlock, /catch \{\s*throw new Error\('Database unavailable\.'\);/);
+  assert.match(chatBlock, /catch \\(e\\) \\{\\s*throw new Error\\('Database unavailable\\.'\\);/);
   assert.doesNotMatch(chatBlock, /catch \{\}\s*if \(!fs\.existsSync\(chatHistoryFile\)/);
 });
 
