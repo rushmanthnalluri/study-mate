@@ -92,7 +92,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 <p className="small-caps mt-1 text-[9px] text-[var(--accent-secondary)]">Private study workspace</p>
               </div>
             </div>
-            <button type="button" onClick={onClose} aria-label="Close sign-in dialog" className="rounded-xl p-2 text-[#dbeafe] hover:bg-white/10 hover:text-white">
+            <button type="button" onClick={onClose} aria-label="Close sign-in dialog" className="rounded-xl p-2 text-[var(--accent-50)] hover:bg-white/10 hover:text-white">
               <X size={19} />
             </button>
           </div>
@@ -110,7 +110,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
               role="tab"
               aria-selected={mode === tab}
               onClick={() => { setMode(tab); resetMessage(); }}
-              className={`py-3.5 text-sm font-bold transition-colors ${mode === tab ? 'bg-[#ffffff] text-[var(--accent)] border-b-2 border-[#3b82f6]' : 'text-[var(--muted-foreground)] hover:text-[#334155]'}`}
+              className={`py-3.5 text-sm font-bold transition-colors ${mode === tab ? 'bg-[#ffffff] text-[var(--accent)] border-b-2 border-[var(--accent)]' : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'}`}
             >
               {tab === 'login' ? 'Sign in' : 'Create account'}
             </button>
@@ -118,23 +118,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
         </div>
 
         <form onSubmit={submit} className="space-y-4 p-6">
-          {error && <div role="alert" aria-live="assertive" className="rounded-2xl border border-[#efc4b8] bg-[#fff0ec] px-4 py-3 text-xs font-semibold text-[#a03e2f]">{error}</div>}
+          {error && <div role="alert" aria-live="assertive" className="rounded-2xl border border-[#efc4b8] bg-[var(--surface)] px-4 py-3 text-xs font-semibold text-[#a03e2f]">{error}</div>}
 
           {mode === 'login' ? (
             <>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-[#334155]">KL ID or university email</label>
+                <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">KL ID or university email</label>
                 <div className="relative">
-                  <UserRound className="absolute left-3.5 top-3.5 text-[#94a3b8]" size={16} />
+                  <UserRound className="absolute left-3.5 top-3.5 text-[var(--muted-foreground)]" size={16} />
                   <input value={loginIdentifier} onChange={e => setLoginIdentifier(e.target.value)} required autoComplete="username" placeholder="e.g. your KL ID or you@kluniversity.in" className="auth-input pl-10" />
                 </div>
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-[#334155]">Password</label>
+                <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Password</label>
                 <div className="relative">
-                  <LockKeyhole className="absolute left-3.5 top-3.5 text-[#94a3b8]" size={16} />
+                  <LockKeyhole className="absolute left-3.5 top-3.5 text-[var(--muted-foreground)]" size={16} />
                   <input type={showPassword ? 'text' : 'password'} value={loginPassword} onChange={e => setLoginPassword(e.target.value)} required autoComplete="current-password" placeholder="Your password" className="auth-input pl-10 pr-10" />
-                  <button type="button" onClick={() => setShowPassword(v => !v)} aria-label={showPassword ? 'Hide password' : 'Show password'} className="absolute right-2.5 top-2.5 rounded-lg p-1.5 text-[var(--muted-foreground)] hover:bg-[#e2e8f0]">{showPassword ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                  <button type="button" onClick={() => setShowPassword(v => !v)} aria-label={showPassword ? 'Hide password' : 'Show password'} className="absolute right-2.5 top-2.5 rounded-lg p-1.5 text-[var(--muted-foreground)] hover:bg-[var(--border)]">{showPassword ? <EyeOff size={15} /> : <Eye size={15} />}</button>
                 </div>
               </div>
               <button disabled={busy} className="auth-primary" type="submit">
@@ -145,30 +145,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
           ) : (
             <>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-[#334155]">Full name</label>
+                <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Full name</label>
                 <input value={signupName} onChange={e => setSignupName(e.target.value)} required autoComplete="name" placeholder="Your full name" className="auth-input" />
               </div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold text-[#334155]">KL ID</label>
+                  <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">KL ID</label>
                   <input value={signupKlId} onChange={e => setSignupKlId(e.target.value)} required placeholder="Your KL ID" className="auth-input font-mono" />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs font-bold text-[#334155]">Department</label>
+                  <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Department</label>
                   <select value={signupDepartment} onChange={e => setSignupDepartment(e.target.value as Department)} className="auth-input">
                     {departments.filter(d => d !== 'All').map(dept => <option key={dept} value={dept}>{dept}</option>)}
                   </select>
                 </div>
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-[#334155]">University email</label>
+                <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">University email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-3.5 text-[#94a3b8]" size={16} />
+                  <Mail className="absolute left-3.5 top-3.5 text-[var(--muted-foreground)]" size={16} />
                   <input value={signupEmail} onChange={e => setSignupEmail(e.target.value)} required type="email" autoComplete="email" placeholder="you@kluniversity.in" className="auth-input pl-10" />
                 </div>
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-[#334155]">Password</label>
+                <label className="mb-1.5 block text-xs font-bold text-[var(--foreground)]">Password</label>
                 <input value={signupPassword} onChange={e => setSignupPassword(e.target.value)} required minLength={8} type="password" autoComplete="new-password" placeholder="At least 8 characters" className="auth-input" />
               </div>
               <button disabled={busy} className="auth-primary" type="submit">
