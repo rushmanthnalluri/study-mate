@@ -187,7 +187,7 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
               {item.definition}
             </p>
 
-            <div className="bg-surface-subtle p-2 rounded-lg border border-[var(--border)]/50 text-[11px] text-stone-700">
+            <div className="bg-surface-subtle p-2 rounded-lg border border-[var(--border)]/50 text-[11px] text-[var(--foreground)]">
               <span className="font-semibold text-[var(--accent)]">KL Evaluator Key Criterion: </span>
               <span>{item.keyRule}</span>
             </div>
