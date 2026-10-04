@@ -52,11 +52,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e2c2a3] text-[#6e4228]"><UserRound size={18} /></div>
             <div>
-              <h3 id="settings-modal-title" className="font-extrabold text-[#172554]">Account settings</h3>
-              <p className="text-[11px] text-[#64748b]">Manage your StudyMate profile</p>
+              <h3 id="settings-modal-title" className="font-extrabold text-[var(--foreground)]">Account settings</h3>
+              <p className="text-[11px] text-[var(--muted-foreground)]">Manage your StudyMate profile</p>
             </div>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close account settings" className="rounded-xl p-2 text-[#64748b] hover:bg-white"><X size={18} /></button>
+          <button type="button" onClick={onClose} aria-label="Close account settings" className="rounded-xl p-2 text-[var(--muted-foreground)] hover:bg-white"><X size={18} /></button>
         </div>
 
         <form onSubmit={save} className="space-y-5 p-6">
@@ -83,7 +83,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
               <input className="auth-input" type="password" autoComplete="current-password" placeholder="Current password" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)}/>
               <input className="auth-input" type="password" autoComplete="new-password" minLength={8} placeholder="New password" value={newPassword} onChange={e=>setNewPassword(e.target.value)}/>
             </div>
-            <button type="button" disabled={!currentPassword||newPassword.length<8} onClick={async()=>{try{await onChangePassword(currentPassword,newPassword);setCurrentPassword('');setNewPassword('');setPasswordMessage('Password changed successfully.');}catch(e){setPasswordMessage(e instanceof Error?e.message:'Password change failed.');}}} className="mt-3 rounded-xl bg-[#172554] px-3 py-2 text-xs font-bold text-white disabled:opacity-40">Update password</button>
+            <button type="button" disabled={!currentPassword||newPassword.length<8} onClick={async()=>{try{await onChangePassword(currentPassword,newPassword);setCurrentPassword('');setNewPassword('');setPasswordMessage('Password changed successfully.');}catch(e){setPasswordMessage(e instanceof Error?e.message:'Password change failed.');}}} className="mt-3 rounded-xl bg-[var(--foreground)] px-3 py-2 text-xs font-bold text-white disabled:opacity-40">Update password</button>
             {passwordMessage&&<p className="mt-2 text-[11px] font-semibold text-[#6f594a]">{passwordMessage}</p>}
           </div>
 
@@ -92,7 +92,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
               <ShieldCheck className="mt-0.5 text-[#9b633c]" size={18} />
               <div>
                 <p className="text-xs font-extrabold text-[#334155]">AI configuration is administrator-controlled</p>
-                <p className="mt-1 text-[11px] leading-relaxed text-[#64748b]">Students cannot enter, replace, or expose the Groq/Gemini keys used by the application. The administrator manages the single app-wide provider configuration.</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-[var(--muted-foreground)]">Students cannot enter, replace, or expose the Groq/Gemini keys used by the application. The administrator manages the single app-wide provider configuration.</p>
               </div>
             </div>
           </div>
@@ -101,7 +101,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, c
             <button type="button" onClick={onResetData} className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold text-[#a04434] hover:bg-[#fff0ec]"><Trash2 size={14} /> Clear local session</button>
             <div className="flex gap-2">
               <button type="button" onClick={onClose} className="rounded-xl border border-[#ddcdbd] bg-white px-4 py-2.5 text-xs font-bold text-[#5e4a3d] hover:bg-[#f8fafc]">Cancel</button>
-              <button type="submit" className="inline-flex items-center gap-1.5 rounded-xl bg-[#2563eb] px-4 py-2.5 text-xs font-extrabold text-white shadow-sm hover:bg-[#643c20]"><Save size={14} /> Save profile</button>
+              <button type="submit" className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--accent)] px-4 py-2.5 text-xs font-extrabold text-white shadow-sm hover:bg-[#643c20]"><Save size={14} /> Save profile</button>
             </div>
           </div>
         </form>
