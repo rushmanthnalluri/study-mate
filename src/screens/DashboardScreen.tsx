@@ -45,11 +45,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
 
   // Calculate readiness metric
   const averageScore = attempts.length ? Math.round(attempts.reduce((sum, a) => sum + a.percentage, 0) / attempts.length) : 0;
-  const readinessPercent = attempts.length
-    ? Math.min(100, Math.round(averageScore * 0.65 + Math.min(100, savedCount * 12 + reviewedCount * 8 + 10) * 0.35))
-    : Math.min(100, Math.round((savedCount * 12 + reviewedCount * 8) + 20));
+  const readinessPercent = attempts.length ? averageScore : null;
 
-  const deptStats = ['CSE', 'AIDS', 'ECE', 'EEE', 'Food Technology'].map((dept) => {
+  const deptStats = Array.from(new Set(subjects.map((subject) => subject.department).filter(Boolean))).map((dept) => {
     const deptSubjs = subjects.filter((s) => s.department === dept);
     const deptSaved = savedNotes.filter((n) => n.department === dept);
     return {
@@ -65,18 +63,18 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       {/* Dashboard Top Header */}
       <div className="space-y-1 pt-1">
         <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
-          Analytics & Readiness
+          Study Progress
         </span>
-        <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
+        <h1 className="font-serif text-3xl font-medium text-[var(--foreground)] leading-tight">
           Student Dashboard
         </h1>
         <p className="text-xs text-[#64748b]">
-          Track syllabus coverage, revision streaks, and exam preparation metrics.
+          A private view of the work you have actually completed in StudyMate.
         </p>
       </div>
 
       {/* Hero Readiness Score Card */}
-      <div className="bg-gradient-to-br from-[#2563eb] to-[#60a5fa] text-white rounded-2xl p-5 shadow-elevated relative overflow-hidden">
+      <div className="bg-gradient-to-br from-[#2563eb] to-[#60a5fa] text-white rounded-lg p-8 shadow-[var(--shadow-md)] relative overflow-hidden">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#f2d0a5] flex items-center space-x-1.5">
@@ -85,7 +83,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             </span>
             <div className="flex items-baseline space-x-2">
               <span className="text-3xl font-mono font-bold text-white">
-                {readinessPercent}%
+                {readinessPercent === null ? '—' : `${readinessPercent}%`}
               </span>
               <span className="text-xs text-[#ead6c0]">
                 {readinessPercent > 70 ? 'Exam Ready' : 'In Progress'}
