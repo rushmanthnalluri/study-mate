@@ -137,7 +137,6 @@ textarea:focus {
   border-top: 2px solid var(--accent);
 }
 
-.relative > button { min-height: 0; }
 
 .auth-input {
   min-height: 44px;
@@ -269,7 +268,7 @@ textarea:focus {
 }
 
 @media print {
-  body { background: #fff; }
+  body { background: var(--card); }
   .print\:hidden { display: none !important; }
 }
 
