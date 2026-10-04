@@ -239,6 +239,13 @@ test('production HTTP security baseline includes proxy trust and CSP', () => {
 });
 
 
+test('production CSP permits only the explicitly trusted Google Font origins used by the frontend', () => {
+  assert.match(server, /style-src 'self' 'unsafe-inline' https:\/\/fonts\.googleapis\.com/);
+  assert.match(server, /font-src 'self' https:\/\/fonts\.gstatic\.com/);
+  assert.doesNotMatch(server, /style-src[^\n]*https:\/\/(?!fonts\.googleapis\.com)/);
+  assert.doesNotMatch(server, /font-src[^\n]*https:\/\/(?!fonts\.gstatic\.com)/);
+});
+
 test('production browser security headers and mutation rate limits are enforced', () => {
   assert.match(server, /Content-Security-Policy/);
   assert.match(server, /Strict-Transport-Security/);
