@@ -274,3 +274,10 @@ test('editorial design system has no legacy compatibility utilities', () => {
   assert.doesNotMatch(source, /brand-(?:50|100|200|300|400|500|600|700|800|900|950)/);
   assert.doesNotMatch(source, /(?:bg|text|border|placeholder)-surface-(?:subtle|border|muted|dark)/);
 });
+
+
+test('service worker never caches private API responses', () => {
+  const sw = fs.readFileSync(path.join(root, 'public', 'sw.js'), 'utf8');
+  assert.match(sw, /Never cache API responses/);
+  assert.match(sw, /pathname\.startsWith\('\/api\/'\)/);
+});
