@@ -110,7 +110,7 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
           >
             <ZoomIn size={15} />
           </button>
-          <div className="h-4 w-px bg-[var(--background)]-border mx-1"></div>
+          <div className="h-4 w-px bg-[var(--border)] mx-1"></div>
           <button
             onClick={handleCopy}
             title="Copy Diagram Code"
