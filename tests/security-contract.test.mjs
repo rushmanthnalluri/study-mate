@@ -314,3 +314,14 @@ test('rate-limit state remains strictly bounded even when all buckets are active
   assert.match(server, /MAX_RATE_LIMIT_BUCKETS = 10000/);
   assert.match(server, /while \(rateLimitBuckets\.size > MAX_RATE_LIMIT_BUCKETS\)/);
 });
+
+
+test('chat history clear is authenticated and server-authoritative', () => {
+  assert.match(server, /app\.delete\('\/api\/chat\/history', requireAuth, rateLimit/);
+  assert.match(db, /export async function deleteChatMessages\(userId\)/);
+  assert.match(db, /deleteMany\(\{ userId: ownerId \}\)/);
+  const chatbot = fs.readFileSync(path.join(root, 'src', 'screens', 'AiChatbotScreen.tsx'), 'utf8');
+  assert.doesNotMatch(chatbot, /studymate_chat_history_/);
+  assert.doesNotMatch(chatbot, /According to the KL University curriculum/);
+  assert.match(chatbot, /\/api\/chat\/history\?limit=100/);
+});
