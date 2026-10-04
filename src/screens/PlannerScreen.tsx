@@ -75,6 +75,7 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({ onNavigate, subjec
             <select
               id="planner-subject"
               name="subject"
+              aria-labelledby="planner-subject-label"
               value={selectedSubjectId}
               onChange={(event) => {
                 setSelectedSubjectId(event.target.value);
@@ -94,6 +95,7 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({ onNavigate, subjec
             <input
               id="planner-exam-date"
               name="examDate"
+              aria-labelledby="planner-exam-date-label"
               type="date"
               value={examDate}
               min={new Date().toISOString().slice(0, 10)}
