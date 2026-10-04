@@ -172,17 +172,17 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
   return (
     <div className="flex flex-col h-[calc(100vh-8.5rem)] max-w-4xl mx-auto pb-4 animate-fade-in">
       {/* Header bar */}
-      <div className="bg-white dark:bg-[var(--foreground)] border border-surface-border dark:border-[var(--border)] rounded-2xl p-4 shadow-sm mb-3 flex items-center justify-between shrink-0">
+      <div className="bg-white border border-surface-border rounded-2xl p-4 shadow-sm mb-3 flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[var(--accent-900)] to-[var(--accent-700)] text-white flex items-center justify-center shadow-sm">
             <Bot size={22} className="text-amber-300" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <h2 className="font-bold text-base text-surface-dark dark:text-white leading-tight">
+              <h2 className="font-bold text-base text-surface-dark leading-tight">
                 StudyMate AI Tutor
               </h2>
-              <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+              <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Study grounded</span>
               </span>
@@ -197,7 +197,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
           <button
             onClick={handleClearChat}
             title="Clear Chat History"
-            className="p-1.5 rounded-lg border border-surface-border dark:border-[var(--border)] text-surface-muted hover:text-rose-600 transition-colors"
+            className="p-1.5 rounded-lg border border-surface-border text-surface-muted hover:text-rose-600 transition-colors"
           >
             <Trash2 size={16} />
           </button>
@@ -227,7 +227,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
                 className={`max-w-[85%] rounded-2xl p-4 shadow-sm ${
                   isUser
                     ? 'bg-brand-800 text-white rounded-tr-none'
-                    : 'bg-white dark:bg-[var(--foreground)] border border-surface-border dark:border-[var(--border)] text-surface-dark dark:text-[var(--card)] rounded-tl-none'
+                    : 'bg-white border border-surface-border text-surface-dark rounded-tl-none'
                 }`}
               >
                 <div className="text-xs sm:text-sm leading-relaxed whitespace-pre-line font-sans space-y-2">
@@ -236,14 +236,14 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
 
                 {/* Suggested Action Chips */}
                 {!isUser && msg.suggestedActions && msg.suggestedActions.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-surface-subtle dark:border-[var(--border)] flex flex-wrap gap-1.5">
+                  <div className="mt-3 pt-3 border-t border-surface-subtle flex flex-wrap gap-1.5">
                     {msg.suggestedActions.map((action, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleActionClick(action)}
-                        className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-brand-50 hover:bg-brand-100 dark:bg-[var(--foreground)] dark:hover:bg-[var(--surface-strong)] text-brand-900  text-xs font-semibold transition-colors border border-brand-200 dark:border-[var(--border)] shadow-2xs"
+                        className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-900  text-xs font-semibold transition-colors border border-brand-200 shadow-2xs"
                       >
-                        <Sparkles size={11} className="text-amber-600 dark:text-amber-400" />
+                        <Sparkles size={11} className="text-amber-600" />
                         <span>{action.label}</span>
                         <ArrowRight size={11} />
                       </button>
@@ -284,7 +284,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
             key={idx}
             onClick={() => handleSendMessage(prompt)}
             disabled={isSending}
-            className="text-xs bg-white dark:bg-[var(--foreground)] hover:bg-brand-50 dark:hover:bg-[var(--foreground)] text-surface-dark dark:text-[var(--card)] border border-surface-border dark:border-[var(--border)] px-3 py-1 rounded-full whitespace-nowrap transition-colors shrink-0 shadow-2xs"
+            className="text-xs bg-white hover:bg-brand-50 text-surface-dark border border-surface-border px-3 py-1 rounded-full whitespace-nowrap transition-colors shrink-0 shadow-2xs"
           >
             {prompt}
           </button>
@@ -297,14 +297,14 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
           e.preventDefault();
           handleSendMessage();
         }}
-        className="bg-white dark:bg-[var(--foreground)] border border-surface-border dark:border-[var(--border)] rounded-2xl p-2 shadow-sm flex items-center space-x-2 shrink-0"
+        className="bg-white border border-surface-border rounded-2xl p-2 shadow-sm flex items-center space-x-2 shrink-0"
       >
         <input
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
           placeholder="Ask a study question…"
-          className="flex-1 bg-transparent px-3 py-2 text-sm text-surface-dark dark:text-white placeholder:text-surface-muted focus:outline-none"
+          className="flex-1 bg-transparent px-3 py-2 text-sm text-surface-dark placeholder:text-surface-muted focus:outline-none"
           disabled={isSending}
         />
         <button
