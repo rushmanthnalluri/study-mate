@@ -50,7 +50,7 @@ StudyMate AI natively supports **Render** deployment with **MongoDB** (Atlas or 
 
 2. **1-Click Render Deployment**:
    The repository includes a root [`render.yaml`](render.yaml) blueprint:
-   - Build Command: `npm install && npm run build`
+   - Build Command: `npm ci && npm run build`
    - Start Command: `node server.js`
 
 3. **Resilient Dual Storage Architecture**:
@@ -121,3 +121,7 @@ Run:
 CI runs the security regression suite and production frontend build on pushes and pull requests to main.
 
 See SECURITY.md for the security model and .env.example for required environment variables.
+
+## Client handover
+
+See [docs/CLIENT_HANDOVER.md](docs/CLIENT_HANDOVER.md), [docs/FINAL_QA_REPORT.md](docs/FINAL_QA_REPORT.md), and [docs/CLIENT_SUBMISSION_CHECKLIST.md](docs/CLIENT_SUBMISSION_CHECKLIST.md) for the production handover, QA verification, and acceptance checklist.
