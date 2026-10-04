@@ -86,7 +86,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                 {readinessPercent === null ? '—' : `${readinessPercent}%`}
               </span>
               <span className="text-xs text-[#ead6c0]">
-                {readinessPercent > 70 ? 'Exam Ready' : 'In Progress'}
+                {readinessPercent === null ? 'No assessments yet' : readinessPercent > 70 ? 'Strong progress' : 'In progress'}
               </span>
             </div>
             <p className="text-[11px] text-[#f0e0cf] max-w-xs leading-relaxed">
