@@ -274,10 +274,10 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
               <div className="flex items-center justify-between">
                 <span className="text-xs font-sans font-bold uppercase tracking-wider text-[var(--foreground)] flex items-center space-x-1.5">
                   <Sparkles size={14} className="text-[var(--accent)]" />
-                  <span>Key Words Looked For by KL Evaluators</span>
+                  <span>Source keywords to review</span>
                 </span>
                 <span className="text-[10px] text-[var(--accent)] font-medium">
-                  Must include in answer
+                  Review against published material
                 </span>
               </div>
               <div className="flex flex-wrap gap-1.5">
@@ -306,7 +306,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                     2 Marks
                   </span>
                   <span className="text-xs text-[var(--muted-foreground)] italic">
-                    Direct Definition / Formula (20-40 words)
+                    Short-answer response
                   </span>
                 </div>
                 <button
@@ -386,7 +386,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                     10 Marks
                   </span>
                   <span className="text-xs text-[var(--muted-foreground)] italic">
-                    Comprehensive KL Exam Essay (350-500 words)
+                    Long-form response
                   </span>
                 </div>
                 <button
