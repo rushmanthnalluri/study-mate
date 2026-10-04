@@ -126,7 +126,7 @@ export const AdminPortalScreen: React.FC<AdminPortalScreenProps> = ({
       setResourceTitle(existingRes.title || '');
       setResourceDescription(existingRes.description || '');
       setResourceUnit(existingRes.unit || 'All Units');
-      setResourceAuthor(existingRes.author || 'KL Department Faculty');
+      setResourceAuthor(existingRes.author || 'Administrator');
     } else {
       const typeLabelMap: Record<string, string> = {
         'course-materials': 'Course Materials',
@@ -325,7 +325,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
       </div>
 
       <p className="text-xs text-[var(--muted-foreground)]">
-        Manage subjects and add resource files (materials, past papers, question banks, rubrics) directly to the KL Knowledge Base library.
+        Manage subjects and add resource files (materials, past papers, question banks, rubrics) directly to the administrator-managed subject library.
       </p>
 
       {/* Admin Stats Cards */}
@@ -357,7 +357,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
           <span className="text-xl font-mono font-bold text-emerald-700">
             {stats.totalQuestions}
           </span>
-          <span className="text-[10px] text-[var(--muted-foreground)] block">KL Past Questions</span>
+          <span className="text-[10px] text-[var(--muted-foreground)] block">Question bank</span>
         </div>
       </div>
 
@@ -539,7 +539,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                                   </span>
                                 </div>
                                 <span className="text-[10px] text-[var(--accent)] font-semibold block">
-                                  Scope: {res.unit || 'All Units'} • Author: {res.author || 'KL Department Faculty'}
+                                  Scope: {res.unit || 'All Units'} • Author: {res.author || 'Administrator'}
                                 </span>
                               </div>
                               <button
@@ -842,7 +842,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   type="text"
                   value={resourceAuthor}
                   onChange={(e) => setResourceAuthor(e.target.value)}
-                  placeholder="e.g. KL Department Faculty / Course Coordinator"
+                  placeholder="e.g. Administrator / Course Coordinator"
                   className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
                 />
               </div>
