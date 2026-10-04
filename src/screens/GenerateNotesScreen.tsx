@@ -218,7 +218,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
           <button
             onClick={handleDownloadMarkdown}
             title="Download Markdown Notes"
-            className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-surface-subtle transition-colors text-xs font-medium flex items-center space-x-1"
+            className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-[var(--surface)] transition-colors text-xs font-medium flex items-center space-x-1"
           >
             <Download size={14} />
             <span className="hidden md:inline">Download</span>
@@ -233,7 +233,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
           <button
             onClick={handleCopyAll}
             title="Copy Complete Exam Sheet"
-            className="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-surface-subtle transition-colors font-medium"
+            className="flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-[var(--surface)] transition-colors font-medium"
           >
             {copiedSection === 'all' ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
             <span className="hidden sm:inline">{copiedSection === 'all' ? 'Copied' : 'Copy'}</span>
@@ -255,7 +255,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
       {/* Note Meta Header Card */}
       <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-surface-subtle text-[var(--foreground)] border border-[var(--border)]">
+          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)]">
             {note.code}
           </span>
           <span className="text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[var(--muted)] text-[var(--accent)]">
@@ -293,7 +293,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                   activeTab === tab.id
                     ? 'bg-[var(--accent)] text-white shadow-sm'
-                    : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] hover:bg-surface-subtle'
+                    : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] hover:bg-[var(--surface)]'
                 }`}
               >
                 {tab.label}
@@ -318,7 +318,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                   <span
                     key={i}
                     onClick={() => handleCopy(kw, `kw-${i}`)}
-                    className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-[var(--card)] border border-[var(--border)] text-xs font-medium text-[var(--foreground)] hover:border-amber-400 cursor-pointer shadow-2xs transition-colors"
+                    className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-[var(--card)] border border-[var(--border)] text-xs font-medium text-[var(--foreground)] hover:border-amber-400 cursor-pointer shadow-[var(--shadow-sm)] transition-colors"
                   >
                     <span>{kw}</span>
                     {copiedSection === `kw-${i}` ? (
@@ -355,7 +355,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                 Q: {note.twoMarks.question}
               </h3>
 
-              <div className="text-xs sm:text-sm text-[var(--foreground)] leading-relaxed font-sans bg-surface-subtle p-3 rounded-lg border border-[var(--border)]/50">
+              <div className="text-xs sm:text-sm text-[var(--foreground)] leading-relaxed font-sans bg-[var(--surface)] p-3 rounded-lg border border-[var(--border)]/50">
                 {note.twoMarks.answer}
               </div>
             </div>
@@ -482,7 +482,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
                   <div
                     key={res.id}
                     onClick={() => setSelectedCitation(selectedCitation === res.id ? null : res.id)}
-                    className="p-2.5 rounded-lg border border-[var(--border)]/80 hover:border-brand-300 bg-surface-subtle cursor-pointer transition-all space-y-1 group"
+                    className="p-2.5 rounded-lg border border-[var(--border)]/80 hover:border-[var(--accent-300)] bg-[var(--surface)] cursor-pointer transition-all space-y-1 group"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
@@ -517,7 +517,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
           </div>
 
           {/* Quick Evaluator Tips Card */}
-          <div className="bg-surface-subtle border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
             <span className="text-xs font-bold text-[var(--foreground)] flex items-center space-x-1.5">
               <Award size={14} className="text-[var(--accent)]" />
               <span>Food Tech Evaluator Check:</span>
@@ -553,7 +553,7 @@ ${note.diagram ? `\n---\n## Process Flowchart\n\`\`\`mermaid\n${note.diagram.cod
 
           <button
             onClick={onOpenFeedback}
-            className="flex-1 py-2 px-3 rounded-xl text-xs font-semibold bg-surface-subtle hover:bg-[var(--muted)] border border-[var(--border)] text-[var(--foreground)] flex items-center justify-center space-x-1.5 transition-colors"
+            className="flex-1 py-2 px-3 rounded-xl text-xs font-semibold bg-[var(--surface)] hover:bg-[var(--muted)] border border-[var(--border)] text-[var(--foreground)] flex items-center justify-center space-x-1.5 transition-colors"
           >
             <MessageSquareText size={15} className="text-[var(--accent)]" />
             <span>Give Feedback (06)</span>
