@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Department, ScreenId, Subject } from '../types';
+import { EditorialCard, EditorialButton, PageHeader, SectionLabel, StatCard } from '../components/Editorial';
 import {
   ShieldCheck,
   PlusCircle,
@@ -291,74 +292,21 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
 
   return (
     <div className="space-y-6 pb-28 max-w-5xl mx-auto">
-      {/* Screen Header */}
-      <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={() => onNavigate('home')}
-            className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-          >
-            <ArrowLeft size={16} />
-          </button>
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[var(--accent)]">
-                Knowledge Base Management
-              </span>
-              <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                Admin Mode
-              </span>
-            </div>
-            <h1 className="font-serif text-3xl font-medium text-[var(--foreground)] leading-tight">
-              Administrator Console
-            </h1>
-          </div>
-        </div>
+      <PageHeader
+        eyebrow="Administrator console"
+        title="Knowledge base management"
+        description="Manage only administrator-published subjects, resources, question banks and the application-wide AI provider."
+        actions={
+          <EditorialButton variant="secondary" type="button" onClick={() => onNavigate('knowledge-base')}>
+            <BookOpen size={14} /> View library
+          </EditorialButton>
+        }
+      />
 
-        <button
-          onClick={() => onNavigate('knowledge-base')}
-          className="text-xs font-semibold text-[var(--accent)] hover:underline flex items-center space-x-1"
-        >
-          <BookOpen size={14} />
-          <span>View Drive Library</span>
-        </button>
-      </div>
-
-      <p className="text-xs text-[var(--muted-foreground)]">
-        Manage subjects and add resource files (materials, past papers, question banks, rubrics) directly to the administrator-managed subject library.
-      </p>
-
-      {/* Admin Stats Cards */}
-      <div className="grid grid-cols-3 gap-2.5">
-        <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm text-center space-y-0.5">
-          <span className="text-[10px] text-[var(--muted-foreground)] block font-sans uppercase tracking-wider">
-            Total Subjects
-          </span>
-          <span className="text-xl font-mono font-bold text-[var(--accent)]">
-            {stats.totalSubjects}
-          </span>
-          <span className="text-[10px] text-emerald-700 block">administrator-managed data</span>
-        </div>
-
-        <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm text-center space-y-0.5">
-          <span className="text-[10px] text-[var(--muted-foreground)] block font-sans uppercase tracking-wider">
-            Active Files
-          </span>
-          <span className="text-xl font-mono font-bold text-[var(--accent)]">
-            {stats.totalFiles}
-          </span>
-          <span className="text-[10px] text-[var(--muted-foreground)] block">resources stored in MongoDB</span>
-        </div>
-
-        <div className="bg-[#ffffff] border border-[var(--border)] rounded-xl p-3 shadow-sm text-center space-y-0.5">
-          <span className="text-[10px] text-[var(--muted-foreground)] block font-sans uppercase tracking-wider">
-            Question Bank
-          </span>
-          <span className="text-xl font-mono font-bold text-emerald-700">
-            {stats.totalQuestions}
-          </span>
-          <span className="text-[10px] text-[var(--muted-foreground)] block">Question bank</span>
-        </div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <StatCard label="Published subjects" value={stats.totalSubjects} detail="MongoDB source of truth" />
+        <StatCard label="Active resources" value={stats.totalFiles} detail="Administrator-managed" />
+        <StatCard label="Question bank" value={stats.totalQuestions} detail="Published questions" />
       </div>
 
       {/* Tab Switcher */}
