@@ -63,7 +63,11 @@ export async function generateKLNotes({ department, subject, topic, subjectMeta 
   note.topic = topic;
   note.subject = subjectMeta.name;
   note.department = subjectMeta.department;
-  note.code = subjectMeta.code || note.code || '';
+  note.code = subjectMeta.code || '';
+  const publishedUnits = units.map(unit => String(unit).trim()).filter(Boolean);
+  const generatedUnit = String(note.unit || '').trim();
+  const matchedUnit = publishedUnits.find(unit => unit.toLowerCase() === generatedUnit.toLowerCase());
+  note.unit = matchedUnit || (publishedUnits.length === 1 ? publishedUnits[0] : 'Not specified in published material');
   note.resourcesUsed = resourceContext;
   note.provider = result.provider;
 
