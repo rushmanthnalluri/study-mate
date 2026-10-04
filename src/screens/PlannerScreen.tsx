@@ -101,21 +101,21 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
           type="button"
           aria-label="Back to home"
           onClick={() => onNavigate('home')}
-          className="p-1.5 rounded-lg border border-[#e3d6cb] bg-[#ffffff] text-[#64748b] hover:text-[#172554] transition-colors"
+          className="p-1.5 rounded-lg border border-[var(--border)] bg-[#ffffff] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
         >
           <ArrowLeft size={16} />
         </button>
         <div>
-          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[#2563eb]">
+          <span className="text-[10px] font-sans font-bold tracking-wider uppercase text-[var(--accent)]">
             Study Schedule
           </span>
-          <h1 className="text-xl font-sans font-bold text-[#172554] leading-tight">
+          <h1 className="text-xl font-sans font-bold text-[var(--foreground)] leading-tight">
             KL Exam Planner
           </h1>
         </div>
       </div>
 
-      <p className="text-xs text-[#64748b]">
+      <p className="text-xs text-[var(--muted-foreground)]">
         Structure your revision schedule unit-by-unit according to KL semester examination timelines.
       </p>
 
@@ -160,11 +160,11 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
       {/* Revision Milestones Checklist */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-sans uppercase tracking-wider font-bold text-[#64748b] flex items-center space-x-1.5">
-            <Calendar size={13} className="text-[#2563eb]" />
+          <h3 className="text-xs font-sans uppercase tracking-wider font-bold text-[var(--muted-foreground)] flex items-center space-x-1.5">
+            <Calendar size={13} className="text-[var(--accent)]" />
             <span>Unit Revision Milestones</span>
           </h3>
-          <span className="text-[10px] font-mono font-bold text-[#64748b]">
+          <span className="text-[10px] font-mono font-bold text-[var(--muted-foreground)]">
             {completedCount} / {plans.length} Completed
           </span>
         </div>
@@ -177,21 +177,21 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
               className={`bg-[#ffffff] border rounded-xl p-3 shadow-sm transition-all cursor-pointer flex items-center justify-between ${
                 plan.completed
                   ? 'border-emerald-200 bg-emerald-50/30'
-                  : 'border-[#e3d6cb] hover:border-brand-300'
+                  : 'border-[var(--border)] hover:border-brand-300'
               }`}
             >
               <div className="flex items-center space-x-3">
                 <button
                   type="button"
                   className={`text-lg transition-colors ${
-                    plan.completed ? 'text-emerald-700' : 'text-[#64748b]'
+                    plan.completed ? 'text-emerald-700' : 'text-[var(--muted-foreground)]'
                   }`}
                 >
                   {plan.completed ? <CheckSquare size={18} /> : <Square size={18} />}
                 </button>
                 <div>
                   <div className="flex items-center space-x-1.5">
-                    <span className="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-surface-subtle text-[#64748b] font-mono">
+                    <span className="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-surface-subtle text-[var(--muted-foreground)] font-mono">
                       {plan.subjectName}
                     </span>
                     <span
@@ -207,8 +207,8 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
                   <h4
                     className={`text-xs font-semibold mt-0.5 ${
                       plan.completed
-                        ? 'line-through text-[#64748b]'
-                        : 'text-[#172554]'
+                        ? 'line-through text-[var(--muted-foreground)]'
+                        : 'text-[var(--foreground)]'
                     }`}
                   >
                     {plan.unitTitle}
@@ -216,7 +216,7 @@ export const PlannerScreen: React.FC<PlannerScreenProps> = ({
                 </div>
               </div>
 
-              <span className="text-[10px] text-[#64748b] font-mono whitespace-nowrap pl-2">
+              <span className="text-[10px] text-[var(--muted-foreground)] font-mono whitespace-nowrap pl-2">
                 {plan.targetDate}
               </span>
             </div>
