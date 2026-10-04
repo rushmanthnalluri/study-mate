@@ -575,7 +575,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={newSubjName}
                   onChange={(e) => setNewSubjName(e.target.value)}
                   placeholder="e.g. Beverage Technology"
-                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
                 />
               </div>
 
@@ -589,7 +589,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={newSubjDepartment}
                   onChange={(e) => setNewSubjDepartment(e.target.value)}
                   placeholder="e.g. CSE"
-                  className="w-full bg-surface border border-[var(--border)] rounded-md p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-surface border border-[var(--border)] rounded-md p-2.5 text-xs text-[var(--foreground)] editorial-focus"
                 />
               </div>
               <div>
@@ -602,7 +602,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={newSubjCode}
                   onChange={(e) => setNewSubjCode(e.target.value)}
                   placeholder="e.g. 21BT3230"
-                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] font-mono focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] font-mono editorial-focus"
                 />
               </div>
             </div>
@@ -618,7 +618,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 value={newSubjDescription}
                 onChange={(e) => setNewSubjDescription(e.target.value)}
                 placeholder="e.g. Comprehensive curriculum on beverage chemistry, carbonation kinetics, brewing technology, fruit juice processing, packaging integrity, and quality control under KL University..."
-                className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 leading-relaxed"
+                className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus leading-relaxed"
               />
             </div>
 
@@ -631,7 +631,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 value={newSubjTopics}
                 onChange={(e) => setNewSubjTopics(e.target.value)}
                 placeholder="e.g. Carbonation Dynamics, Beer Brewing Kinetics, Fruit Juice Clarification"
-                className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
               />
             </div>
 
@@ -703,7 +703,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 <select
                   value={selectedSubjName}
                   onChange={(e) => setSelectedSubjName(e.target.value)}
-                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
                 >
                   {subjects.map((s) => (
                     <option key={s.id} value={s.name}>
@@ -720,7 +720,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 <select
                   value={resourceType}
                   onChange={(e) => setResourceType(e.target.value as any)}
-                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-surface border border-[var(--border)] rounded-xl p-2.5 text-xs text-[var(--foreground)] editorial-focus"
                 >
                   <option value="course-materials">📘 Course Materials (course-materials.md)</option>
                   <option value="previous-papers">📜 Previous Exam Papers (previous-papers.md)</option>
@@ -750,7 +750,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                     value={resourceTitle}
                     onChange={(e) => setResourceTitle(e.target.value)}
                     placeholder="e.g. Unit IV Thermal Death Kinetics Master Lecture Handout"
-                    className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                    className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] editorial-focus"
                   />
                 </div>
 
@@ -763,7 +763,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                     value={resourceUnit}
                     onChange={(e) => setResourceUnit(e.target.value)}
                     placeholder="e.g. Unit IV: Thermal Death Kinetics or Units I - V"
-                    className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                    className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] editorial-focus"
                   />
                 </div>
               </div>
@@ -778,7 +778,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={resourceDescription}
                   onChange={(e) => setResourceDescription(e.target.value)}
                   placeholder="Explain what concepts, equations, previous questions, or rubrics this resource provides..."
-                  className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus"
                 />
               </div>
 
@@ -791,7 +791,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                   value={resourceAuthor}
                   onChange={(e) => setResourceAuthor(e.target.value)}
                   placeholder="e.g. Administrator / Course Coordinator"
-                  className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+                  className="w-full bg-[#ffffff] border border-[var(--border)] rounded-xl p-2 text-xs text-[var(--foreground)] editorial-focus"
                 />
               </div>
             </div>
@@ -825,7 +825,7 @@ Subject: ${selectedSubjName} | Department: ${subjects.find((s) => s.name === sel
                 value={resourceContent}
                 onChange={(e) => setResourceContent(e.target.value)}
                 placeholder="Enter markdown or JSON content..."
-                className="w-full bg-surface border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] font-mono placeholder-surface-muted focus:outline-none focus:ring-2 focus:ring-brand-800/30 leading-relaxed"
+                className="w-full bg-surface border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] font-mono placeholder-surface-muted editorial-focus leading-relaxed"
               />
             </div>
 
