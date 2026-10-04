@@ -7,9 +7,10 @@ interface AuthModalProps {
   onClose: () => void;
   currentUser: UserProfile | null;
   onAuthSuccess: (user: UserProfile, token: string) => void;
+  departments: Department[];
 }
 
-export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess }) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess, departments }) => {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [loginIdentifier, setLoginIdentifier] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -17,7 +18,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
   const [signupKlId, setSignupKlId] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
-  const [signupDepartment, setSignupDepartment] = useState<Department>('Food Technology');
+  const [signupDepartment, setSignupDepartment] = useState<Department>('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -79,16 +80,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[#0f172a]/60 backdrop-blur-md p-4" role="presentation">
-      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" tabIndex={-1} className="w-full max-w-md overflow-hidden rounded-[28px] border border-[#dbe3ee] bg-[#ffffff] shadow-2xl">
-        <div className="bg-[#172554] px-6 py-6 text-[#ffffff]">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" tabIndex={-1} className="w-full max-w-md overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] shadow-[var(--shadow-lg)]">
+        <div className="border-b border-[var(--border)] bg-[var(--foreground)] px-6 py-7 text-white">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#93c5fd] text-[#172554]">
+              <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[var(--muted)] text-[var(--accent)]">
                 <GraduationCap size={22} />
               </div>
               <div>
-                <p id="auth-modal-title" className="text-lg font-extrabold tracking-tight">StudyMate</p>
-                <p className="text-xs text-[#dbeafe]">Your personal KL exam workspace</p>
+                <p id="auth-modal-title" className="font-serif text-2xl tracking-tight">StudyMate</p>
+                <p className="small-caps mt-1 text-[9px] text-[var(--accent-secondary)]">Private study workspace</p>
               </div>
             </div>
             <button type="button" onClick={onClose} aria-label="Close sign-in dialog" className="rounded-xl p-2 text-[#dbeafe] hover:bg-white/10 hover:text-white">
@@ -101,7 +102,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
           </div>
         </div>
 
-        <div className="grid grid-cols-2 border-b border-[#e2e8f0] bg-[#f8fafc]">
+        <div className="grid grid-cols-2 border-b border-[var(--border)] bg-[var(--muted)]">
           {(['login', 'signup'] as const).map(tab => (
             <button
               key={tab}
@@ -155,7 +156,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-[#334155]">Department</label>
                   <select value={signupDepartment} onChange={e => setSignupDepartment(e.target.value as Department)} className="auth-input">
-                    <option>Food Technology</option><option>CSE</option><option>AIDS</option><option>ECE</option><option>EEE</option>
+                    {departments.filter(d => d !== 'All').map(dept => <option key={dept} value={dept}>{dept}</option>)}
                   </select>
                 </div>
               </div>
