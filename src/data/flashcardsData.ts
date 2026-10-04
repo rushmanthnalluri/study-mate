@@ -130,25 +130,4 @@ export const initialFlashcards: Flashcard[] = [
     keywords: ['First Column', 'No Sign Changes', 'Characteristic Polynomial', 'LHP Poles']
   },
 
-  // Food Technology
-  {
-    id: 'fc-ft-1',
-    department: 'Food Technology',
-    subject: 'Food Microbiology',
-    topic: 'D-Value (Decimal Reduction Time)',
-    marks: 2,
-    question: 'Define D-value and state its units in thermal food processing.',
-    answer: 'The D-value is the heating time in minutes at a specified constant temperature required to reduce the microbial population by 90% (one log cycle). Its unit is minutes.',
-    keywords: ['1 Log Cycle', '90% Inactivation', 'Constant Temperature', 'Minutes']
-  },
-  {
-    id: 'fc-ft-2',
-    department: 'Food Technology',
-    subject: 'Dairy Technology',
-    topic: 'Alkaline Phosphatase Test',
-    marks: 2,
-    question: 'Why is Alkaline Phosphatase used to verify milk pasteurization?',
-    answer: 'Alkaline Phosphatase is a native milk enzyme destroyed at temperatures slightly higher than heat-resistant pathogens like Mycobacterium tuberculosis. A negative phosphatase test confirms adequate pasteurization.',
-    keywords: ['Native Enzyme', 'Indicator', 'Pasteurization Verification', 'Negative Test']
-  }
 ];
