@@ -45,7 +45,7 @@ const departmentsData = {
           topic: 'Process Synchronization and Semaphores',
           marks: 5,
           unit: 2,
-          paperYear: 'KL In-Sem Exam 2, 2024',
+          paperYear: 'KL assessment Exam 2, 2024',
           question: 'What is a Semaphore? Explain how counting and binary semaphores solve the critical section problem without busy waiting.'
         },
         {
@@ -61,7 +61,7 @@ const departmentsData = {
           topic: 'Context Switching',
           marks: 2,
           unit: 1,
-          paperYear: 'KL In-Sem Exam 1, 2024',
+          paperYear: 'KL assessment Exam 1, 2024',
           question: 'What is Context Switching? Mention the state information preserved in PCB.'
         }
       ]
@@ -106,7 +106,7 @@ const departmentsData = {
           topic: '0/1 Knapsack Dynamic Programming',
           marks: 5,
           unit: 5,
-          paperYear: 'KL In-Sem Exam 2, 2024',
+          paperYear: 'KL assessment Exam 2, 2024',
           question: 'Derive the Dynamic Programming recurrence relation for the 0/1 Knapsack problem with a memoization table.'
         },
         {
@@ -159,7 +159,7 @@ const departmentsData = {
           topic: 'Two-Phase Locking (2PL)',
           marks: 5,
           unit: 4,
-          paperYear: 'KL In-Sem Exam 2, 2024',
+          paperYear: 'KL assessment Exam 2, 2024',
           question: 'Describe Strict and Rigorous 2-Phase Locking (2PL) protocols and how they avoid cascading aborts.'
         },
         {
@@ -214,7 +214,7 @@ const departmentsData = {
           topic: 'Bias-Variance Tradeoff',
           marks: 5,
           unit: 1,
-          paperYear: 'KL In-Sem Exam 1, 2024',
+          paperYear: 'KL assessment Exam 1, 2024',
           question: 'Explain the Bias-Variance tradeoff curve and demonstrate how L1 (Lasso) and L2 (Ridge) regularization control model complexity.'
         },
         {
@@ -267,7 +267,7 @@ const departmentsData = {
           topic: 'LSTM Gates and Operations',
           marks: 5,
           unit: 3,
-          paperYear: 'KL In-Sem Exam 2, 2024',
+          paperYear: 'KL assessment Exam 2, 2024',
           question: 'Illustrate the architecture of an LSTM cell and explain the mathematical equations of the Forget, Input, and Output gates.'
         },
         {
@@ -322,7 +322,7 @@ const departmentsData = {
           topic: 'FIR Filter Windowing Techniques',
           marks: 5,
           unit: 4,
-          paperYear: 'KL In-Sem Exam 2, 2024',
+          paperYear: 'KL assessment Exam 2, 2024',
           question: 'Compare Rectangular, Hamming, and Blackman windows for FIR filter design in terms of main-lobe width and peak side-lobe attenuation.'
         },
         {
@@ -375,7 +375,7 @@ const departmentsData = {
           topic: 'Setup Time and Hold Time in Flip-Flops',
           marks: 5,
           unit: 4,
-          paperYear: 'KL In-Sem Exam 2, 2024',
+          paperYear: 'KL assessment Exam 2, 2024',
           question: 'Define Setup Time (t_setup) and Hold Time (t_hold). Derive the maximum clock frequency condition in a synchronous digital pipeline.'
         },
         {
@@ -430,7 +430,7 @@ const departmentsData = {
           topic: 'Ferranti Effect in Transmission Lines',
           marks: 5,
           unit: 1,
-          paperYear: 'KL In-Sem Exam 1, 2024',
+          paperYear: 'KL assessment Exam 1, 2024',
           question: 'Explain the Ferranti Effect in medium and long transmission lines under no-load or light-load conditions with a phasor diagram.'
         },
         {
@@ -483,7 +483,7 @@ const departmentsData = {
           topic: 'PID Controller Effects',
           marks: 5,
           unit: 2,
-          paperYear: 'KL In-Sem Exam 2, 2024',
+          paperYear: 'KL assessment Exam 2, 2024',
           question: 'Discuss the individual effects of Proportional (P), Integral (I), and Derivative (D) control actions on steady-state error, rise time, and maximum overshoot.'
         },
         {
@@ -537,8 +537,8 @@ ${subj.units.map(u => `### ${u}\n- Comprehensive lecture notes, textbook referen
 ## Semester Examination Papers Catalog
 - **KL End-Semester May 2024 (Regular & Supplementary)**
 - **KL End-Semester Dec 2023 (Odd Semester)**
-- **KL In-Semester Examination 1 (Mid-Term 2024)**
-- **KL In-Semester Examination 2 (Mid-Term 2024)**
+- **KL assessmentester Examination 1 (Mid-Term 2024)**
+- **KL assessmentester Examination 2 (Mid-Term 2024)**
 
 ## Key Exam Patterns Observed
 - **Part A:** 5 mandatory questions $\\times$ 2 marks = 10 marks (Direct definitions, fundamental laws, no fluff).
