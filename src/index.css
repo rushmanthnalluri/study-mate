@@ -333,3 +333,10 @@ textarea:focus-visible {
 @media (min-width: 768px) {
   .editorial-page { padding: 4rem 2rem 8rem; }
 }
+
+
+.editorial-focus:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
