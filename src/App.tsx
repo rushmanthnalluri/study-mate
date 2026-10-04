@@ -374,7 +374,6 @@ export const App: React.FC = () => {
         selectedDepartment={selectedDepartment}
         onSelectDepartment={setSelectedDepartment}
         onNavigate={setCurrentScreen}
-        departments={['All', ...Array.from(new Set(subjects.map((subject) => subject.department))).filter(Boolean)] as Department[]}
         currentUser={currentUser}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onOpenSettings={() => setIsSettingsModalOpen(true)}
