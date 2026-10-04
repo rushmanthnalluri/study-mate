@@ -9,6 +9,7 @@ interface SettingsModalProps {
   onSaveProfile: (profile: UserProfile) => void;
   onResetData: () => void;
   onChangePassword: (currentPassword:string,newPassword:string) => Promise<void>;
+  departments: Department[];
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser, onSaveProfile, onResetData, onChangePassword, departments }) => {
