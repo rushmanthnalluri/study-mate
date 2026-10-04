@@ -162,7 +162,7 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
 
       {/* Department Tabs */}
       <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none">
-        {['All', 'CSE', 'AIDS', 'ECE', 'EEE', 'Food Technology'].map((dept) => (
+        {['All', ...Array.from(new Set(glossaryTerms.map(term => term.department).filter(Boolean)))].map((dept) => (
           <button
             key={dept}
             onClick={() => setDeptFilter(dept as Department)}
