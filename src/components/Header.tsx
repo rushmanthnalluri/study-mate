@@ -60,24 +60,15 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[rgba(250,250,248,0.96)] backdrop-blur-md print:hidden">
-      <div className="border-b border-[var(--border)]">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-2 sm:px-6">
-          <span className="small-caps text-[10px] text-[var(--accent)]">StudyMate</span>
-          <span className="hidden text-xs text-[var(--muted-foreground)] sm:block">
-            Private academic workspace
-          </span>
-        </div>
-      </div>
-
-      <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-4 py-3 sm:px-6">
         <button
           type="button"
           onClick={() => navigate('home')}
           aria-label="StudyMate home"
           className="group flex min-h-11 min-w-0 items-center gap-3 text-left"
         >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-white text-[var(--accent)] shadow-[var(--shadow-sm)] transition-colors duration-200 group-hover:border-[var(--accent)]">
-            <GraduationCap size={21} strokeWidth={1.7} />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md border border-[var(--border)] bg-white shadow-[var(--shadow-sm)] transition-colors duration-200 group-hover:border-[var(--accent)]">
+            <img src="/logo.svg" alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
           </span>
           <span className="hidden min-w-0 sm:block">
             <span className="block truncate font-serif text-xl text-[var(--foreground)]">
@@ -89,14 +80,14 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
         </button>
 
-        <nav aria-label="Primary navigation" className="hidden flex-1 items-center justify-center gap-1 lg:flex">
+        <nav aria-label="Primary navigation" className="order-3 hidden w-full basis-full items-center gap-1 overflow-x-auto border-t border-[var(--border)] pt-2 scrollbar-none lg:flex">
           {items.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               type="button"
               onClick={() => navigate(id)}
               aria-current={currentScreen === id ? 'page' : undefined}
-              className={`inline-flex min-h-11 items-center gap-1.5 border-b px-2.5 text-xs font-medium tracking-[0.04em] transition-colors duration-200 ${
+              className={`inline-flex min-h-10 shrink-0 items-center gap-1.5 whitespace-nowrap border-b px-3 text-xs font-medium tracking-[0.04em] transition-colors duration-200 ${
                 currentScreen === id
                   ? 'border-[var(--accent)] text-[var(--accent)]'
                   : 'border-transparent text-[var(--muted-foreground)] hover:border-[var(--border)] hover:text-[var(--foreground)]'
@@ -111,7 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               onClick={() => navigate('admin')}
               aria-current={currentScreen === 'admin' ? 'page' : undefined}
-              className={`inline-flex min-h-11 items-center gap-1.5 border-b px-2.5 text-xs font-medium tracking-[0.04em] transition-colors ${
+              className={`inline-flex min-h-10 shrink-0 items-center gap-1.5 whitespace-nowrap border-b px-3 text-xs font-medium tracking-[0.04em] transition-colors ${
                 currentScreen === 'admin'
                   ? 'border-[var(--accent)] text-[var(--accent)]'
                   : 'border-transparent text-[var(--foreground)] hover:border-[var(--accent)] hover:text-[var(--accent)]'
