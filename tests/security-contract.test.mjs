@@ -230,3 +230,24 @@ test('LMS is completely removed from the application surface', () => {
   assert.doesNotMatch(server, /\/api\/auth\/kl-lms|lmsUsername|isLmsConnected|lmsLastSynced|enrolledCourses/);
   assert.doesNotMatch(db, /isLmsConnected|lmsUsername|lmsLastSynced|enrolledCourses/);
 });
+
+
+test('legacy fabricated Food Technology content is absent from active product data', () => {
+  const quiz = fs.readFileSync(path.join(root, 'src', 'data', 'quizData.ts'), 'utf8');
+  const flashcards = fs.readFileSync(path.join(root, 'src', 'data', 'flashcardsData.ts'), 'utf8');
+  const glossary = fs.readFileSync(path.join(root, 'src', 'screens', 'GlossaryScreen.tsx'), 'utf8');
+  const generator = fs.readFileSync(path.join(root, 'server', 'generator.js'), 'utf8');
+  const chatbot = fs.readFileSync(path.join(root, 'server', 'chatbot.js'), 'utf8');
+  assert.doesNotMatch(quiz, /Food Technology|Food Microbiology|Dairy Technology/);
+  assert.doesNotMatch(flashcards, /Food Technology|Food Microbiology|Dairy Technology/);
+  assert.doesNotMatch(glossary, /Food Technology|Food Microbiology|Dairy Technology/);
+  assert.doesNotMatch(generator, /Food Technology|goldStandardAnswers|synthesizeFoodTechAnswer/);
+  assert.doesNotMatch(chatbot, /Food Technology|Food Microbiology|Thermal Death Kinetics|HTST Pasteurization/);
+});
+
+test('note generation fails closed without administrator-configured AI', () => {
+  const generator = fs.readFileSync(path.join(root, 'server', 'generator.js'), 'utf8');
+  assert.match(generator, /administrator-published subject context/);
+  assert.match(generator, /No administrator-configured AI provider/);
+  assert.doesNotMatch(generator, /goldStandardAnswers|Food Technology|fallback/);
+});
