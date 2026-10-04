@@ -53,6 +53,12 @@ test('production database mode fails closed instead of silently falling back to 
   assert.ok(db.includes("throw new Error('Database unavailable.')"));
 });
 
+test('production startup requires MongoDB configuration before the server can run', () => {
+  const bootstrap = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
+  assert.match(bootstrap, /NODE_ENV === 'production' && !process\.env\.MONGODB_URI/);
+  assert.match(bootstrap, /MONGODB_URI is required in production/);
+});
+
 test('session revocation endpoint exists and clears server token state', () => {
   assert.ok(server.includes("app.post('/api/auth/logout', requireAuth"));
   assert.ok(server.includes("req.user.authTokenHash = ''"));
