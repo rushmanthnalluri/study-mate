@@ -394,7 +394,7 @@ export const App: React.FC = () => {
         className={`flex-1 mx-auto w-full px-4 pt-3 ${
           ['generate-notes', 'admin', 'mock-exam', 'quiz', 'studio', 'dashboard', 'chatbot'].includes(currentScreen)
             ? 'max-w-6xl'
-            : 'max-w-xl'
+            : 'max-w-4xl'
         }`}
       >
         {currentScreen === 'home' && (
