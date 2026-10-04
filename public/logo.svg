@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <rect width="100" height="100" rx="24" fill="#831d32" />
+  <rect width="100" height="100" rx="24" fill="#1A1A1A" />
   <!-- Cap / Book symbol -->
-  <path d="M50 22L18 38L50 54L82 38L50 22Z" fill="#fdfaf7" />
-  <path d="M82 46V64" stroke="#e5b4bc" stroke-width="4" stroke-linecap="round" />
-  <circle cx="82" cy="68" r="4" fill="#f59e0b" />
-  <path d="M30 46V64C30 73 50 80 50 80C50 80 70 73 70 64V46" stroke="#fdfaf7" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M50 22L18 38L50 54L82 38L50 22Z" fill="#FAFAF8" />
+  <path d="M82 46V64" stroke="#D4A84B" stroke-width="4" stroke-linecap="round" />
+  <circle cx="82" cy="68" r="4" fill="#B8860B" />
+  <path d="M30 46V64C30 73 50 80 50 80C50 80 70 73 70 64V46" stroke="#FAFAF8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
   <!-- Food / Science Leaf Core -->
-  <path d="M50 49C44 56 44 65 50 71C56 65 56 56 50 49Z" fill="#f59e0b" />
-  <path d="M50 54V67" stroke="#831d32" stroke-width="2" stroke-linecap="round" />
+  <path d="M50 49C44 56 44 65 50 71C56 65 56 56 50 49Z" fill="#B8860B" />
+  <path d="M50 54V67" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" />
 </svg>
