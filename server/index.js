@@ -442,20 +442,34 @@ const ensureBootstrapAdmin = async () => {
   if (!email || !password) return;
   const users = await getAllUsers();
   const existing = users.find(u => String(u.email || '').toLowerCase() === email);
-  const token = issueAuthToken();
   if (existing) {
+    const wasAdmin = existing.role === 'admin';
+    const issuedAt = Date.parse(existing.authTokenIssuedAt || '');
+    const sessionExpired = !existing.authTokenHash || !Number.isFinite(issuedAt) ||
+      Date.now() - issuedAt > 30 * 24 * 60 * 60 * 1000;
+
     existing.name = existing.name || 'StudyMate Administrator';
     existing.klId = existing.klId || 'ADMIN';
     existing.passwordHash = hashPassword(password);
     delete existing.password;
     existing.role = 'admin';
     existing.department = 'All';
-    existing.authTokenHash = tokenHash(token);
-    existing.authTokenIssuedAt = new Date().toISOString();
+
+    // Do not invalidate a live administrator session merely because the
+    // process restarted or Render performed a routine deployment. Rotate only
+    // when promoting an existing account or when its stored session is absent/expired.
+    if (!wasAdmin || sessionExpired) {
+      const token = issueAuthToken();
+      existing.authTokenHash = tokenHash(token);
+      existing.authTokenIssuedAt = new Date().toISOString();
+    }
+
     await saveUser(existing);
     console.log('StudyMate configured administrator credentials refreshed.');
     return;
   }
+
+  const token = issueAuthToken();
   const admin = {
     id: crypto.randomUUID(),
     name: 'StudyMate Administrator',
