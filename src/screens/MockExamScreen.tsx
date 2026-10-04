@@ -159,7 +159,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
 
         <button
           onClick={handlePrint}
-          className="flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-surface-subtle transition-colors shadow-2xs"
+          className="flex items-center space-x-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-[var(--surface)] transition-colors shadow-[var(--shadow-sm)]"
         >
           <Printer size={15} />
           <span>Print / PDF</span>
@@ -180,7 +180,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
         <select
           value={activeSubject.id}
           onChange={(e) => setSelectedSubjId(e.target.value)}
-          className="w-full bg-surface-subtle border border-[var(--border)] rounded-lg p-2 text-xs font-medium text-[var(--foreground)] editorial-focus"
+          className="w-full bg-[var(--surface)] border border-[var(--border)] rounded-lg p-2 text-xs font-medium text-[var(--foreground)] editorial-focus"
         >
           {subjects.map((s) => (
             <option key={s.id} value={s.id}>
@@ -191,7 +191,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
       </div>
 
       {/* The Official KL University Exam Paper Sheet */}
-      <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 sm:p-7 shadow-elevated space-y-5 print:border-none print:shadow-none print:p-0">
+      <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 sm:p-7 shadow-[var(--shadow-lg)] space-y-5 print:border-none print:shadow-none print:p-0">
         {/* Official KL Header */}
         <div className="text-center border-b-2 border-[var(--border)] pb-4 space-y-1">
           <h2 className="text-sm sm:text-base font-sans font-extrabold uppercase tracking-wide text-[var(--foreground)]">
@@ -214,7 +214,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
         </div>
 
         {/* Instructions */}
-        <div className="text-[11px] text-[var(--muted-foreground)] italic bg-surface-subtle p-2.5 rounded-lg border border-[var(--border)]/50">
+        <div className="text-[11px] text-[var(--muted-foreground)] italic bg-[var(--surface)] p-2.5 rounded-lg border border-[var(--border)]/50">
           <p>Instructions: (1) Answer ALL questions in Part A. (2) Answer any THREE in Part B and TWO in Part C. (3) Draw neat diagrams wherever necessary.</p>
         </div>
 
@@ -231,7 +231,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
             {partAQuestions.map((q) => (
               <div
                 key={q.id}
-                className="border border-[var(--border)]/80 rounded-xl p-3 hover:border-brand-300 transition-all bg-surface"
+                className="border border-[var(--border)]/80 rounded-xl p-3 hover:border-[var(--accent-300)] transition-all bg-[var(--background)]"
               >
                 <div className="flex items-start justify-between">
                   <div className="space-y-1 pr-2">
@@ -280,7 +280,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
             {partBQuestions.map((q) => (
               <div
                 key={q.id}
-                className="border border-[var(--border)]/80 rounded-xl p-3 hover:border-brand-300 transition-all bg-surface"
+                className="border border-[var(--border)]/80 rounded-xl p-3 hover:border-[var(--accent-300)] transition-all bg-[var(--background)]"
               >
                 <div className="flex items-start justify-between">
                   <div className="space-y-1 pr-2">
@@ -329,7 +329,7 @@ export const MockExamScreen: React.FC<MockExamScreenProps> = ({
             {partCQuestions.map((q) => (
               <div
                 key={q.id}
-                className="border border-[var(--border)]/80 rounded-xl p-3.5 hover:border-brand-300 transition-all bg-surface"
+                className="border border-[var(--border)]/80 rounded-xl p-3.5 hover:border-[var(--accent-300)] transition-all bg-[var(--background)]"
               >
                 <div className="flex items-start justify-between">
                   <div className="space-y-1 pr-2">

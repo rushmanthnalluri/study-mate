@@ -1,5 +1,5 @@
-@config "../tailwind.config.js";
 @import "tailwindcss";
+@config "../tailwind.config.js";
 
 :root {
   --background: #FAFAF8;
@@ -273,20 +273,10 @@ textarea:focus {
   .print\:hidden { display: none !important; }
 }
 
-/*
- * Editorial compatibility layer.
- * Legacy screen utilities are normalized here while screens migrate to
- * semantic design tokens. This keeps the visual language coherent during
- * the repo-wide refactor without introducing another UI dependency.
- */
 .editorial-app {
   background: var(--background);
   color: var(--foreground);
 }
-
-/* Keep legacy rounded utilities restrained. */
-[class*="rounded-[28px]"],
-[class*="rounded-[36px]"] { border-radius: 0.5rem !important; }
 
 /* Shared semantic building blocks for the migration. */
 .editorial-page {

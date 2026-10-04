@@ -71,7 +71,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
       <div className="bg-[var(--card)] border border-[var(--accent-200)] rounded-xl p-3.5 shadow-sm flex items-center justify-between">
         <div className="space-y-0.5">
           <div className="flex items-center space-x-2">
-            <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-surface-subtle text-[var(--muted-foreground)]">
+            <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--surface)] text-[var(--muted-foreground)]">
               {subject.code}
             </span>
             <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[var(--accent)]">
@@ -102,7 +102,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
               value={topicInput}
               onChange={(e) => setTopicInput(e.target.value)}
               placeholder="e.g. Banker's Algorithm safety steps, AVL tree rotations, Nyquist criterion, or paste an exact question..."
-              className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm leading-relaxed"
+              className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] editorial-focus shadow-sm leading-relaxed"
             />
           </div>
           <p className="text-[11px] text-[var(--muted-foreground)] mt-1 italic">
@@ -111,7 +111,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
         </div>
 
         {/* Blueprint Scope Checklist */}
-        <div className="bg-surface-subtle border border-[var(--border)] rounded-xl p-3 space-y-2">
+        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 space-y-2">
           <span className="text-[10px] font-sans uppercase tracking-wider font-bold text-[var(--muted-foreground)]">
             Outputs Generated in KL Exam Format
           </span>
@@ -145,7 +145,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
           disabled={!topicInput.trim() || isLoading}
           className={`w-full py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 shadow-md transition-all active:scale-[0.98] ${
             !topicInput.trim() || isLoading
-              ? 'bg-surface-border text-[var(--muted-foreground)] cursor-not-allowed'
+              ? 'bg-[var(--border)] text-[var(--muted-foreground)] cursor-not-allowed'
               : 'bg-[var(--accent)] text-white hover:bg-[var(--accent)] editorial-focus'
           }`}
         >
@@ -182,7 +182,7 @@ export const EnterTopicScreen: React.FC<EnterTopicScreenProps> = ({
               <div
                 key={q.id}
                 onClick={() => handleSelectQuestion(q)}
-                className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 shadow-sm hover:border-brand-300 transition-all cursor-pointer group text-left"
+                className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-3 shadow-sm hover:border-[var(--accent-300)] transition-all cursor-pointer group text-left"
               >
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center space-x-1.5">

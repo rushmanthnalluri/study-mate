@@ -76,12 +76,12 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
   const resetZoom = () => setScale(1);
 
   return (
-    <div className="bg-white border border-surface-border rounded-xl shadow-mobile-card overflow-hidden my-4">
+    <div className="bg-white border border-[var(--border)] rounded-xl shadow-mobile-card overflow-hidden my-4">
       {/* Diagram header */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-surface-subtle border-b border-surface-border">
+      <div className="flex items-center justify-between px-4 py-2.5 bg-[var(--surface)] border-b border-[var(--border)]">
         <div className="flex items-center space-x-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-brand-800"></span>
-          <span className="text-xs font-semibold text-surface-dark uppercase tracking-wider font-condensed">
+          <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent-800)]"></span>
+          <span className="text-xs font-semibold text-[var(--foreground)] uppercase tracking-wider font-mono">
             {title}
           </span>
         </div>
@@ -90,7 +90,7 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
             onClick={zoomOut}
             title="Zoom Out"
             aria-label="Zoom out diagram"
-            className="p-1 rounded text-surface-muted hover:text-surface-dark hover:bg-white transition-colors"
+            className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-white transition-colors"
           >
             <ZoomOut size={15} />
           </button>
@@ -98,7 +98,7 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
             onClick={resetZoom}
             title="Reset Zoom"
             aria-label="Reset diagram zoom"
-            className="p-1 rounded text-surface-muted hover:text-surface-dark hover:bg-white transition-colors text-xs font-mono"
+            className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-white transition-colors text-xs font-mono"
           >
             {Math.round(scale * 100)}%
           </button>
@@ -106,15 +106,15 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
             onClick={zoomIn}
             title="Zoom In"
             aria-label="Zoom in diagram"
-            className="p-1 rounded text-surface-muted hover:text-surface-dark hover:bg-white transition-colors"
+            className="p-1 rounded text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-white transition-colors"
           >
             <ZoomIn size={15} />
           </button>
-          <div className="h-4 w-px bg-surface-border mx-1"></div>
+          <div className="h-4 w-px bg-[var(--border)] mx-1"></div>
           <button
             onClick={handleCopy}
             title="Copy Diagram Code"
-            className="flex items-center space-x-1 px-2 py-1 text-xs text-brand-800 hover:bg-brand-50 rounded transition-colors font-medium"
+            className="flex items-center space-x-1 px-2 py-1 text-xs text-[var(--accent-800)] hover:bg-[var(--accent-50)] rounded transition-colors font-medium"
           >
             {copied ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
             <span>{copied ? 'Copied' : 'Copy'}</span>
@@ -123,7 +123,7 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
       </div>
 
       {/* Render Area */}
-      <div className="p-4 overflow-x-auto min-h-[160px] flex items-center justify-center bg-surface">
+      <div className="p-4 overflow-x-auto min-h-[160px] flex items-center justify-center bg-[var(--background)]">
         {!renderError && svgUrl ? (
           <div
             ref={containerRef}
@@ -145,8 +145,8 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
         )}
       </div>
 
-      <div className="px-4 py-2 bg-surface text-center border-t border-surface-border/60">
-        <p className="text-[11px] text-surface-muted italic">
+      <div className="px-4 py-2 bg-[var(--background)] text-center border-t border-[var(--border)]/60">
+        <p className="text-[11px] text-[var(--muted-foreground)] italic">
           💡 KL Exam Tip: Drawing this clean labeled flowchart secures the mandatory 2 marks reserved for diagrams.
         </p>
       </div>

@@ -261,3 +261,16 @@ test('production academic content has no repository-seeded catalog fallback', ()
   assert.equal(fs.existsSync(path.join(root, 'scripts', 'seedKnowledgeBase.js')), false);
   assert.match(server, /administrator-persisted MongoDB data only/);
 });
+
+test('editorial design system has no legacy compatibility utilities', () => {
+  const css = fs.readFileSync(path.join(root, 'src', 'index.css'), 'utf8');
+  assert.doesNotMatch(css, /Editorial compatibility layer|legacy rounded utilities restrained/);
+  const files = [
+    path.join(root, 'src', 'App.tsx'),
+    ...fs.readdirSync(path.join(root, 'src', 'components')).filter(f => f.endsWith('.tsx')).map(f => path.join(root, 'src', 'components', f)),
+    ...fs.readdirSync(path.join(root, 'src', 'screens')).filter(f => f.endsWith('.tsx')).map(f => path.join(root, 'src', 'screens', f))
+  ];
+  const source = files.map(file => fs.readFileSync(file, 'utf8')).join('\\n');
+  assert.doesNotMatch(source, /brand-(?:50|100|200|300|400|500|600|700|800|900|950)/);
+  assert.doesNotMatch(source, /(?:bg|text|border|placeholder)-surface-(?:subtle|border|muted|dark)/);
+});

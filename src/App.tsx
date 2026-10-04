@@ -299,7 +299,7 @@ export const App: React.FC = () => {
       {!currentUser && (
         <div className="min-h-screen w-full bg-[radial-gradient(circle_at_top,var(--accent-foreground)_0%,#FAFAF8_58%,#F5F3F0_100%)] px-5 py-10">
           <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-4xl items-center justify-center">
-            <div className="grid w-full overflow-hidden rounded-[36px] border border-[var(--border)] bg-white/95 shadow-[0_30px_90px_rgba(75,55,42,0.16)] md:grid-cols-[1.05fr_.95fr]">
+            <div className="grid w-full overflow-hidden rounded-lg border border-[var(--border)] bg-white/95 shadow-[0_30px_90px_rgba(75,55,42,0.16)] md:grid-cols-[1.05fr_.95fr]">
               <div className="hidden bg-[var(--foreground)] p-10 text-white md:flex md:flex-col md:justify-between">
                 <div>
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--muted)] text-[var(--foreground)]"><GraduationCap size={28}/></div>

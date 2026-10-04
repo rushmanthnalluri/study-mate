@@ -141,7 +141,7 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search glossary terms (e.g. Belady, Ferranti, 12D, Kernel)..."
-          className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[var(--foreground)] placeholder-surface-muted editorial-focus shadow-sm"
+          className="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] editorial-focus shadow-sm"
         />
       </div>
 
@@ -154,7 +154,7 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
               deptFilter === dept
                 ? 'bg-[var(--accent)] text-white shadow-sm'
-                : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] hover:bg-surface-subtle'
+                : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] hover:bg-[var(--surface)]'
             }`}
           >
             {dept === 'All' ? 'All Depts' : dept}
@@ -167,7 +167,7 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
         {filtered.map((item, idx) => (
           <div
             key={idx}
-            className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2 hover:border-brand-300 transition-all"
+            className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-4 shadow-sm space-y-2 hover:border-[var(--accent-300)] transition-all"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
@@ -187,7 +187,7 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
               {item.definition}
             </p>
 
-            <div className="bg-surface-subtle p-2 rounded-lg border border-[var(--border)]/50 text-[11px] text-[var(--foreground)]">
+            <div className="bg-[var(--surface)] p-2 rounded-lg border border-[var(--border)]/50 text-[11px] text-[var(--foreground)]">
               <span className="font-semibold text-[var(--accent)]">KL Evaluator Key Criterion: </span>
               <span>{item.keyRule}</span>
             </div>

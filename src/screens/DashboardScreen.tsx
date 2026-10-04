@@ -156,7 +156,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                   {item.attemptCount} attempts • {item.average === null ? '—' : `${item.average}%`}
                 </span>
               </div>
-              <div className="w-full bg-surface-subtle h-2 rounded-full overflow-hidden border border-[var(--border)]/40">
+              <div className="w-full bg-[var(--surface)] h-2 rounded-full overflow-hidden border border-[var(--border)]/40">
                 <div
                   className="bg-[var(--accent)] h-full rounded-full transition-all duration-300"
                   style={{ width: `${item.average ?? 0}%` }}
