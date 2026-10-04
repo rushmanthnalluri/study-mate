@@ -174,7 +174,7 @@ According to the KL University curriculum for **${selectedDepartment} (${selecte
       {/* Header bar */}
       <div className="bg-white dark:bg-[var(--foreground)] border border-surface-border dark:border-[var(--border)] rounded-2xl p-4 shadow-sm mb-3 flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-900 to-amber-700 text-white flex items-center justify-center shadow-sm">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[var(--accent-900)] to-[var(--accent-700)] text-white flex items-center justify-center shadow-sm">
             <Bot size={22} className="text-amber-300" />
           </div>
           <div>
