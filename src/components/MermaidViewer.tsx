@@ -147,7 +147,7 @@ export const MermaidViewer: React.FC<MermaidViewerProps> = ({ code, title = "Pro
 
       <div className="px-4 py-2 bg-[var(--background)] text-center border-t border-[var(--border)]/60">
         <p className="text-[11px] text-[var(--muted-foreground)] italic">
-          💡 KL Exam Tip: Drawing this clean labeled flowchart secures the mandatory 2 marks reserved for diagrams.
+          Use a clean labeled diagram when the published assessment guidance calls for one.
         </p>
       </div>
     </div>
