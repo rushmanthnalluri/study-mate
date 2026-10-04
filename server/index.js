@@ -1166,7 +1166,7 @@ app.post('/api/admin/resources', requireAdmin, rateLimit(60 * 60 * 1000, 40), as
   try {
     const {
       subjectName,
-      department = 'Food Technology',
+      department = '',
       resourceType,
       title,
       description,
