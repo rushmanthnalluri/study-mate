@@ -175,7 +175,7 @@ export const KnowledgeBaseScreen: React.FC<KnowledgeBaseScreenProps> = ({
             const found = subjects.find((s) => s.id === e.target.value);
             if (found) setSelectedSubject(found);
           }}
-          className="w-full bg-surface-subtle border border-[var(--border)] rounded-lg p-2.5 text-xs text-[var(--foreground)] font-medium focus:outline-none focus:ring-2 focus:ring-brand-800/30"
+          className="w-full bg-surface-subtle border border-[var(--border)] rounded-lg p-2.5 text-xs text-[var(--foreground)] font-medium editorial-focus"
         >
           {filteredSubjects.map((s) => (
             <option key={s.id} value={s.id}>
