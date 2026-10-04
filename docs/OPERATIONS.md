@@ -24,9 +24,9 @@ Verify the target database before enabling the destructive restore. Do not run r
 
 ## Database schema migrations
 
-Migrations are versioned in `scripts/mongodb-migrate.mjs` and tracked in the `_schema_migrations` collection.
+Migrations are versioned in `scripts/mongodb-migrate.mjs` and tracked in the `_schema_migrations` collection. The release currently includes migrations through v4, including removal of legacy LMS fields from user records.
 
-The current schema version is 1. Each migration is idempotent and should:
+The current schema version is 4. Each migration is idempotent and should:
 
 1. Make schema/index changes only.
 2. Record its version and applied timestamp.
