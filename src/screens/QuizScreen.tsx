@@ -161,6 +161,8 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
             <label className="text-xs font-bold text-[var(--foreground)]">
               Course
               <select
+                id="quiz-course"
+                name="course"
                 value={subject?.id || ''}
                 onChange={e => setSubjectId(e.target.value)}
                 className="auth-input mt-1.5"
@@ -172,6 +174,8 @@ export const QuizScreen: React.FC<Props> = ({ onNavigate, subjects, selectedDepa
             <label className="text-xs font-bold text-[var(--foreground)]">
               Mode
               <select
+                id="quiz-mode"
+                name="mode"
                 value={mode}
                 onChange={e => setMode(e.target.value as 'quiz' | 'model')}
                 className="auth-input mt-1.5"
