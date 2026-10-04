@@ -128,7 +128,7 @@ export const SelfTestModal: React.FC<SelfTestModalProps> = ({ note, onClose }) =
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
                 targetMarks === m
                   ? 'bg-[var(--accent-800)] text-white shadow-sm'
-                  : 'bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)] hover:bg-[var(--background)]-border'
+                  : 'bg-[var(--surface)] text-[var(--foreground)] border border-[var(--border)] hover:bg-[var(--border)]'
               }`}
             >
               {m} Marks
