@@ -91,6 +91,9 @@ export const GlossaryScreen: React.FC<GlossaryScreenProps> = ({
       <div className="relative">
         <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]" />
         <input
+          id="glossary-search"
+          name="search"
+          aria-label="Search glossary"
           type="search"
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
